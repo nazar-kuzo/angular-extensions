@@ -1,0 +1,90 @@
+<base-control #baseControl
+              [field]="field">
+  <mat-form-field [appearance]="appearance"
+                  [class]="fieldClass">
+    <mat-label>
+      {{ field.label }}
+    </mat-label>
+
+    <mat-hint>
+      {{ field.info }}
+    </mat-hint>
+
+    <mat-select #select
+                [panelClass]="'custom-scroll ' + dropdownClass"
+                [ngClass]="{ loading: field.isQuerying }"
+                [matTooltipDisabled]="field.tooltipDisabled"
+                [matTooltip]="select.triggerValue"
+                [formControl]="field.control"
+                [disableOptionCentering]="searchable"
+                [multiple]="multiple">
+
+      <mat-select-trigger *ngIf="triggerTemplate">
+        <ng-container *ngTemplateOutlet="triggerTemplate; context: { $implicit: select.triggerValue, label: triggerLabel, option: selectedOption }">
+        </ng-container>
+      </mat-select-trigger>
+
+      <mat-option *ngIf="searchable">
+        <ngx-mat-select-search placeholderLabel="Search"
+                               noEntriesFoundLabel="No items found"
+                               [formControl]="filterControl"
+                               [searching]="field.isQuerying"></ngx-mat-select-search>
+      </mat-option>
+
+      <mat-option #selectAllOption
+                  *ngIf="multiple && showSelectAll && !filterControl.value">
+        All
+      </mat-option>
+
+      <ng-container *ngIf="field.options | filter : field.optionsFilterPredicate : filterControl.value as options">
+        <ng-container *ngIf="field.optionsGroupProvider">
+          <mat-optgroup *ngFor="let group of options | groupBy : field.optionsGroupProvider"
+                        [label]="group.key | map : field.optionGroupLabel">
+            <mat-option *ngFor="let option of group.items; trackBy : field.optionId"
+                        [matTooltip]="option | map : field.optionLabel"
+                        [value]="option | map : field.optionValue"
+                        [disabled]="option | map : field.optionDisabled">
+              <ng-container *ngTemplateOutlet="optionTemplate || defaultOptionTempalte; context: { $implicit: option | map : field.optionLabel, option: option }">
+              </ng-container>
+            </mat-option>
+          </mat-optgroup>
+        </ng-container>
+
+        <ng-container *ngIf="!field.optionsGroupProvider">
+          <mat-option *ngFor="let option of options; trackBy : field.optionId"
+                      [matTooltip]="option | map : field.optionLabel"
+                      [value]="option | map : field.optionValue"
+                      [disabled]="option | map : field.optionDisabled">
+            <ng-container *ngTemplateOutlet="optionTemplate || defaultOptionTempalte; context: { $implicit: option | map : field.optionLabel, option: option }">
+            </ng-container>
+          </mat-option>
+        </ng-container>
+      </ng-container>
+    </mat-select>
+
+    <span matSuffix
+          *ngIf="field.isQuerying">
+      <spinner [loading]="field.isQuerying"
+               [size]="20"></spinner>
+    </span>
+
+    <button *ngIf="!multiple && clearable && field.value !== null && !field.isQuerying"
+            mat-button
+            matSuffix
+            mat-icon-button
+            matTooltip="Clear"
+            (click)="$any(field).value = null; $event.stopPropagation()">
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <mat-error *ngIf="baseControl.initialized">
+      <ng-container *ngTemplateOutlet="baseControl.errorsTemplate"></ng-container>
+    </mat-error>
+  </mat-form-field>
+</base-control>
+
+<ng-template #defaultOptionTempalte
+             let-label
+             let-option="option">
+  {{ label }}
+</ng-template>

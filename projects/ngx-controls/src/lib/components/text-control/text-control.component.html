@@ -1,0 +1,48 @@
+<base-control #baseControl
+              [field]="field">
+  <mat-form-field [appearance]="appearance"
+                  [class]="fieldClass"
+                  (click)="focus()">
+    <mat-label>
+      {{ field.label }}
+    </mat-label>
+
+    <mat-hint>
+      {{ field.info }}
+    </mat-hint>
+
+    <mat-icon *ngIf="icon"
+              matPrefix>{{icon}}</mat-icon>
+
+    <button mat-icon-button
+            *ngIf="field.value && clearable"
+            matSuffix
+            aria-label="Clear"
+            matTooltip="Clear"
+            (click)="field.value = ''"
+            type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <ng-container *ngIf="mask">
+      <input matInput
+             #input
+             [type]="type"
+             [prefix]="prefix"
+             [mask]="mask"
+             [showMaskTyped]="showMaskTyped"
+             [formControl]="field.control">
+    </ng-container>
+
+    <ng-container *ngIf="!mask">
+      <input matInput
+             #input
+             [type]="type"
+             [formControl]="field.control">
+    </ng-container>
+
+    <mat-error *ngIf="baseControl.initialized">
+      <ng-container *ngTemplateOutlet="baseControl.errorsTemplate"></ng-container>
+    </mat-error>
+  </mat-form-field>
+</base-control>

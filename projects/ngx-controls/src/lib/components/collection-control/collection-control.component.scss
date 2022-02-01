@@ -1,0 +1,18 @@
+:host {
+  .inputs {
+    align-items: baseline;
+
+    .input-actions {
+      padding: 0;
+      display: flex;
+
+      button {
+        border-radius: 50%;
+
+        mat-icon {
+          margin: 0;
+        }
+      }
+    }
+  }
+}

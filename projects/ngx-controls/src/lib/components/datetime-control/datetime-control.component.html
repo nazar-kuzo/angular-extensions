@@ -1,0 +1,41 @@
+<base-control #baseControl
+              [field]="field">
+  <mat-form-field [appearance]="appearance"
+                  [class]="fieldClass"
+                  (click)="dateTimePicker.open(); $event.preventDefault();">
+    <mat-label>
+      {{ field.label }}
+    </mat-label>
+
+    <mat-hint>
+      {{ field.info }}
+    </mat-hint>
+
+    <input matInput
+           #input
+           readonly
+           [format]="format"
+           [formControl]="field.control"
+           [ngxMatDatetimePicker]="dateTimePicker">
+
+    <mat-datepicker-toggle matSuffix
+                           [for]="$any(dateTimePicker)">
+      <mat-icon matDatepickerToggleIcon
+                [matTooltip]="clearable && field.value !== null ? 'Clear' : ''"
+                (click)="onToggle($event)">
+        {{ clearable && field.value !== null ? 'close' : 'today' }}</mat-icon>
+    </mat-datepicker-toggle>
+
+    <ngx-mat-datetime-picker #dateTimePicker
+                             [color]="'primary'"
+                             [stepMinute]="15"
+                             [defaultTime]="initialTime"
+                             [showSeconds]="true"
+                             (closed)="field.control.markAllAsTouched()">
+    </ngx-mat-datetime-picker>
+
+    <mat-error *ngIf="baseControl.initialized">
+      <ng-container *ngTemplateOutlet="baseControl.errorsTemplate"></ng-container>
+    </mat-error>
+  </mat-form-field>
+</base-control>

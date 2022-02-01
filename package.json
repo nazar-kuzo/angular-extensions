@@ -1,0 +1,49 @@
+{
+  "name": "ngx-controls",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build ngx-controls",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "12.2.9",
+    "@angular/cdk": "12.2.9",
+    "@angular/common": "12.2.9",
+    "@angular/compiler": "12.2.9",
+    "@angular/core": "12.2.9",
+    "@angular/forms": "12.2.9",
+    "@angular/material": "12.2.9",
+    "@angular/platform-browser": "12.2.9",
+    "@angular/platform-browser-dynamic": "12.2.9",
+    "@angular/router": "12.2.9",
+    "@angular-material-components/datetime-picker": "6.0.3",
+    "date-fns": "^2.16.1",
+    "lodash-es": "4.17.21",
+    "ngx-awesome-uploader": "^12.0.2",
+    "ngx-filesize": "^2.0.16",
+    "ngx-mask": "12.0.0",
+    "ngx-mat-select-search": "3.3.0",
+    "rxjs": "~6.6.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.11.4"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "12.2.9",
+    "@angular/cli": "12.2.9",
+    "@angular/compiler-cli": "12.2.9",
+    "@types/jasmine": "~3.8.0",
+    "@types/node": "^12.11.1",
+    "codelyzer": "6.0.2",
+    "eslint": "7.29.0",
+    "eslint-plugin-import": "2.23.4",
+    "eslint-plugin-jsdoc": "35.4.0",
+    "eslint-plugin-prefer-arrow": "1.2.3",
+    "ts-node": "8.3.0",
+    "typescript": "4.3.5",
+    "ng-packagr": "^12.1.1"
+  }
+}

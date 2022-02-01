@@ -1,0 +1,7 @@
+:host {
+  display: inline-block;
+
+  ::ng-deep input {
+    cursor: pointer;
+  }
+}

@@ -1,0 +1,43 @@
+<ng-content></ng-content>
+
+<ng-template>
+  <mat-error *ngIf="field.control.errors?.required as error">
+    {{ field.validation.text || "Field is required" }}
+  </mat-error>
+
+  <mat-error *ngIf="field.control.errors?.requiredTrue as error">
+    {{ field.validation.requiredTrue?.text || "Field is required" }}
+  </mat-error>
+
+  <mat-error *ngIf="field.control.errors?.min as error">
+    {{ field.validation.min?.text || "Field should be greater than " + error.min }}
+  </mat-error>
+
+  <mat-error *ngIf="field.control.errors?.max as error">
+    {{ field.validation.max?.text || "Field should be smaller than " + error.max }}
+  </mat-error>
+
+  <mat-error *ngIf="field.control.errors?.minDate as error">
+    {{ field.validation.minDate?.text || "Date should be after the " + (error.minDate | dateFns) }}
+  </mat-error>
+
+  <mat-error *ngIf="field.control.errors?.minOrEqualDate as error">
+    {{ field.validation.minOrEqualDate?.text || "Date should be same or after the " + (error.minOrEqualDate | dateFns) }}
+  </mat-error>
+
+  <mat-error *ngIf="field.control.errors?.maxDate as error">
+    {{ field.validation.maxDate?.text || "Date should be before the " + (error.maxDate | dateFns) }}
+  </mat-error>
+
+  <mat-error *ngIf="field.control.errors?.maxOrEqualDate as error">
+    {{ field.validation.maxOrEqualDate?.text || "Date should be same or before the " + (error.maxOrEqualDate | dateFns) }}
+  </mat-error>
+
+  <mat-error *ngIf="field.control.errors?.pattern as error">
+    {{ field.validation.pattern?.text || error.message }}
+  </mat-error>
+
+  <mat-error *ngIf="field.control.errors?.custom as error">
+    {{ field.validation.custom?.text || error.message }}
+  </mat-error>
+</ng-template>

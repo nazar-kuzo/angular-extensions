@@ -1,0 +1,18 @@
+time-control {
+  display: inline-block;
+
+  .mat-form-field-flex {
+    &,
+    & input {
+      cursor: pointer;
+    }
+  }
+}
+
+.time-picker-container {
+  display: none !important;
+
+  & + .time-container {
+    padding: 0 2em;
+  }
+}

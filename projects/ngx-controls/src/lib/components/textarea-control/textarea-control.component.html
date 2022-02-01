@@ -1,0 +1,22 @@
+<base-control #baseControl
+              [field]="field">
+  <mat-form-field [appearance]="appearance"
+                  [class]="fieldClass">
+    <mat-label>
+      {{ field.label }}
+    </mat-label>
+
+    <mat-hint>
+      {{ field.info }}
+    </mat-hint>
+
+    <textarea matInput
+              #input
+              [formControl]="field.control">
+    </textarea>
+
+    <mat-error *ngIf="baseControl.initialized">
+      <ng-container *ngTemplateOutlet="baseControl.errorsTemplate"></ng-container>
+    </mat-error>
+  </mat-form-field>
+</base-control>

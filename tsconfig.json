@@ -1,0 +1,51 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "sourceMap": true,
+    "declaration": true,
+    "downlevelIteration": true,
+    "paths": {
+      "ngx-controls": [
+        "dist/ngx-controls/ngx-controls",
+        "dist/ngx-controls",
+      ]
+    },
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2017",
+    "module": "es2020",
+    "lib": [
+      "es2019",
+      "dom"
+    ],
+    "types": [
+      "./projects/ngx-controls/src/lib/@types/projects/index",
+      "./projects/ngx-controls/src/lib/@types/projects/@angular/core"
+    ]
+  },
+    "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInputAccessModifiers": true,
+    "strictInjectionParameters": true,
+    "strictAttributeTypes": true,
+    "strictOutputEventTypes": true,
+    "strictContextGenerics": true,
+    "strictLiteralTypes": true,
+    "strictDomLocalRefTypes": true,
+    "strictSafeNavigationTypes": true,
+
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictTemplates": true,
+    "strictInputTypes": true,
+    "strictDomEventTypes": true,
+  }
+}

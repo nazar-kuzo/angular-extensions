@@ -1,0 +1,63 @@
+:host {
+  .field-label {
+    width: 100%;
+  }
+
+  ::ng-deep {
+
+    ngx-awesome-uploader {
+      max-width: none !important;
+    }
+
+    .file-drop-wrapper {
+      background: #fff !important;
+      padding-top: 0 !important;
+
+      #dropZone {
+        padding: 5px 0;
+        border: none;
+        max-width: none;
+      }
+
+      file-drop {
+        padding: 0 3px;
+      }
+    }
+
+    file-preview-item {
+      position: initial;
+      padding: 10px 16px;
+      max-width: none;
+    }
+  }
+
+  .toolbar {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    mat-icon {
+      cursor: pointer;
+    }
+
+    .editor-label {
+      padding: 8px 14px;
+      display: inline-block;
+      line-height: 1em;
+      height: 34px;
+    }
+
+    .form-control {
+      width: auto;
+      display: inline-block;
+      line-height: 1em;
+      height: 34px;
+      margin-right: 0.3em;
+    }
+
+    // span.text-left {
+    //   flex: auto;
+    // }
+  }
+}

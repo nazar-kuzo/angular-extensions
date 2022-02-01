@@ -1,0 +1,11 @@
+:host {
+  display: inline-block;
+
+  ::ng-deep mat-select {
+    &.loading {
+      .mat-select-arrow {
+        color: transparent !important;
+      }
+    }
+  }
+}

@@ -1,0 +1,56 @@
+<base-control #baseControl
+              [field]="field">
+  <div class="field-label">
+
+    <ngx-awesome-uploader #uploader
+                          [adapter]="adapter"
+                          [showeDragDropZone]="true"
+                          [uploadType]="multiple ? 'multi' : 'single'"
+                          [fileMaxSize]="maxFileSize"
+                          [totalMaxSize]="totalFileSize"
+                          [fileMaxCount]="multiple ? undefined : 1"
+                          [accept]="accept.toString()"
+                          [itemTemplate]="fileItemTemplate"
+                          [enableAutoUpload]="autoUpload"
+                          [fileExtensions]="allowedFileExtensions"
+                          (validationError)="onValidationError($event)"
+                          (fileAdded)="onFileAdded($event)">
+
+      <div class="dropzoneTemplate">
+        <button mat-raised-button
+                type="button"
+                (click)="field.control.markAsTouched()">{{ field.label }}</button>
+      </div>
+
+    </ngx-awesome-uploader>
+
+  </div>
+
+  <mat-error *ngIf="baseControl.initialized && field.control.touched">
+    <ng-container *ngTemplateOutlet="baseControl.errorsTemplate"></ng-container>
+    <ng-container *ngIf="validationErrors">
+      <mat-error *ngFor="let error of validationErrors">
+        {{ error.error }}
+      </mat-error>
+    </ng-container>
+  </mat-error>
+</base-control>
+
+<ng-template #fileItemTemplate
+             let-fileItem="fileItem"
+             let-uploadProgress="uploadProgress">
+  <div class="toolbar">
+    <span class="text-left">
+      {{ fileItem.fileName }}
+    </span>
+
+    <div *ngIf="fileItem">
+      <button mat-button
+              mat-icon-button
+              type="button"
+              (click)="uploader.removeFile(fileItem); onFileRemoved(fileItem)">
+        <mat-icon>clear</mat-icon>
+      </button>
+    </div>
+  </div>
+</ng-template>

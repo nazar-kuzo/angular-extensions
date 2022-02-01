@@ -1,0 +1,31 @@
+.control {
+  &:not(:last-child):not(.d-block) {
+    padding-right: 1.34375em;
+  }
+
+  &.d-none {
+    display: none !important;
+  }
+
+  base-control {
+    font-size: 14px;
+
+    mat-form-field {
+      min-width: 150px;
+
+      &.p-0 {
+        .mat-form-field-wrapper {
+          padding: 0 !important;
+        }
+
+        .mat-form-field-underline {
+          bottom: 0 !important;
+        }
+      }
+
+      .mat-form-field-subscript-wrapper {
+        position: relative;
+      }
+    }
+  }
+}
