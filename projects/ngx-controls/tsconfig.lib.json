@@ -11,6 +11,7 @@
     "strictPropertyInitialization": false,
     "moduleResolution": "node",
     "importHelpers": true,
+    "declaration": true,
     "target": "es2015",
     "module": "es2020",
     "lib": [
@@ -18,8 +19,9 @@
       "es2019"
     ],
     "types": [
-      "./src/lib/@types/projects/index"
-    ]
+      "./src/lib/@types/projects/index",
+      "./src/lib/@types/@angular/core"
+    ],
   },
 
   "exclude": [

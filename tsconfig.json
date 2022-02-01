@@ -26,10 +26,6 @@
     "lib": [
       "es2019",
       "dom"
-    ],
-    "types": [
-      "./projects/ngx-controls/src/lib/@types/projects/index",
-      "./projects/ngx-controls/src/lib/@types/projects/@angular/core"
     ]
   },
     "angularCompilerOptions": {
