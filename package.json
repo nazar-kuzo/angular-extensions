@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
     "build": "ng build ngx-controls",
     "pack": "npm pack ./dist/ngx-controls",
     "watch": "ng build --watch --configuration development",
