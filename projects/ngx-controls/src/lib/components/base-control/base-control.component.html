@@ -18,19 +18,19 @@
   </mat-error>
 
   <mat-error *ngIf="field.control.errors?.minDate as error">
-    {{ field.validation.minDate?.text || "Date should be after the " + (error.minDate | dateFns) }}
+    {{ field.validation.minDate?.text || "Date should be after the " + (error.minDate | date) }}
   </mat-error>
 
   <mat-error *ngIf="field.control.errors?.minOrEqualDate as error">
-    {{ field.validation.minOrEqualDate?.text || "Date should be same or after the " + (error.minOrEqualDate | dateFns) }}
+    {{ field.validation.minOrEqualDate?.text || "Date should be same or after the " + (error.minOrEqualDate | date) }}
   </mat-error>
 
   <mat-error *ngIf="field.control.errors?.maxDate as error">
-    {{ field.validation.maxDate?.text || "Date should be before the " + (error.maxDate | dateFns) }}
+    {{ field.validation.maxDate?.text || "Date should be before the " + (error.maxDate | date) }}
   </mat-error>
 
   <mat-error *ngIf="field.control.errors?.maxOrEqualDate as error">
-    {{ field.validation.maxOrEqualDate?.text || "Date should be same or before the " + (error.maxOrEqualDate | dateFns) }}
+    {{ field.validation.maxOrEqualDate?.text || "Date should be same or before the " + (error.maxOrEqualDate | date) }}
   </mat-error>
 
   <mat-error *ngIf="field.control.errors?.pattern as error">

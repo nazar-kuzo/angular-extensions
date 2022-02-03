@@ -8,7 +8,7 @@
                           [uploadType]="multiple ? 'multi' : 'single'"
                           [fileMaxSize]="maxFileSize"
                           [totalMaxSize]="totalFileSize"
-                          [fileMaxCount]="multiple ? undefined : 1"
+                          [fileMaxCount]="multiple ? $any(undefined) : 1"
                           [accept]="accept.toString()"
                           [itemTemplate]="fileItemTemplate"
                           [enableAutoUpload]="autoUpload"

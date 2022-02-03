@@ -4,21 +4,21 @@ import { FormControl, ValidatorFn, Validators, FormGroup } from "@angular/forms"
 import { startCase } from "lodash-es";
 
 import { Validation, ValueProvider, CustomValidators, ValidationConstructor } from "./validation.model";
-import { DateFnsPipe, DateTimePipe } from "../pipes";
+import { DatePipe, DateTimePipe, StartCasePipe } from "../pipes";
 import { MAT_DATE_APP_FORMATS } from "./date-formats.model";
 
 export const Formatters = {
 
   utcDateFormatter: (field: Field<Date>): string => {
-    return new DateFnsPipe(MAT_DATE_APP_FORMATS).transform(field.value, "yyyy-MM-dd");
+    return new DatePipe(MAT_DATE_APP_FORMATS).transform(field.value, "yyyy-MM-dd");
   },
 
   utcDateTimeFormatter: (field: Field<Date>): string => {
-    return new DateFnsPipe(MAT_DATE_APP_FORMATS).transform(field.value?.toUtcDate(), "yyyy-MM-dd'T'HH:mm:ss'Z'");
+    return new DatePipe(MAT_DATE_APP_FORMATS).transform(field.value?.toUtcDate(), "yyyy-MM-dd'T'HH:mm:ss'Z'");
   },
 
   dateFormatter: (field: Field<Date>) => {
-    return new DateFnsPipe(MAT_DATE_APP_FORMATS).transform(field.value);
+    return new DatePipe(MAT_DATE_APP_FORMATS).transform(field.value);
   },
 
   dateTimeFormatter: (field: Field<Date>) => {
@@ -27,6 +27,9 @@ export const Formatters = {
 };
 
 export class Option<TValue, TId = string> {
+
+  private static startCasePipe = new StartCasePipe();
+
   public id: TId;
 
   public name: string;
@@ -35,18 +38,26 @@ export class Option<TValue, TId = string> {
 
   public value: TValue;
 
-  public static ForEnum<TEnum extends number | string>(operator: any) {
+  constructor(props?: Partial<Option<TValue, TId>>) {
+    Object.assign(this, props);
+
+    if (!this.name) {
+      this.name = this.value as any as string;
+    }
+  }
+
+  public static ForEnum<TEnum extends number | string>(operator: any, insertSpaceBeforeDigits = false): Option<TEnum>[] {
     let entries = Object.entries(operator) as [string, string | number][];;
 
     let numberEntries = entries.filter(([, value]) => typeof value == "number") as [string, number][];
 
     return (numberEntries.length > 0 ? numberEntries : entries)
       .map(([key, value]: [string, string | number]) => {
-        return Object.assign(new Option<TEnum>(), {
-          label: startCase(key).replace(/\s(\d)/g, "$1"), // remove extra spaces when formatting digits
+        return Object.assign(new Option<TEnum>({
+          label: this.startCasePipe.transform(key, insertSpaceBeforeDigits),
           name: key,
-          value: value,
-        } as Option<TEnum>);
+          value: value as TEnum,
+        }));
       });
   }
 }
@@ -64,11 +75,11 @@ type FieldConstructor<TValue, TOption = any, TOptionGroup = any> =
 
 export class Field<TValue, TOption = any, TOptionGroup = any> {
 
+  private optionChangesSubject = new Subject<TOption[]>();
+
   private destroy$ = new Subject();
 
   private _options: TOption[];
-
-  public optionChangesSubject = new Subject<TOption[]>();
 
   public control: FormControl;
 
@@ -116,6 +127,11 @@ export class Field<TValue, TOption = any, TOptionGroup = any> {
 
   public optionLabel: (option: TOption) => string;
 
+  /**
+   * Allows to specify option display label when selected or being howered
+   */
+  public optionDisplayLabel?: (option: TOption) => string;
+
   public optionValue: (option: TOption) => any;
 
   public optionDisabled: (option: TOption) => boolean;
@@ -161,21 +177,27 @@ export class Field<TValue, TOption = any, TOptionGroup = any> {
       delete props.onOptionsChange;
     }
 
-    if (props.options instanceof Observable) {
-      this.isQuerying = true;
+    if (props.options) {
+      if (props.options instanceof Observable) {
+        this.isQuerying = true;
 
-      props.options.subscribe({
-        next: options => {
-          this.options = options;
+        props.options.subscribe({
+          next: options => {
+            this.options = options;
 
-          this.optionChangesSubject.next(options);
+            this.optionChangesSubject.next(options);
 
-          this.isQuerying = false;
-        },
-        error: () => {
-          this.isQuerying = false;
-        }
-      });
+            this.isQuerying = false;
+          },
+          error: () => {
+            this.isQuerying = false;
+          }
+        });
+
+      }
+      else {
+        this._options = props.options;
+      }
 
       delete props.options;
     }
@@ -189,6 +211,7 @@ export class Field<TValue, TOption = any, TOptionGroup = any> {
     this.optionGroupLabel = (optionGroup: TOptionGroup) => optionGroup as any;
     this.optionId = (index: number, option: any) => option.id || option;
     this.optionLabel = (option: any) => option.label || "";
+    this.optionDisabled = _ => false;
     this.optionValue = (option: any) => {
       if (option instanceof Option) {
         return option.value;
@@ -197,7 +220,6 @@ export class Field<TValue, TOption = any, TOptionGroup = any> {
         return option;
       }
     };
-    this.optionDisabled = _ => false;
 
     Object.assign(this, props);
   }
@@ -215,7 +237,7 @@ export class Field<TValue, TOption = any, TOptionGroup = any> {
   public set visible(isVisible: boolean) {
     this.visibilityProvider = () => !!isVisible;
 
-    this.control.updateValueAndValidity({ emitEvent: false });
+    this.control.updateValueAndValidity();
   }
 
   public get value() {
@@ -234,22 +256,10 @@ export class Field<TValue, TOption = any, TOptionGroup = any> {
     }
   }
 
-  public get formattedValue() {
+  public get formattedValue(): string {
     return this.formatter
       ? this.formatter(this)
       : this.value;
-  }
-
-  public disable() {
-    this.control.disable({ onlySelf: true, emitEvent: false });
-
-    this.control.updateValueAndValidity();
-  }
-
-  public enable() {
-    this.control.enable({ onlySelf: true, emitEvent: false });
-
-    this.control.updateValueAndValidity();
   }
 
   public setFromOptions(

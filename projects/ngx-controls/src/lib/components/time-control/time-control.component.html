@@ -21,9 +21,9 @@
     <mat-datepicker-toggle matSuffix
                            [for]="$any(timePicker)">
       <mat-icon matDatepickerToggleIcon
-                [matTooltip]="clearable && field.value !== null ? 'Clear' : ''"
+                [matTooltip]="clearable && field.value != null ? 'Clear' : ''"
                 (click)="onToggle($event)">
-        {{ clearable && field.value !== null ? 'close' : 'schedule' }}
+        {{ clearable && field.value != null ? 'close' : 'schedule' }}
       </mat-icon>
     </mat-datepicker-toggle>
 

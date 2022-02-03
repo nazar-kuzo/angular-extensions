@@ -3,9 +3,9 @@ import { Inject, Pipe, PipeTransform } from "@angular/core";
 import { MatDateFormats, MAT_DATE_FORMATS } from "@angular/material/core";
 
 @Pipe({
-  name: "dateFns",
+  name: "date",
 })
-export class DateFnsPipe implements PipeTransform {
+export class DatePipe implements PipeTransform {
 
   constructor(
     @Inject(MAT_DATE_FORMATS) private dateFormats: MatDateFormats,

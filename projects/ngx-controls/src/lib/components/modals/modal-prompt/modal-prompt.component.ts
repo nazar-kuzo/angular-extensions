@@ -22,7 +22,7 @@ export class ModalPromptComponent {
   public field: Field<string>;
 
   constructor(
-    public dialogRef: MatDialogRef<ModalPromptComponent>,
+    public dialogRef: MatDialogRef<ModalPromptComponent, string>,
     @Inject(MAT_DIALOG_DATA) public settings: ModalPromptSettings
   ) {
     this.field = new Field<string>({

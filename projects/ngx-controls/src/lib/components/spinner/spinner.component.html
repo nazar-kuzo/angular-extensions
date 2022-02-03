@@ -1,14 +1,14 @@
 <ng-content></ng-content>
 
 <div *ngIf="loading">
-  <mat-progress-bar *ngIf="type === 'small'"
+  <mat-progress-bar *ngIf="type == 'small'"
                     mode="indeterminate"></mat-progress-bar>
 
-  <mat-spinner *ngIf="type === 'big'"
+  <mat-spinner *ngIf="type == 'big'"
                [diameter]="size"
                mode="indeterminate"></mat-spinner>
 </div>
 
-<ng-container *ngIf="!loading">
+<ng-container *ngIf="!loading && contentTemplate">
   <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
 </ng-container>

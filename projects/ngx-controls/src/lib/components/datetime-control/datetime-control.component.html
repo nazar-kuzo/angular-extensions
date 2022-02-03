@@ -21,16 +21,17 @@
     <mat-datepicker-toggle matSuffix
                            [for]="$any(dateTimePicker)">
       <mat-icon matDatepickerToggleIcon
-                [matTooltip]="clearable && field.value !== null ? 'Clear' : ''"
+                [matTooltip]="clearable && field.control.enabled && field.value != null ? 'Clear' : ''"
                 (click)="onToggle($event)">
-        {{ clearable && field.value !== null ? 'close' : 'today' }}</mat-icon>
+        {{ clearable && field.control.enabled && field.value != null ? 'close' : 'today' }}</mat-icon>
     </mat-datepicker-toggle>
 
     <ngx-mat-datetime-picker #dateTimePicker
                              [color]="'primary'"
                              [stepMinute]="15"
+                             [disableMinute]="disableMinute"
                              [defaultTime]="initialTime"
-                             [showSeconds]="true"
+                             [showSeconds]="showSeconds"
                              (closed)="field.control.markAllAsTouched()">
     </ngx-mat-datetime-picker>
 

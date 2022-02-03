@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { ReactiveFormsModule } from "@angular/forms";
 
 import {
   NgxMatDateAdapter,
@@ -25,10 +25,11 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
 import { Platform } from "@angular/cdk/platform";
+import { NgxMaskModule } from "ngx-mask";
 
 import { ModalConfirmComponent, ModalPromptComponent } from "./components/modals";
-import { DateFnsPipe, DateTimePipe, FilterPipe, GroupByPipe, MapPipe, StartCasePipe, TrustedHtmlPipe } from "./pipes";
-import { CustomPaginatorDirective, DateTimePickerDirective, FormatDirective } from "./directives";
+import { DatePipe, DateTimePipe, FilterPipe, GroupByPipe, MapPipe, StartCasePipe, TrustedHtmlPipe } from "./pipes";
+import { CustomPaginatorDirective, DateTimePickerDirective, FormatDirective, TooltipImprovementsDirective } from "./directives";
 
 import {
   BaseControlComponent,
@@ -36,14 +37,15 @@ import {
   DateControlComponent,
   DateTimeControlComponent,
   SelectControlComponent,
+  OptionContextDirective,
   SpinnerComponent,
   TextareaControlComponent,
   TextControlComponent,
   TimeControlComponent,
+  CollectionControlComponent,
 } from "./components";
 import { MAT_DATE_APP_FORMATS } from "./models";
-import { CollectionControlComponent } from "./components/collection-control/collection-control.component";
-import { NgxMaskModule } from "ngx-mask";
+import { A11yModule } from "@angular/cdk/a11y";
 
 export class AppDateAdapter extends NgxMatNativeDateAdapter {
 
@@ -59,8 +61,8 @@ export class AppDateAdapter extends NgxMatNativeDateAdapter {
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,
     ReactiveFormsModule,
+    A11yModule,
 
     MatIconModule,
     MatButtonModule,
@@ -83,6 +85,7 @@ export class AppDateAdapter extends NgxMatNativeDateAdapter {
     BaseControlComponent,
     CheckboxControlComponent,
     SelectControlComponent,
+    OptionContextDirective,
     TextControlComponent,
     TextareaControlComponent,
     DateControlComponent,
@@ -94,17 +97,18 @@ export class AppDateAdapter extends NgxMatNativeDateAdapter {
     ModalConfirmComponent,
     ModalPromptComponent,
 
-    DateFnsPipe,
+    DatePipe,
     DateTimePipe,
     FilterPipe,
     TrustedHtmlPipe,
     StartCasePipe,
-    MapPipe,
     GroupByPipe,
+    MapPipe,
 
     CustomPaginatorDirective,
     DateTimePickerDirective,
     FormatDirective,
+    TooltipImprovementsDirective,
   ],
   exports: [
     CommonModule,
@@ -129,6 +133,7 @@ export class AppDateAdapter extends NgxMatNativeDateAdapter {
     BaseControlComponent,
     CheckboxControlComponent,
     SelectControlComponent,
+    OptionContextDirective,
     TextControlComponent,
     TextareaControlComponent,
     DateControlComponent,
@@ -140,19 +145,20 @@ export class AppDateAdapter extends NgxMatNativeDateAdapter {
     ModalConfirmComponent,
     ModalPromptComponent,
 
-    DateFnsPipe,
+    DatePipe,
     DateTimePipe,
     FilterPipe,
     TrustedHtmlPipe,
     StartCasePipe,
-    MapPipe,
-    GroupByPipe,
 
     CustomPaginatorDirective,
     DateTimePickerDirective,
     FormatDirective,
+    TooltipImprovementsDirective,
   ],
   providers: [
+    DatePipe,
+    DateTimePipe,
     {
       provide: DateAdapter,
       useClass: AppDateAdapter,

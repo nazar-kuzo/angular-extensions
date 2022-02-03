@@ -1,8 +1,10 @@
 <base-control #baseControl
               [field]="field">
-  <mat-form-field [appearance]="appearance"
+  <mat-form-field cdkTrapFocus
+                  [appearance]="appearance"
                   [class]="fieldClass"
-                  (click)="focus()">
+                  [cdkTrapFocusAutoCapture]="focused"
+                  (click)="input.focus()">
     <mat-label>
       {{ field.label }}
     </mat-label>
@@ -25,8 +27,10 @@
     </button>
 
     <ng-container *ngIf="mask">
-      <input matInput
-             #input
+      <input #input
+             matInput
+             cdkFocusInitial
+             [attr.inputmode]="type == 'number' ? 'decimal' : null"
              [type]="type"
              [prefix]="prefix"
              [mask]="mask"
@@ -35,8 +39,10 @@
     </ng-container>
 
     <ng-container *ngIf="!mask">
-      <input matInput
-             #input
+      <input #input
+             matInput
+             cdkFocusInitial
+             [attr.inputmode]="type == 'number' ? 'decimal' : null"
              [type]="type"
              [formControl]="field.control">
     </ng-container>

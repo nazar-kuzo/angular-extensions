@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, Input } from "@angular/core";
+import { Component, ElementRef, Inject, Input, ViewEncapsulation } from "@angular/core";
 import { MatDateFormats, MAT_DATE_FORMATS } from "@angular/material/core";
 import { MatFormFieldAppearance } from "@angular/material/form-field";
 
@@ -7,7 +7,8 @@ import { Field } from "../../models";
 @Component({
   selector: "datetime-control",
   templateUrl: "./datetime-control.component.html",
-  styleUrls: ["./datetime-control.component.scss"]
+  styleUrls: ["./datetime-control.component.scss"],
+  encapsulation: ViewEncapsulation.None,
 })
 export class DateTimeControlComponent {
 
@@ -27,6 +28,12 @@ export class DateTimeControlComponent {
   public clearable: boolean;
 
   @Input()
+  public disableMinute = false;
+
+  @Input()
+  public showSeconds = true;
+
+  @Input()
   public format: string;
 
   constructor(
@@ -41,8 +48,10 @@ export class DateTimeControlComponent {
   }
 
   public onToggle(event: MouseEvent) {
-    if (this.clearable && this.field.value != null) {
+    if (this.clearable && this.field.control.enabled && this.field.value != null) {
       this.field.value = null as any;
+
+      this.field.control.markAsTouched();
 
       event.preventDefault();
       event.stopImmediatePropagation();

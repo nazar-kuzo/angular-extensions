@@ -20,8 +20,7 @@
                 [multiple]="multiple">
 
       <mat-select-trigger *ngIf="triggerTemplate">
-        <ng-container *ngTemplateOutlet="triggerTemplate; context: { $implicit: select.triggerValue, label: triggerLabel, option: selectedOption }">
-        </ng-container>
+        <ng-container *ngTemplateOutlet="triggerTemplate; context: { $implicit: select.triggerValue, label: triggerLabel, option: selectedOption }"></ng-container>
       </mat-select-trigger>
 
       <mat-option *ngIf="searchable">
@@ -37,27 +36,31 @@
       </mat-option>
 
       <ng-container *ngIf="field.options | filter : field.optionsFilterPredicate : filterControl.value as options">
-        <ng-container *ngIf="field.optionsGroupProvider">
-          <mat-optgroup *ngFor="let group of options | groupBy : field.optionsGroupProvider"
-                        [label]="group.key | map : field.optionGroupLabel">
-            <mat-option *ngFor="let option of group.items; trackBy : field.optionId"
+        <ng-container *ngIf="options.length; else noItemsTemplate">
+          <ng-container *ngIf="field.optionsGroupProvider">
+            <mat-optgroup *ngFor="let group of options | groupBy : field.optionsGroupProvider"
+                          [label]="group.key | map : field.optionGroupLabel">
+              <mat-option *ngFor="let option of group.items; trackBy : field.optionId"
+                          [matTooltip]="option | map : field.optionLabel"
+                          [context]="option"
+                          [value]="option | map : field.optionValue"
+                          [disabled]="option | map : field.optionDisabled">
+                <ng-container *ngTemplateOutlet="optionTemplate || defaultOptionTempalte;
+                  context: { $implicit: option | map : field.optionLabel, option: option }"></ng-container>
+              </mat-option>
+            </mat-optgroup>
+          </ng-container>
+
+          <ng-container *ngIf="!field.optionsGroupProvider">
+            <mat-option *ngFor="let option of options; trackBy : field.optionId"
                         [matTooltip]="option | map : field.optionLabel"
+                        [context]="option"
                         [value]="option | map : field.optionValue"
                         [disabled]="option | map : field.optionDisabled">
-              <ng-container *ngTemplateOutlet="optionTemplate || defaultOptionTempalte; context: { $implicit: option | map : field.optionLabel, option: option }">
-              </ng-container>
+              <ng-container *ngTemplateOutlet="optionTemplate || defaultOptionTempalte;
+                context: { $implicit: option | map : field.optionLabel, option: option }"></ng-container>
             </mat-option>
-          </mat-optgroup>
-        </ng-container>
-
-        <ng-container *ngIf="!field.optionsGroupProvider">
-          <mat-option *ngFor="let option of options; trackBy : field.optionId"
-                      [matTooltip]="option | map : field.optionLabel"
-                      [value]="option | map : field.optionValue"
-                      [disabled]="option | map : field.optionDisabled">
-            <ng-container *ngTemplateOutlet="optionTemplate || defaultOptionTempalte; context: { $implicit: option | map : field.optionLabel, option: option }">
-            </ng-container>
-          </mat-option>
+          </ng-container>
         </ng-container>
       </ng-container>
     </mat-select>
@@ -68,7 +71,7 @@
                [size]="20"></spinner>
     </span>
 
-    <button *ngIf="!multiple && clearable && field.value !== null && !field.isQuerying"
+    <button *ngIf="!multiple && clearable && field.value != null && !field.isQuerying"
             mat-button
             matSuffix
             mat-icon-button
@@ -82,6 +85,11 @@
     </mat-error>
   </mat-form-field>
 </base-control>
+
+<ng-template #noItemsTemplate>
+  <mat-option *ngIf="!filterControl.value"
+              [disabled]="true">No items available</mat-option>
+</ng-template>
 
 <ng-template #defaultOptionTempalte
              let-label

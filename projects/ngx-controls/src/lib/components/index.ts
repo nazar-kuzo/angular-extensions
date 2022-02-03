@@ -5,6 +5,7 @@ export * from "./datetime-control/datetime-control.component";
 export * from "./text-control/text-control.component";
 export * from "./textarea-control/textarea-control.component";
 export * from "./select-control/select-control.component";
+export * from "./select-control/option-context/option-context.directive";
 export * from "./checkbox-control/checkbox-control.component";
 export * from "./spinner/spinner.component";
 export * from "./collection-control/collection-control.component";

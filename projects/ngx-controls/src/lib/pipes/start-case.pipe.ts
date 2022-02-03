@@ -6,7 +6,11 @@ import { Pipe, PipeTransform } from "@angular/core";
 })
 export class StartCasePipe implements PipeTransform {
 
-  public transform(value?: string) {
-    return startCase(value || "").replace(/\s(\d)/g, "$1");
+  public transform(value?: string, insertSpaceBeforeDigits = false) {
+    let label = startCase(value || "");
+
+    return insertSpaceBeforeDigits
+      ? label
+      : label.replace(/\s(\d)/g, "$1");
   }
 }

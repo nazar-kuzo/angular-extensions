@@ -1,10 +1,14 @@
-:host {
+datetime-control {
   display: inline-block;
 
-  ::ng-deep .mat-form-field-flex {
+  .mat-form-field-flex {
     &,
     & input {
       cursor: pointer;
     }
   }
+}
+
+ngx-mat-calendar {
+  height: 354px; // fixes content jump during month navigation
 }

@@ -32,7 +32,7 @@ export class FileControlComponent implements OnInit {
   public maxFileSize: number;
 
   @Input()
-  public totalFileSize?: number;
+  public totalFileSize: number;
 
   @Input()
   public autoUpload = false;

@@ -1,26 +1,19 @@
-import {
-  AfterViewInit,
-  Component,
-  ContentChild,
-  ElementRef,
-  Input,
-  OnDestroy,
-  OnInit,
-  Optional,
-  TemplateRef,
-  ViewChild,
-} from "@angular/core";
-import { FormControl } from "@angular/forms";
-import { MatOption } from "@angular/material/core";
-import { MatFormFieldAppearance } from "@angular/material/form-field";
-import { MatMenuTrigger } from "@angular/material/menu";
-import { MatSelect } from "@angular/material/select";
-import { MatSelectSearchComponent } from "ngx-mat-select-search";
 import { Subject } from "rxjs";
 import { debounceTime, takeUntil } from "rxjs/operators";
+import {
+  Component, OnInit, Input, Optional, ElementRef,
+  ViewChild, OnDestroy, AfterViewInit, ContentChild, TemplateRef,
+} from "@angular/core";
+import { MatOption } from "@angular/material/core";
+import { MatSelect } from "@angular/material/select";
+import { MatFormFieldAppearance } from "@angular/material/form-field";
+import { FormControl } from "@angular/forms";
+import { MatMenuTrigger } from "@angular/material/menu";
+import { MatSelectSearchComponent } from "ngx-mat-select-search";
 
 import { Field } from "../../models";
-import { overrideFunction } from "../../extensions";
+import { nameOf, overrideFunction } from "../../extensions";
+import { MatOptionWithContext } from "./option-context/option-context.directive";
 
 @Component({
   selector: "select-control",
@@ -71,22 +64,27 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
   @ContentChild("triggerTemplate", { static: true })
   public triggerTemplate: TemplateRef<{ $implicit: string; option: TOption | TOption[] }>;
 
-  public get selectedOption(): any {
-    return Array.isArray(this.select?.selected)
-      ? this.field?.options?.length
-        ? this.select.selected.map(matOption => this.field.options.find(option => this.field.optionValue(option) == matOption.value))
-        : []
-      : this.select?.selected != null && this.field
-        ? this.field.options.find(option => this.field.optionValue(option) == (this.select.selected as MatOption).value)
-        : null;
+  public get selectedOption() {
+    if (Array.isArray(this.select?.selected)) {
+      return (this.select.selected as MatOptionWithContext<TOption>[]).map(option => option.context);
+    }
+    else {
+      return (this.select.selected as MatOptionWithContext<TOption>)?.context;
+    }
   }
 
-  public get triggerLabel(): string {
-    return Array.isArray(this.selectedOption)
-      ? this.selectedOption.map(option => this.field.optionLabel(option)).join(", ")
-      : this.selectedOption != null
-        ? this.field.optionLabel(this.selectedOption)
-        : "";
+  public get triggerLabel() {
+    let selectedOption = this.selectedOption;
+
+    if (Array.isArray(selectedOption)) {
+      return selectedOption.map(option => this.field.optionLabel(option)).join(", ");
+    }
+    else if (selectedOption) {
+      return this.field.optionLabel(selectedOption);
+    }
+    else {
+      return "";
+    }
   }
 
   private destroy = new Subject();
@@ -128,6 +126,21 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
   }
 
   public ngAfterViewInit() {
+    if (this.field.optionDisplayLabel) {
+      let optionViewLabel = this.field.optionDisplayLabel;
+
+      this.select.options.changes
+        .pipe(takeUntil(this.destroy))
+        .subscribe((options: MatOption[]) => {
+          options.forEach(option => {
+            Object.defineProperty(option, nameOf(() => option.viewValue), {
+              get: () => optionViewLabel(option.value as TOption),
+              configurable: true,
+            });
+          });
+        });
+    }
+
     if (this.searchable && this.multiple && this.select) {
       // fixing issue with select control not propagating
       // changes to model when options filtering is applied
@@ -136,7 +149,7 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
         select => (select as any)._initializeSelection,
         (_, select) => {
           Promise.resolve().then(() => {
-            (select as any)._setSelectionByValue([...select.ngControl.value, ...(select as any)._value]);
+            (select as any)._setSelectionByValue([...(select.ngControl.value || []), ...((select as any)._value || [])]);
             select.stateChanges.next();
           });
         });

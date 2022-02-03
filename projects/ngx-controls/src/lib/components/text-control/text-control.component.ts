@@ -1,6 +1,5 @@
-import { AfterViewInit, Component, Input, ViewChild } from "@angular/core";
+import { Component, Input, ViewChild } from "@angular/core";
 import { MatFormFieldAppearance } from "@angular/material/form-field";
-import { MatInput } from "@angular/material/input";
 
 import { Field, TimeOfDay } from "../../models";
 
@@ -9,10 +8,7 @@ import { Field, TimeOfDay } from "../../models";
   templateUrl: "./text-control.component.html",
   styleUrls: ["./text-control.component.scss"]
 })
-export class TextControlComponent implements AfterViewInit {
-
-  @ViewChild(MatInput)
-  public input: MatInput;
+export class TextControlComponent {
 
   @Input()
   public field: Field<string> | Field<number> | Field<TimeOfDay>;
@@ -43,14 +39,4 @@ export class TextControlComponent implements AfterViewInit {
 
   @Input()
   public clearable = false;
-
-  public ngAfterViewInit() {
-    if (this.focused) {
-      setTimeout(() => this.focus());
-    }
-  }
-
-  public focus() {
-    this.input.focus();
-  }
 }

@@ -12,7 +12,7 @@ export const CustomValidators = {
       setTimeout(() => {
         Object.values(control.parent?.controls || {})
           .filter(siblingControl => siblingControl !== control && predicate(siblingControl))
-          .forEach(siblingControl => siblingControl.updateValueAndValidity());
+          .forEach(siblingControl => siblingControl.updateValueAndValidity({ emitEvent: false }));
       });
     }
   },
