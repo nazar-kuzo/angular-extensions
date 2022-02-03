@@ -25,6 +25,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
 import { Platform } from "@angular/cdk/platform";
+import { A11yModule } from "@angular/cdk/a11y";
 import { NgxMaskModule } from "ngx-mask";
 
 import { ModalConfirmComponent, ModalPromptComponent } from "./components/modals";
@@ -45,7 +46,6 @@ import {
   CollectionControlComponent,
 } from "./components";
 import { MAT_DATE_APP_FORMATS } from "./models";
-import { A11yModule } from "@angular/cdk/a11y";
 
 export class AppDateAdapter extends NgxMatNativeDateAdapter {
 
