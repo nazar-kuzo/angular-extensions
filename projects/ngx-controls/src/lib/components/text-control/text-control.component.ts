@@ -1,5 +1,6 @@
 import { Component, Input, ViewChild } from "@angular/core";
 import { MatFormFieldAppearance } from "@angular/material/form-field";
+import { MatInput } from "@angular/material/input";
 
 import { Field, TimeOfDay } from "../../models";
 
@@ -9,6 +10,9 @@ import { Field, TimeOfDay } from "../../models";
   styleUrls: ["./text-control.component.scss"]
 })
 export class TextControlComponent {
+
+  @ViewChild(MatInput)
+  public input: MatInput;
 
   @Input()
   public field: Field<string> | Field<number> | Field<TimeOfDay>;
