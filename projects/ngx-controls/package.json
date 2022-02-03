@@ -5,16 +5,16 @@
   "author": "Nazar Kuzo",
   "license": "MIT",
   "peerDependencies": {
-    "@angular/cdk": "12.2.9",
-    "@angular/common": "12.2.9",
-    "@angular/core": "12.2.9",
-    "@angular/material": "12.2.9",
-    "@angular-material-components/datetime-picker": "6.0.3",
-    "date-fns": "2.16.1",
-    "lodash-es": "4.17.21",
+    "@angular/cdk": "^12.0.5",
+    "@angular/common": "^12.0.5",
+    "@angular/core": "^12.0.5",
+    "@angular/material": "^12.0.5",
+    "@angular-material-components/datetime-picker": "^6.0.3",
+    "date-fns": "^2.16.1",
+    "lodash-es": "^4.17.21",
     "ngx-awesome-uploader": "^12.0.2",
     "ngx-filesize": "^2.0.16",
-    "ngx-mask": "12.0.0",
-    "ngx-mat-select-search": "3.3.0"
+    "ngx-mask": "^12.0.0",
+    "ngx-mat-select-search": "^3.3.0"
   }
 }

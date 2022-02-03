@@ -1,5 +1,40 @@
 import { orderBy as lodashOrderBy } from "lodash-es";
 
+declare global {
+  interface Array<T> {
+    first(this: T[]): T;
+    last(this: T[]): T;
+    elementAt(this: T[], index: number): T;
+    distinct(this: T[]): T[];
+    contains(this: T[], item: T): boolean;
+    orderBy(this: T[], property: (item: T) => any): T[];
+    orderByDesc(this: T[], property: (item: T) => any): T[];
+    move(this: T[], from: number, to: number): T[];
+    groupBy(this: T[], property: (item: T) => T[keyof T]): Group<T>[];
+  }
+
+  interface String {
+    hasJsonStructure(this: string): boolean;
+  }
+
+  interface Dictionary<T> {
+    [index: string]: T;
+  }
+
+  interface Group<T> {
+    key: T[keyof T];
+
+    items: T[];
+  }
+
+  interface Date {
+    getDayOfWeek(this: Date): number;
+    asUtcDate(this: Date): Date;
+    toUtcDate(this: Date): Date;
+    asLocalDate(this: Date): Date;
+  }
+}
+
 export function first<T>(this: T[]): T {
   return this[0];
 }

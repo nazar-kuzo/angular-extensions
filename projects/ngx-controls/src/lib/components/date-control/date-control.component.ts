@@ -1,9 +1,8 @@
-import { Component, ComponentRef, ElementRef, Inject, Input, OnChanges } from "@angular/core";
+import { Component, ComponentRef, ElementRef, Inject, Input, OnChanges, SimpleChangesGeneric } from "@angular/core";
 import { Field } from "../../models";
 import { MatFormFieldAppearance } from "@angular/material/form-field";
 import { MatCalendarView, MatDatepicker, MatDatepickerContent } from "@angular/material/datepicker";
 import { MatDateFormats, MAT_DATE_FORMATS } from "@angular/material/core";
-import { SimpleChangesGeneric } from "../../@types/@angular/core";
 
 @Component({
   selector: "date-control",
