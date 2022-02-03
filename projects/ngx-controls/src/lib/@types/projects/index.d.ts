@@ -1,4 +1,3 @@
-/// <reference types="typescript" />
 declare interface Array<T> {
   first(this: T[]): T;
   last(this: T[]): T;
@@ -11,7 +10,6 @@ declare interface Array<T> {
   groupBy(this: T[], property: (item: T) => T[keyof T]): Group<T>[];
 }
 
-// eslint-disable-next-line id-blacklist
 declare interface String {
   hasJsonStructure(this: string): boolean;
 }
