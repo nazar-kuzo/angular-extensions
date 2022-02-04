@@ -11,7 +11,9 @@ export class MapPipe implements PipeTransform {
    * @param propertyOrFormatter Item proptery or formatter
    * @returns Mapped item or collection of items
    */
-  public transform<T, TResult>(value: T, propertyOrFormatter: keyof T | ((value: T) => TResult)) {
+  public transform<T, TResult>(value: T, propertyOrFormatter: keyof T | ((value: T) => TResult)): TResult;
+  public transform<T, TResult>(value: T[], propertyOrFormatter: keyof T | ((value: T) => TResult)): TResult[];
+  public transform<T, TResult>(value: T | T[], propertyOrFormatter: keyof T | ((value: T) => TResult)): TResult | TResult[] {
     let formatter: (value: T) => TResult;
 
     if (typeof propertyOrFormatter == "function") {

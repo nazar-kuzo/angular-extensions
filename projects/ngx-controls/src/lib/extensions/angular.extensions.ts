@@ -1,4 +1,5 @@
 import {} from "@angular/core";
+import { HttpParams } from "@angular/common/http";
 import { MatTableDataSource } from "@angular/material/table";
 
 declare module "@angular/core" {
@@ -35,4 +36,18 @@ export class CustomMatTableDataSource<T> extends MatTableDataSource<T> {
 
     this.filterPredicate = (data, filter) => filterPredicate(data, filter, defaultFilterPredicate);
   }
+}
+
+/**
+ * Patches Angular HttpParams "toString()" method to handle empty array query params properly
+ */
+export function patchAngularHttpParams() {
+  let httpParamsToStringOriginal = HttpParams.prototype.toString;
+
+  HttpParams.prototype.toString = function () {
+    return httpParamsToStringOriginal
+      .apply(this)
+      .replace(/&{2,}/g, "&")
+      .replace(/^&|&$/g, "");
+  };
 }

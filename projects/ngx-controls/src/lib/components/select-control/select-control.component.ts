@@ -1,5 +1,5 @@
-import { Subject } from "rxjs";
-import { debounceTime, takeUntil } from "rxjs/operators";
+import { of, Subject } from "rxjs";
+import { debounceTime, distinctUntilChanged, switchMap, takeUntil, tap } from "rxjs/operators";
 import {
   Component, OnInit, Input, Optional, ElementRef,
   ViewChild, OnDestroy, AfterViewInit, ContentChild, TemplateRef,
@@ -45,6 +45,9 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
 
   @Input()
   public showSelectAll = false;
+
+  @Input()
+  public tooltipDisabled = false;
 
   @Input()
   public filter = "";
@@ -166,12 +169,29 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
         { capture: true });
     }
 
-    if (this.searchable && this.field.queryOptions) {
+    if (this.searchable && this.field.optionsSearchProvider) {
+      let optionsSearchProvider = this.field.optionsSearchProvider;
+
       this.search._formControl.valueChanges
         .pipe(
+          distinctUntilChanged(),
+          tap(() => {
+            this.field.isQuerying = true;
+            this.field.options = [];
+          }),
           debounceTime(300),
+          switchMap((query: string) => !!query ? optionsSearchProvider(query) : of([])),
           takeUntil(this.destroy))
-        .subscribe(query => this.field.queryOptions(query));
+        .subscribe({
+          next: options => {
+            this.field.options = options;
+            this.field.isQuerying = false;
+          },
+          error: () => {
+            this.field.options = [];
+            this.field.isQuerying = false;
+          }
+        });
     }
   }
 

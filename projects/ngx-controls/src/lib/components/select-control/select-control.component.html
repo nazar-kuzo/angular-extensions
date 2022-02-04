@@ -13,7 +13,7 @@
     <mat-select #select
                 [panelClass]="'custom-scroll ' + dropdownClass"
                 [ngClass]="{ loading: field.isQuerying }"
-                [matTooltipDisabled]="field.tooltipDisabled"
+                [matTooltipDisabled]="tooltipDisabled"
                 [matTooltip]="select.triggerValue"
                 [formControl]="field.control"
                 [disableOptionCentering]="searchable"
@@ -87,7 +87,13 @@
 </base-control>
 
 <ng-template #noItemsTemplate>
-  <mat-option *ngIf="!filterControl.value"
+  <mat-option *ngIf="searchable && !search._formControl.value"
+              [disabled]="true">Type to search items</mat-option>
+
+  <mat-option *ngIf="field.isQuerying"
+              [disabled]="true">Loading...</mat-option>
+
+  <mat-option *ngIf="!filterControl.value && !field.isQuerying"
               [disabled]="true">No items available</mat-option>
 </ng-template>
 

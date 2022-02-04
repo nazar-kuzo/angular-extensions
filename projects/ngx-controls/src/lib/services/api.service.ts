@@ -1,16 +1,16 @@
 import { merge } from "lodash-es";
 import { map } from "rxjs/operators";
 import { Inject, Injectable, InjectionToken } from "@angular/core";
-import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpHeaders as AngularHttpHeaders, HttpParams as AngularHttpParams } from "@angular/common/http";
+import { patchAngularHttpParams } from "../extensions/angular.extensions";
+
+type HttpHeaders = AngularHttpHeaders | { [header: string]: string | string[]; }
+type HttpParams = AngularHttpParams | { [param: string]: string | string[]; }
 
 interface DefaultHttpClientOptions {
-  headers?: HttpHeaders | {
-    [header: string]: string | string[];
-  };
+  headers?: HttpHeaders;
   observe: "response";
-  params?: HttpParams | {
-    [param: string]: string | string[];
-  };
+  params?: HttpParams;
   reportProgress?: boolean;
   responseType?: "json";
   withCredentials?: boolean;
@@ -24,15 +24,7 @@ export const API_CONFIG = new InjectionToken<ApiConfig>("ApiConfig");
 
 export type HttpClientOptions = Partial<DefaultHttpClientOptions>;
 
-// patch Angular HttpParams "toString()" method
-// to handle empty array query params properly
-let httpParamsToStringOriginal = HttpParams.prototype.toString;
-HttpParams.prototype.toString = function () {
-  return httpParamsToStringOriginal
-    .apply(this)
-    .replace(/&{2,}/g, "&")
-    .replace(/^&|&$/g, "");
-};
+patchAngularHttpParams();
 
 /**
  * Provides simplified api to make REST requests to API
@@ -56,51 +48,56 @@ export class ApiService {
     };
   }
 
-  public get<T>(url: string, params?: any, httpOptions?: HttpClientOptions) {
+  public get<T>(url: string, params?: HttpParams, httpOptions?: HttpClientOptions) {
     return this.http
       .get<T>(`${this.config.apiUrl}/${url}`, this.getHttpOptions(params, httpOptions))
       .pipe(map(response => response.body as T));
   }
 
-  public post<T>(url: string, body?: any, params?: any, httpOptions?: HttpClientOptions) {
+  public post<T>(url: string, body?: any, params?: HttpParams, httpOptions?: HttpClientOptions) {
     return this.http
       .post<T>(`${this.config.apiUrl}/${url}`, JSON.stringify(body), this.getHttpOptions(params, httpOptions))
       .pipe(map(response => response.body as T));
   }
 
-  public put<T>(url: string, body?: any, params?: any, httpOptions?: HttpClientOptions) {
+  public put<T>(url: string, body?: any, params?: HttpParams, httpOptions?: HttpClientOptions) {
     return this.http
       .put<T>(`${this.config.apiUrl}/${url}`, JSON.stringify(body), this.getHttpOptions(params, httpOptions))
       .pipe(map(response => response.body as T));
   }
 
-  public delete<T>(url: string, params?: any, httpOptions?: HttpClientOptions) {
+  public delete<T>(url: string, params?: HttpParams, httpOptions?: HttpClientOptions) {
     return this.http
       .delete<T>(`${this.config.apiUrl}/${url}`, this.getHttpOptions(params, httpOptions))
       .pipe(map(response => response.body as T));
   }
 
-  private sanitizeQueryParams(params?: any) {
-    if (params instanceof HttpParams) {
-      params = params.keys().reduce((result: any, key: string) => {
-        result[key] = params.getAll(key);
+  private sanitizeQueryParams(params?: HttpParams) {
+    if (params instanceof AngularHttpParams) {
+      let httpParams = params;
+
+      params = httpParams.keys().reduce((result: any, key: string) => {
+        result[key] = httpParams.getAll(key);
 
         return result;
       }, {});
     }
+    else if (params != undefined) {
+      let objectParams = params;
 
-    if (params instanceof Object) {
-      Object.keys(params)
-        .filter(key => params[key] == null || params[key] === "")
+      Object.keys(objectParams)
+        .filter(key => objectParams[key] == null || objectParams[key] === "")
         .forEach(key => {
-          delete params[key];
+          delete objectParams[key];
         });
+
+      params = objectParams;
     }
 
     return params;
   }
 
-  private getHttpOptions(queryParams?: any, httpOptions?: HttpClientOptions): DefaultHttpClientOptions {
+  private getHttpOptions(queryParams?: HttpParams, httpOptions?: HttpClientOptions): DefaultHttpClientOptions {
     if (!httpOptions) {
       httpOptions = {} as DefaultHttpClientOptions;
     }
