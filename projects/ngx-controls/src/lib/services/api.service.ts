@@ -34,6 +34,9 @@ HttpParams.prototype.toString = function () {
     .replace(/^&|&$/g, "");
 };
 
+/**
+ * Provides simplified api to make REST requests to API
+ */
 @Injectable()
 export class ApiService {
 

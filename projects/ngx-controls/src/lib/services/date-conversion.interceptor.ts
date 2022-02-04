@@ -3,7 +3,9 @@ import { Injectable } from "@angular/core";
 import { HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from "@angular/common/http";
 import { parseDateProperty, parseDates } from "../extensions";
 
-
+/**
+ * Parses all date-like strings into actual Date objects
+ */
 @Injectable()
 export class DateConversionInterceptor implements HttpInterceptor {
 

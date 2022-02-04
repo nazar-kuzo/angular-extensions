@@ -12,6 +12,9 @@ export class DateTimePipe implements PipeTransform {
   ) {
   }
 
+  /**
+  * Formats value as "${display.dateInput} HH:mm". See {@link MatDateFormats} for details
+  */
   public transform(dateTime?: Date, format?: string) {
     return dateTime
       ? formatDate(dateTime, format || `${this.dateFormats.display.dateInput} HH:mm`)

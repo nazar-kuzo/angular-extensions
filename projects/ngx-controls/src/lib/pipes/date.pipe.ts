@@ -12,6 +12,9 @@ export class DatePipe implements PipeTransform {
   ) {
   }
 
+  /**
+   * Formats value as "display.dateInput". See {@link MatDateFormats} for details
+   */
   public transform(date?: Date, format?: string) {
     return date
       ? formatDate(date, format || this.dateFormats.display.dateInput)
