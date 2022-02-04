@@ -1,4 +1,4 @@
-import "@angular/core";
+import {} from "@angular/core";
 
 declare module "@angular/core" {
   export type SimpleChangeGeneric<TValue> = {

@@ -1,5 +1,24 @@
 import { format, parseISO, parse, isValid } from "date-fns";
 
+declare global {
+  interface Dictionary<T> {
+    [index: string]: T;
+  }
+
+  interface Group<T> {
+    key: T[keyof T];
+
+    items: T[];
+  }
+
+  interface Date {
+    getDayOfWeek(this: Date): number;
+    asUtcDate(this: Date): Date;
+    toUtcDate(this: Date): Date;
+    asLocalDate(this: Date): Date;
+  }
+}
+
 export type Func<T> = (obj: T) => any;
 export type Class<T> = new (...params: any[]) => T;
 
@@ -92,6 +111,27 @@ export function asLocalDate(this: Date) {
   return new Date(format(this, "yyyy-MM-dd'T'HH:mm:ss"));
 }
 
+/**
+ * Returns zero-based index of day of week assuming that week starts with Monday
+ *
+ * @param this
+ * @returns Local date without changing time
+ */
+export function getDayOfWeek(this: Date) {
+  let dayOfWeek = this.getDay();
+
+  return dayOfWeek == 0
+    ? 6
+    : dayOfWeek - 1;
+}
+
+export function trimRigth(this: String, charlist = "\s") {
+  return this?.replace(new RegExp("[" + charlist + "]+$"), "");
+};
+
+
+Date.prototype.getDayOfWeek = getDayOfWeek;
 Date.prototype.asUtcDate = asUtcDate;
 Date.prototype.toUtcDate = toUtcDate;
 Date.prototype.asLocalDate = asLocalDate;
+String.prototype.trimRight = trimRigth;

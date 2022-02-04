@@ -12,27 +12,6 @@ declare global {
     move(this: T[], from: number, to: number): T[];
     groupBy(this: T[], property: (item: T) => T[keyof T]): Group<T>[];
   }
-
-  interface String {
-    hasJsonStructure(this: string): boolean;
-  }
-
-  interface Dictionary<T> {
-    [index: string]: T;
-  }
-
-  interface Group<T> {
-    key: T[keyof T];
-
-    items: T[];
-  }
-
-  interface Date {
-    getDayOfWeek(this: Date): number;
-    asUtcDate(this: Date): Date;
-    toUtcDate(this: Date): Date;
-    asLocalDate(this: Date): Date;
-  }
 }
 
 export function first<T>(this: T[]): T {
@@ -41,6 +20,10 @@ export function first<T>(this: T[]): T {
 
 export function last<T>(this: T[]): T {
   return this[this.length - 1];
+}
+
+export function elementAt<T>(this: T[], index: number): T {
+  return this[index];
 }
 
 export function distinct<T>(this: T[]): T[] {
@@ -61,8 +44,8 @@ export function flatten<T>(array: T[], nestedArrayFunc: (item: T) => T[]): T[] {
   return result;
 }
 
-export function orderBy<T>(this: T[], property: (item: T) => any): T[] {
-  return lodashOrderBy(this, property, "asc");
+export function orderBy<T>(this: T[], ...properties: ((item: T) => any)[]): T[] {
+  return lodashOrderBy(this, properties);
 }
 
 export function orderByDesc<T>(this: T[], property: (item: T) => any): T[] {
@@ -97,6 +80,7 @@ export function groupBy<T>(this: T[], property: (item: T) => T[keyof T]): Group<
 
 Array.prototype.first = first;
 Array.prototype.last = last;
+Array.prototype.elementAt = elementAt;
 Array.prototype.distinct = distinct;
 Array.prototype.contains = contains;
 Array.prototype.orderBy = orderBy;
