@@ -1,0 +1,9 @@
+{
+  "files.exclude": {
+    "**/node_modules": true,
+  },
+  "html.format.wrapLineLength": 0,
+  "html.format.wrapAttributes": "force-aligned",
+  "javascript.preferences.quoteStyle": "double",
+  "typescript.preferences.quoteStyle": "double",
+}
