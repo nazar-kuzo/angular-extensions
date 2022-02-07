@@ -1,4 +1,4 @@
-# ngx-controls
+# ngx-mat-controls
 
 Angular Form Controls extensibility
 
@@ -10,14 +10,8 @@ Angular Form Controls extensibility
 
 ### Build
 
-Run `ng build ngx-controls --configuration development` from root directory.
-
-### Create a Pack file
-
-Navigate to the `dist/ngx-controls` folder and run the `npm pack` command.
-
-This will make a Pack (target) file with a name ngx-controls-0.0.1.tgz.
+Run `ng build ngx-mat-controls --configuration development` from root directory.
 
 ### Usage
 
-Install the package in your project using the command `npm install <absolute_path>/ngx-controls-0.0.1.tgz`
+Install the package in your project using the command `npm install ngx-mat-controls-1.0.0`
