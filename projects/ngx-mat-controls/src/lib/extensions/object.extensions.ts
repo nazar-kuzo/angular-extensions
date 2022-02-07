@@ -2,7 +2,7 @@ import { format, parseISO, parse, isValid } from "date-fns";
 
 declare global {
   interface String {
-    trimRight(this: string, charList?: string): string;
+    trimEnd(this: string, charList?: string): string;
   }
 
   interface Dictionary<T> {
@@ -129,7 +129,7 @@ export function getDayOfWeek(this: Date) {
     : dayOfWeek - 1;
 }
 
-export function trimRigth(this: String, charlist = "\s") {
+export function trimEnd(this: String, charlist = "\s") {
   return this?.replace(new RegExp("[" + charlist + "]+$"), "");
 };
 
@@ -138,4 +138,4 @@ Date.prototype.getDayOfWeek = getDayOfWeek;
 Date.prototype.asUtcDate = asUtcDate;
 Date.prototype.toUtcDate = toUtcDate;
 Date.prototype.asLocalDate = asLocalDate;
-String.prototype.trimRight = trimRigth;
+String.prototype.trimEnd = trimEnd;
