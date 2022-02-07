@@ -5,8 +5,7 @@
     "ng": "ng",
     "build": "ng build ngx-mat-controls --configuration production",
     "publish": "npm publish ./dist/ngx-mat-controls",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "watch": "ng build --watch --configuration development"
   },
   "private": true,
   "dependencies": {

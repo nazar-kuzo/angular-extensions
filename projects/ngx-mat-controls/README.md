@@ -1,6 +1,8 @@
 # ngx-mat-controls
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.0.
+* Provides simplified API to work with Angular ReactiveForms validation via Field/Form classes.
+* Contains a list of commonly-used editor controls based on Angular Material and CDK
+* Provides extensions to Angular Router like: stateful modals, route retained event, etc.
 
 ## Code scaffolding
 
