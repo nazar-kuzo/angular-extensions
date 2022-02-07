@@ -26,6 +26,11 @@ export function elementAt<T>(this: T[], index: number): T {
   return this[index];
 }
 
+/**
+ * Removes duplicates from a collection based on a Set
+ * @param this Array
+ * @returns Array
+ */
 export function distinct<T>(this: T[]): T[] {
   return [...new Set<T>(this)];
 }
@@ -44,6 +49,12 @@ export function flatten<T>(array: T[], nestedArrayFunc: (item: T) => T[]): T[] {
   return result;
 }
 
+/**
+ * Sorts array by specified properties based on "lodashOrderBy" function
+ * @param this Array
+ * @param properties List of property selectors
+ * @returns Sorted array
+ */
 export function orderBy<T>(this: T[], ...properties: ((item: T) => any)[]): T[] {
   return lodashOrderBy(this, properties);
 }
