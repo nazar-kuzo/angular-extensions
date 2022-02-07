@@ -1,9 +1,9 @@
 import { toString } from "lodash-es";
 import { Observable, Subject } from "rxjs";
 import { filter as filterPredicate, first, pairwise, startWith, takeUntil } from "rxjs/operators";
-import { FormControl, ValidatorFn, Validators, FormGroup } from "@angular/forms";
+import { FormControl, FormGroup } from "@angular/forms";
 
-import { Validation, ValueProvider, CustomValidators, ValidationConstructor } from "./validation.model";
+import { Validation, ValueProvider, ValidationConstructor } from "./validation.model";
 import { DatePipe, DateTimePipe, StartCasePipe } from "../pipes";
 import { MAT_DATE_APP_FORMATS } from "./date-formats.model";
 
@@ -312,7 +312,7 @@ export class Field<TValue, TOption = any, TOptionGroup = any, TConvertedValue = 
         disabled: props.disabled != null ? props.disabled : true,
       },
       {
-        validators: this.validators,
+        validators: Validation.getValidators(this.validation),
         updateOn: props.updateOn,
       });
 
@@ -433,7 +433,7 @@ export class Field<TValue, TOption = any, TOptionGroup = any, TConvertedValue = 
   public updateValidation(validation: ValidationConstructor<TValue>) {
     Object.assign(this.validation, new Validation(validation));
 
-    this.control.setValidators(this.validators);
+    this.control.setValidators(Validation.getValidators(this.validation));
   }
 
   /**
@@ -442,95 +442,5 @@ export class Field<TValue, TOption = any, TOptionGroup = any, TConvertedValue = 
   public destroy() {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  private get validators() {
-    let validators: ValidatorFn[] = [];
-
-    if (this.validation) {
-      if (this.validation.required) {
-        validators.push(this.validation.required.validate(
-          isRequired => isRequired ? CustomValidators.required : () => null,
-          (control, errors) => {
-            if (errors == null) {
-              CustomValidators.triggerValidation(control, siblingControl => siblingControl.hasError("required"));
-            }
-          }));
-      }
-
-      if (this.validation.requiredTrue) {
-        validators.push(this.validation.requiredTrue.validate(isRequiredTrue => isRequiredTrue ? Validators.requiredTrue : () => null));
-      }
-
-      if (this.validation.minLength) {
-        validators.push(this.validation.minLength.validate(Validators.minLength));
-      }
-
-      if (this.validation.maxLength) {
-        validators.push(this.validation.maxLength.validate(Validators.maxLength));
-      }
-
-      if (this.validation.min) {
-        validators.push(this.validation.min.validate(Validators.min, (control, errors) => {
-          if (errors == null) {
-            CustomValidators.triggerValidation(control, siblingControl => siblingControl.hasError("max"));
-          }
-        }));
-      }
-
-      if (this.validation.max) {
-        validators.push(this.validation.max.validate(Validators.max, (control, errors) => {
-          if (errors == null) {
-            CustomValidators.triggerValidation(control, siblingControl => siblingControl.hasError("min"));
-          }
-        }));
-      }
-
-      if (this.validation.minDate) {
-        validators.push(this.validation.minDate.validate(CustomValidators.minDate, (control, errors) => {
-          if (errors == null) {
-            CustomValidators.triggerValidation(control, siblingControl =>
-              siblingControl.hasError("maxDate") || siblingControl.hasError("maxOrEqualDate"));
-          }
-        }));
-      }
-
-      if (this.validation.minOrEqualDate) {
-        validators.push(this.validation.minOrEqualDate.validate(CustomValidators.minOrEqualDate, (control, errors) => {
-          if (errors == null) {
-            CustomValidators.triggerValidation(control, siblingControl =>
-              siblingControl.hasError("maxDate") || siblingControl.hasError("maxOrEqualDate"));
-          }
-        }));
-      }
-
-      if (this.validation.maxDate) {
-        validators.push(this.validation.maxDate.validate(CustomValidators.maxDate, (control, errors) => {
-          if (errors == null) {
-            CustomValidators.triggerValidation(control, siblingControl =>
-              siblingControl.hasError("minDate") || siblingControl.hasError("minOrEqualDate"));
-          }
-        }));
-      }
-
-      if (this.validation.maxOrEqualDate) {
-        validators.push(this.validation.maxOrEqualDate.validate(CustomValidators.maxOrEqualDate, (control, errors) => {
-          if (errors == null) {
-            CustomValidators.triggerValidation(control, siblingControl =>
-              siblingControl.hasError("minDate") || siblingControl.hasError("minOrEqualDate"));
-          }
-        }));
-      }
-
-      if (this.validation.pattern) {
-        validators.push(this.validation.pattern.validate(Validators.pattern));
-      }
-
-      if (this.validation.custom) {
-        validators.push(this.validation.custom.validate(CustomValidators.custom));
-      }
-    }
-
-    return validators;
   }
 }

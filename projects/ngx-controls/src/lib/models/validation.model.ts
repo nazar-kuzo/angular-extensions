@@ -2,11 +2,20 @@ import { ValidatorFn, ValidationErrors, AbstractControl as AbstractControlBase, 
 
 export type ValueProvider<TValue, TResult> = (value?: TValue) => TResult;
 
+/**
+ * Generic representation of Angular's AbstractControl
+ */
 export interface AbstractControl<TValue> extends AbstractControlBase {
   value: TValue;
 }
 
 export const CustomValidators = {
+
+  /**
+   * Triggers validation of related controls by specified predicate.
+   * @param control Control that triggeres validation
+   * @param predicate Related controls predicate
+   */
   triggerValidation: (control: AbstractControl<any>, predicate: (siblingControl: AbstractControl<any>) => boolean): void => {
     if (control.parent) {
       setTimeout(() => {
@@ -17,15 +26,16 @@ export const CustomValidators = {
     }
   },
 
-  required(control: AbstractControl<string>): ValidationErrors | null {
+  /**
+   * Custom validation that requires non empty string values
+   * @param control AbstractControl
+   * @returns Validation function
+   */
+  required(control: AbstractControl<any>): ValidationErrors | null {
     if (typeof control.value == "string") {
       return (control.value || "").trim() != ""
         ? null
-        : {
-          required: {
-            expected: true,
-          }
-        };
+        : { required: { expected: true } };
     }
     else {
       return Validators.required(control);
@@ -38,11 +48,7 @@ export const CustomValidators = {
         minDate == null ||
         minDate.valueOf() < control.value.valueOf()
         ? null
-        : {
-          minDate: {
-            expected: minDate,
-          }
-        };
+        : { minDate: { expected: minDate } };
     };
   },
 
@@ -52,11 +58,7 @@ export const CustomValidators = {
         minOrEqualDate == null ||
         minOrEqualDate.valueOf() <= control.value.valueOf()
         ? null
-        : {
-          minOrEqualDate: {
-            expected: minOrEqualDate,
-          }
-        };
+        : { minOrEqualDate: { expected: minOrEqualDate } };
     };
   },
 
@@ -66,11 +68,7 @@ export const CustomValidators = {
         maxDate == null ||
         maxDate.valueOf() > control.value.valueOf()
         ? null
-        : {
-          maxDate: {
-            expected: maxDate,
-          }
-        };
+        : { maxDate: { expected: maxDate } };
     };
   },
 
@@ -80,23 +78,15 @@ export const CustomValidators = {
         maxOrEqualDate == null ||
         maxOrEqualDate.valueOf() >= control.value.valueOf()
         ? null
-        : {
-          maxOrEqualDate: {
-            expected: maxOrEqualDate,
-          }
-        };
+        : { maxOrEqualDate: { expected: maxOrEqualDate } };
     };
   },
 
-  custom<T>(valid: boolean): ValidatorFn {
+  custom(valid: boolean): ValidatorFn {
     return (control: AbstractControl<any>): ValidationErrors | null => {
       return valid
         ? null
-        : {
-          custom: {
-            value: control.value
-          }
-        };
+        : { custom: { value: control.value } };
     };
   },
 };
@@ -107,22 +97,42 @@ export interface ValidationItemConstructor<TValue, TResult> {
   text?: string;
 }
 
+/**
+ * Contains validation data provider and provides generic method to validate AbstractControl
+ */
 export class ValidationItem<TValue, TResult> implements ValidationItemConstructor<TValue, TResult> {
 
+  /**
+   * Validation data provider
+   */
   public value: TResult | ValueProvider<TValue, TResult>;
 
+  /**
+   * Validation error text
+   */
   public text?: string;
 
   constructor(props: Partial<ValidationItem<TValue, TResult>>) {
     Object.assign(this, props);
   }
 
+  /**
+   * Gets constant value if possible or executes provider function
+   * @param controlValue Actual AbstractControl value
+   * @returns Validation data
+   */
   public getValue(controlValue?: TValue): TResult {
     return this.value instanceof Function
       ? this.value(controlValue)
       : this.value;
   }
 
+  /**
+   * Returns AbstractControl validation function based on provided validator and validation data
+   * @param validator AbstractControl validator
+   * @param onValidationComplete Validation completed hook
+   * @returns AbstractControl validation function
+   */
   public validate(
     validator: (value: TResult) => ValidatorFn,
     onValidationComplete?: (control: AbstractControl<TValue>, validationErrors: ValidationErrors | null) => void
@@ -149,6 +159,9 @@ export class ValidationItem<TValue, TResult> implements ValidationItemConstructo
 export type ValidationConstructor<TValue> =
   Partial<{ [K in keyof Validation<TValue>]: Partial<Validation<TValue>[K]> }>;
 
+/**
+ * Contains Field's available validation components
+ */
 export class Validation<TValue> {
 
   [key: string]: ValidationItem<TValue, any> | undefined;
@@ -183,5 +196,100 @@ export class Validation<TValue> {
       .forEach(key => {
         this[key] = new ValidationItem(props[key] as Partial<ValidationItem<TValue, any>>);
       });
+  }
+
+  /**
+   * Builds AbstractControl validators based on Validation object
+   * @param validation
+   * @returns
+   */
+  public static getValidators(validation: Validation<any>): ValidatorFn[] {
+    let validators: ValidatorFn[] = [];
+
+    if (validation) {
+      if (validation.required) {
+        validators.push(validation.required.validate(
+          isRequired => isRequired ? CustomValidators.required : () => null,
+          (control, errors) => {
+            if (errors == null) {
+              CustomValidators.triggerValidation(control, siblingControl => siblingControl.hasError("required"));
+            }
+          }));
+      }
+
+      if (validation.requiredTrue) {
+        validators.push(validation.requiredTrue.validate(isRequiredTrue => isRequiredTrue ? Validators.requiredTrue : () => null));
+      }
+
+      if (validation.minLength) {
+        validators.push(validation.minLength.validate(Validators.minLength));
+      }
+
+      if (validation.maxLength) {
+        validators.push(validation.maxLength.validate(Validators.maxLength));
+      }
+
+      if (validation.min) {
+        validators.push(validation.min.validate(Validators.min, (control, errors) => {
+          if (errors == null) {
+            CustomValidators.triggerValidation(control, siblingControl => siblingControl.hasError("max"));
+          }
+        }));
+      }
+
+      if (validation.max) {
+        validators.push(validation.max.validate(Validators.max, (control, errors) => {
+          if (errors == null) {
+            CustomValidators.triggerValidation(control, siblingControl => siblingControl.hasError("min"));
+          }
+        }));
+      }
+
+      if (validation.minDate) {
+        validators.push(validation.minDate.validate(CustomValidators.minDate, (control, errors) => {
+          if (errors == null) {
+            CustomValidators.triggerValidation(control, siblingControl =>
+              siblingControl.hasError("maxDate") || siblingControl.hasError("maxOrEqualDate"));
+          }
+        }));
+      }
+
+      if (validation.minOrEqualDate) {
+        validators.push(validation.minOrEqualDate.validate(CustomValidators.minOrEqualDate, (control, errors) => {
+          if (errors == null) {
+            CustomValidators.triggerValidation(control, siblingControl =>
+              siblingControl.hasError("maxDate") || siblingControl.hasError("maxOrEqualDate"));
+          }
+        }));
+      }
+
+      if (validation.maxDate) {
+        validators.push(validation.maxDate.validate(CustomValidators.maxDate, (control, errors) => {
+          if (errors == null) {
+            CustomValidators.triggerValidation(control, siblingControl =>
+              siblingControl.hasError("minDate") || siblingControl.hasError("minOrEqualDate"));
+          }
+        }));
+      }
+
+      if (validation.maxOrEqualDate) {
+        validators.push(validation.maxOrEqualDate.validate(CustomValidators.maxOrEqualDate, (control, errors) => {
+          if (errors == null) {
+            CustomValidators.triggerValidation(control, siblingControl =>
+              siblingControl.hasError("minDate") || siblingControl.hasError("minOrEqualDate"));
+          }
+        }));
+      }
+
+      if (validation.pattern) {
+        validators.push(validation.pattern.validate(Validators.pattern));
+      }
+
+      if (validation.custom) {
+        validators.push(validation.custom.validate(CustomValidators.custom));
+      }
+    }
+
+    return validators;
   }
 }
