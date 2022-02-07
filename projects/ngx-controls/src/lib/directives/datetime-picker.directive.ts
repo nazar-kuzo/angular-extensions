@@ -3,6 +3,9 @@ import { NgxMatDatetimePicker } from "@angular-material-components/datetime-pick
 
 import { overrideFunction } from "../extensions";
 
+/**
+ * Overrides cancel behavior for DateTime picker
+ */
 @Directive({
   selector: "ngx-mat-datetime-picker"
 })

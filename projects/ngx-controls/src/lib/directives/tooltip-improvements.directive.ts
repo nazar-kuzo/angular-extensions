@@ -1,5 +1,8 @@
 import { Directive, HostListener } from "@angular/core";
 
+/**
+ * Fixes issue with unnecessary text selection triggered on long tap on tooltip on mobile devices
+ */
 @Directive({
   selector: "[matTooltip]"
 })

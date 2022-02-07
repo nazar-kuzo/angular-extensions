@@ -6,6 +6,9 @@ import { MatPaginator } from "@angular/material/paginator";
 })
 export class CustomPaginatorDirective {
 
+  /**
+   * Fixes problem with pagination when it is not updating page after items were filtered
+   */
   @Input()
   public set length(length: number) {
     if (length != null && this.paginator.pageIndex * this.paginator.pageSize >= length) {

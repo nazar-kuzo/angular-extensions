@@ -11,6 +11,9 @@ interface DatePickerAdapter {
   _formatValue(date: Date): void;
 }
 
+/**
+ * Forces date/time format in text input view
+ */
 @Directive({
   selector: "input[format]"
 })
