@@ -1,7 +1,7 @@
 {
   "name": "ngx-mat-controls",
   "version": "1.0.0",
-  "repository": "https://github.com/nazar-kuzo/ngx-controls.git",
+  "repository": "https://github.com/nazar-kuzo/ngx-mat-controls.git",
   "author": "Nazar Kuzo",
   "license": "MIT",
   "peerDependencies": {
