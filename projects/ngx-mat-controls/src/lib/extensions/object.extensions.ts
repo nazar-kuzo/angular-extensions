@@ -1,6 +1,10 @@
 import { format, parseISO, parse, isValid } from "date-fns";
 
 declare global {
+  interface String {
+    trimRight(this: string, charList?: string): string;
+  }
+
   interface Dictionary<T> {
     [index: string]: T;
   }

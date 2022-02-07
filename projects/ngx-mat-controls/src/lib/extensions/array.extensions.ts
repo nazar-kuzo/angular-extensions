@@ -7,7 +7,7 @@ declare global {
     elementAt(this: T[], index: number): T;
     distinct(this: T[]): T[];
     contains(this: T[], item: T): boolean;
-    orderBy(this: T[], property: (item: T) => any): T[];
+    orderBy(this: T[], ...properties: ((item: T) => any)[]): T[];
     orderByDesc(this: T[], property: (item: T) => any): T[];
     move(this: T[], from: number, to: number): T[];
     groupBy(this: T[], property: (item: T) => T[keyof T]): Group<T>[];
