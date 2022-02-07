@@ -136,6 +136,8 @@ export class Field<TValue, TOption = any, TOptionGroup = any, TConvertedValue = 
 
   private _options: TOption[];
 
+  private _initialStatus: { disabled: boolean };
+
   /**
    * Angular FormControl of field. ngx-mat-controls components communicates via this control between Field and UI
    */
@@ -309,12 +311,22 @@ export class Field<TValue, TOption = any, TOptionGroup = any, TConvertedValue = 
     this.control = new FormControl(
       {
         value: props.value,
-        disabled: props.disabled || false,
+
+        // suppresses validation that might have dependencies
+        // on other fields that are not currently instantiated
+        disabled: true,
       },
       {
         validators: Validation.getValidators(this.validation),
         updateOn: props.updateOn,
       });
+
+    // indicated form that control should remain disabled
+    if (props.disabled) {
+      this._initialStatus = { disabled: props.disabled };
+
+      delete props.disabled;
+    }
 
     if (props.onValueChange) {
       let onValueChange = props.onValueChange;

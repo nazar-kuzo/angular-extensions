@@ -36,7 +36,7 @@ export class Form {
       this.addField(field);
     });
 
-    this.formGroup.enable();
+    this.formGroup.updateValueAndValidity({ onlySelf: true });
   }
 
   /**
@@ -73,7 +73,7 @@ export class Form {
         }
       });
 
-    form.formGroup.enable();
+    form.formGroup.updateValueAndValidity({ onlySelf: true });
 
     return form;
   }
@@ -94,6 +94,10 @@ export class Form {
 
     this.fields.push(field);
     this.formGroup.registerControl(field.name, field.control);
+
+    if (!(field as any)._initialStatus?.disabled) {
+      field.control.enable({ onlySelf: true });
+    }
   }
 
   /**
