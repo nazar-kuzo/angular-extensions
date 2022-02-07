@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "build": "ng build ngx-mat-controls",
+    "build": "ng build ngx-mat-controls --configuration production",
     "publish": "npm publish ./dist/ngx-mat-controls",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
