@@ -1,5 +1,5 @@
 /*
- * Public API Surface of ngx-controls
+ * Public API Surface of ngx-mat-controls
  */
 
 export * from "./lib/controls.module";

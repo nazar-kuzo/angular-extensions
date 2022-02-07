@@ -13,9 +13,9 @@
     "declaration": true,
     "downlevelIteration": true,
     "paths": {
-      "ngx-controls": [
-        "dist/ngx-controls/ngx-controls",
-        "dist/ngx-controls",
+      "ngx-mat-controls": [
+        "dist/ngx-mat-controls/ngx-mat-controls",
+        "dist/ngx-mat-controls",
       ]
     },
     "experimentalDecorators": true,

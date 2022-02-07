@@ -1,10 +1,10 @@
 {
-  "name": "ngx-controls",
+  "name": "ngx-mat-controls",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "build": "ng build ngx-controls",
-    "pack": "npm pack ./dist/ngx-controls",
+    "build": "ng build ngx-mat-controls",
+    "publish": "npm publish ./dist/ngx-mat-controls",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

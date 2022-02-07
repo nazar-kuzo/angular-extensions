@@ -3,23 +3,23 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ngx-controls": {
+    "ngx-mat-controls": {
       "projectType": "library",
-      "root": "projects/ngx-controls",
-      "sourceRoot": "projects/ngx-controls/src",
+      "root": "projects/ngx-mat-controls",
+      "sourceRoot": "projects/ngx-mat-controls/src",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "project": "projects/ngx-controls/ng-package.json"
+            "project": "projects/ngx-mat-controls/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/ngx-controls/tsconfig.lib.prod.json"
+              "tsConfig": "projects/ngx-mat-controls/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/ngx-controls/tsconfig.lib.json"
+              "tsConfig": "projects/ngx-mat-controls/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -27,5 +27,5 @@
       }
     }
   },
-  "defaultProject": "ngx-controls"
+  "defaultProject": "ngx-mat-controls"
 }
