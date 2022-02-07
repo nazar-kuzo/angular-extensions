@@ -21,6 +21,9 @@ declare global {
     toUtcDate(this: Date): Date;
     asLocalDate(this: Date): Date;
   }
+
+  function nameOf<T>(func: Func<T> | Class<T>): string;
+  function nameOfFull<T>(func: Func<T>): string;
 }
 
 export type Func<T> = (obj: T) => any;
@@ -139,3 +142,6 @@ Date.prototype.asUtcDate = asUtcDate;
 Date.prototype.toUtcDate = toUtcDate;
 Date.prototype.asLocalDate = asLocalDate;
 String.prototype.trimEnd = trimEnd;
+
+window.nameOf = nameOf;
+window.nameOfFull = nameOfFull;

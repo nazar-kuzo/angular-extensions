@@ -87,7 +87,7 @@
 </base-control>
 
 <ng-template #noItemsTemplate>
-  <mat-option *ngIf="searchable && !search._formControl.value"
+  <mat-option *ngIf="searchable && !search?._formControl?.value"
               [disabled]="true">Type to search items</mat-option>
 
   <mat-option *ngIf="field.isQuerying"

@@ -12,7 +12,7 @@ import { MatMenuTrigger } from "@angular/material/menu";
 import { MatSelectSearchComponent } from "ngx-mat-select-search";
 
 import { Field } from "../../models";
-import { nameOf, overrideFunction } from "../../extensions";
+import { overrideFunction } from "../../extensions";
 import { MatOptionWithContext } from "./option-context/option-context.directive";
 
 @Component({
@@ -53,7 +53,7 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
   public filter = "";
 
   @ViewChild(MatSelectSearchComponent)
-  public search: MatSelectSearchComponent;
+  public search?: MatSelectSearchComponent;
 
   @ViewChild("select", { static: true })
   public select: MatSelect;
@@ -169,10 +169,10 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
         { capture: true });
     }
 
-    if (this.searchable && this.field.optionsSearchProvider) {
+    if (this.searchable && this.search && this.field.optionsSearchProvider) {
       let optionsSearchProvider = this.field.optionsSearchProvider;
 
-      this.search._formControl.valueChanges
+      this.search?._formControl.valueChanges
         .pipe(
           distinctUntilChanged(),
           tap(() => {
