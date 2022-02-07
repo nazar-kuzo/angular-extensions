@@ -35,6 +35,8 @@ export class Form {
     fields.forEach(field => {
       this.addField(field);
     });
+
+    this.formGroup.enable();
   }
 
   /**
@@ -42,10 +44,9 @@ export class Form {
    * Assigns Field name based on property name of a model.
    * Enables each discovered Field property unless is explicitly disabled.
    * @param model {@link BaseEditor} model
-   * @param onCreated Initialization hook that is called right after FormGroup was constructed
    * @returns Form
    */
-  public static Create<TModel>(model: TModel, onCreated?: () => void) {
+  public static Create<TModel>(model: TModel) {
     let form = new Form();
 
     Object
@@ -72,9 +73,7 @@ export class Form {
         }
       });
 
-    if (onCreated) {
-      onCreated();
-    }
+    form.formGroup.enable();
 
     return form;
   }
@@ -94,11 +93,7 @@ export class Form {
     }
 
     this.fields.push(field);
-    this.formGroup.addControl(field.name, field.control);
-
-    if (!field.control.disabled) {
-      field.control.enable();
-    }
+    this.formGroup.registerControl(field.name, field.control);
   }
 
   /**

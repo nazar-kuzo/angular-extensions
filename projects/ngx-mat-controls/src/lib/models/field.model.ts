@@ -309,7 +309,7 @@ export class Field<TValue, TOption = any, TOptionGroup = any, TConvertedValue = 
     this.control = new FormControl(
       {
         value: props.value,
-        disabled: props.disabled != null ? props.disabled : true,
+        disabled: props.disabled || false,
       },
       {
         validators: Validation.getValidators(this.validation),
