@@ -5,7 +5,7 @@
     "entryFile": "src/public-api.ts",
     "umdModuleIds": {
       "date-fns": "date-fns",
-      "datetime-picker": "datetime-picker",
+      "@angular-material-components/datetime-picker": "datetime-picker",
       "ngx-mat-select-search": "ngx-mat-select-search",
       "lodash-es": "lodash-es",
       "ngx-mask": "ngx-mask"

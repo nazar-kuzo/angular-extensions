@@ -2,11 +2,11 @@
  * Public API Surface of ngx-mat-controls
  */
 
-export * from "./lib/controls.module";
-export * from "./lib/components";
-export * from "./lib/components/modals";
-export * from "./lib/directives";
-export * from "./lib/pipes";
-export * from "./lib/models";
-export * from "./lib/extensions";
-export * from "./lib/decorators";
+export * from "./components";
+export * from "./directives";
+export * from "./decorators";
+export * from "./extensions";
+export * from "./models";
+export * from "./pipes";
+export * from "./services";
+export * from "./controls.module";

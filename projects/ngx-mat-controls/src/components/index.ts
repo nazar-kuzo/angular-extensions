@@ -1,3 +1,4 @@
+export * from "./modals";
 export * from "./base-control/base-control.component";
 export * from "./date-control/date-control.component";
 export * from "./time-control/time-control.component";

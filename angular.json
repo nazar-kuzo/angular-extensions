@@ -7,7 +7,7 @@
       "projectType": "library",
       "root": "projects/ngx-mat-controls",
       "sourceRoot": "projects/ngx-mat-controls/src",
-      "prefix": "lib",
+      "prefix": "",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
