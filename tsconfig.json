@@ -13,8 +13,12 @@
     "declaration": true,
     "downlevelIteration": true,
     "paths": {
+      "ngx-mat-controls/*": [
+        "projects/ngx-mat-controls/*",
+        "projects/ngx-mat-controls",
+      ],
       "ngx-mat-controls": [
-        "dist/ngx-mat-controls/ngx-mat-controls",
+        "dist/ngx-mat-controls/*",
         "dist/ngx-mat-controls",
       ]
     },
