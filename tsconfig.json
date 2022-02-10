@@ -2,6 +2,16 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "paths": {
+      "angular-extensions": [
+        "dist/angular-extensions/*",
+        "dist/angular-extensions"
+      ],
+      "angular-extensions/*": [
+        "projects/angular-extensions/*",
+        "projects/angular-extensions"
+      ]
+    },
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
@@ -10,43 +20,22 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
-    "declaration": true,
+    "declaration": false,
     "downlevelIteration": true,
-    "paths": {
-      "ngx-mat-controls/*": [
-        "projects/ngx-mat-controls/*",
-        "projects/ngx-mat-controls",
-      ],
-      "ngx-mat-controls": [
-        "dist/ngx-mat-controls/*",
-        "dist/ngx-mat-controls",
-      ]
-    },
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "es2017",
     "module": "es2020",
     "lib": [
-      "es2019",
-      "dom"
-    ],
-    "skipLibCheck": true
+      "dom",
+      "es2019"
+    ]
   },
-    "angularCompilerOptions": {
-    "fullTemplateTypeCheck": true,
-    "strictInputAccessModifiers": true,
-    "strictInjectionParameters": true,
-    "strictAttributeTypes": true,
-    "strictOutputEventTypes": true,
-    "strictContextGenerics": true,
-    "strictLiteralTypes": true,
-    "strictDomLocalRefTypes": true,
-    "strictSafeNavigationTypes": true,
-
+  "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
-    "strictTemplates": true,
-    "strictInputTypes": true,
-    "strictDomEventTypes": true,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
   }
 }

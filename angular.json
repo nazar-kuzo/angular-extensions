@@ -3,29 +3,38 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ngx-mat-controls": {
+    "angular-extensions": {
       "projectType": "library",
-      "root": "projects/ngx-mat-controls",
-      "sourceRoot": "projects/ngx-mat-controls/src",
+      "root": "projects/angular-extensions",
+      "sourceRoot": "projects/angular-extensions/src",
       "prefix": "",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "project": "projects/ngx-mat-controls/ng-package.json"
+            "project": "projects/angular-extensions/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/ngx-mat-controls/tsconfig.lib.prod.json"
+              "tsConfig": "projects/angular-extensions/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/ngx-mat-controls/tsconfig.lib.json"
+              "tsConfig": "projects/angular-extensions/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/angular-extensions/**/*.ts",
+              "projects/angular-extensions/**/*.html"
+            ]
+          }
         }
       }
     }
   },
-  "defaultProject": "ngx-mat-controls"
+  "defaultProject": "angular-extensions"
 }
