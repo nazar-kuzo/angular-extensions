@@ -1,8 +1,7 @@
 {
   "root": true,
-  // "ignorePatterns": [
-  //   "projects/**/*"
-  // ],
+  "ignorePatterns": [
+  ],
   "overrides": [
     {
       "files": [
@@ -20,6 +19,7 @@
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
+        "id-blacklist": "off",
         "@angular-eslint/component-selector": [
           "error",
           {
@@ -96,12 +96,6 @@
             "asyncArrow": "always",
             "named": "never"
           }
-        ],
-        "max-len": [
-          "error",
-          {
-            "code": 140
-          }
         ]
       }
     },
@@ -113,13 +107,13 @@
         "plugin:@angular-eslint/template/recommended"
       ],
       "rules": {
+        "@angular-eslint/template/eqeqeq": "off",
         "max-len": [
           "warn",
           {
             "code": 170
           }
-        ],
-        "@angular-eslint/template/eqeqeq": "warn"
+        ]
       }
     }
   ]

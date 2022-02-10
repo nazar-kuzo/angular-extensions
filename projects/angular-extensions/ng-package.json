@@ -1,0 +1,11 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/angular-extensions",
+  "lib": {
+    "entryFile": "public-api.ts",
+    "umdModuleIds": {
+      "date-fns": "date-fns",
+      "lodash-es": "lodash-es"
+    }
+  }
+}

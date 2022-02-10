@@ -1,11 +1,11 @@
 {
-  "name": "ngx-mat-controls",
+  "name": "angular-extensions",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "build": "ng build ngx-mat-controls --configuration production",
-    "pack": "npm pack ./dist/ngx-mat-controls",
-    "publish": "npm publish ./dist/ngx-mat-controls",
+    "build": "ng build angular-extensions --configuration production",
+    "pack": "npm pack ./dist/angular-extensions",
+    "publish": "npm publish ./dist/angular-extensions",
     "watch": "ng build --watch --configuration development"
   },
   "private": true,
@@ -32,17 +32,23 @@
     "zone.js": "0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "12.2.9",
-    "@angular/cli": "12.2.9",
+    "@angular-devkit/build-angular": "12.2.16",
+    "@angular-eslint/builder": "12.2.0",
+    "@angular-eslint/eslint-plugin": "12.2.0",
+    "@angular-eslint/eslint-plugin-template": "12.2.0",
+    "@angular-eslint/schematics": "12.2.0",
+    "@angular-eslint/template-parser": "12.2.0",
+    "@angular/cli": "12.2.16",
     "@angular/compiler-cli": "12.2.9",
     "@types/lodash-es": "4.17.5",
-    "codelyzer": "6.0.2",
+    "@typescript-eslint/eslint-plugin": "4.28.0",
+    "@typescript-eslint/parser": "4.28.0",
     "eslint": "7.29.0",
     "eslint-plugin-import": "2.23.4",
     "eslint-plugin-jsdoc": "35.4.0",
     "eslint-plugin-prefer-arrow": "1.2.3",
-    "ng-packagr": "12.2.6",
-    "ts-node": "8.3.0",
+    "ng-packagr": "12.2.7",
+    "ng-samurai": "3.0.0",
     "typescript": "4.3.5"
   }
 }

@@ -1,0 +1,11 @@
+{
+  "ngPackage": {
+    "lib": {
+      "entryFile": "public-api.ts",
+      "cssUrl": "inline",
+      "umdModuleIds": {
+        "ngx-mask": "ngx-mask"
+      }
+    }
+  }
+}
