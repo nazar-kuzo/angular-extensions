@@ -35,6 +35,10 @@ import { MapPipe } from "./map.pipe";
     StartCasePipe,
     GroupByPipe,
     MapPipe,
+  ],
+  providers: [
+    DatePipe,
+    DateTimePipe,
   ]
 })
 export class NgxPipesModule { }
