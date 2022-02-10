@@ -16,4 +16,4 @@ Run `ng build angular-extensions --configuration development` from root director
 
 ### Usage
 
-Install the package in your project using the command `npm install angular-extensions-1.0.0`
+Install the package in your project using the command `npm install angular-extensions@1`
