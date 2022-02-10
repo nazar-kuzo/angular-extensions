@@ -133,7 +133,7 @@ export class Option<TValue, TId = string> {
 }
 
 /**
- * Provides simplified api to work with Angular reactive forms and predefined ngx-mat-controls compomnents.
+ * Provides simplified api to work with Angular reactive forms and predefined control compomnents.
  */
 export class Field<TValue, TOption = any, TOptionGroup = any, TConvertedValue = any> {
 
@@ -146,7 +146,7 @@ export class Field<TValue, TOption = any, TOptionGroup = any, TConvertedValue = 
   private _initialStatus: { disabled: boolean };
 
   /**
-   * Angular FormControl of field. ngx-mat-controls components communicates via this control between Field and UI
+   * Angular FormControl of field. Control components communicates via this control between Field and UI
    */
   public control: FormControl;
 
