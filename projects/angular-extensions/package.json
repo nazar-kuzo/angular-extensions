@@ -1,7 +1,7 @@
 {
   "name": "angular-extensions",
   "version": "1.0.8",
-  "repository": "https://github.com/nazar-kuzo/ngx-mat-controls.git",
+  "repository": "https://github.com/nazar-kuzo/angular-extensions.git",
   "author": "Nazar Kuzo",
   "license": "MIT",
   "peerDependencies": {
