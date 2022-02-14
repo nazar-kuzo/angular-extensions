@@ -10,11 +10,19 @@
   </mat-error>
 
   <mat-error *ngIf="field.control.errors?.min as error">
-    {{ field.validation.min?.text || "Field should be greater than " + error.min }}
+    {{ field.validation.min?.text || "Value should be greater than " + error.min }}
   </mat-error>
 
   <mat-error *ngIf="field.control.errors?.max as error">
-    {{ field.validation.max?.text || "Field should be smaller than " + error.max }}
+    {{ field.validation.max?.text || "Value should be smaller than " + error.max }}
+  </mat-error>
+
+  <mat-error *ngIf="field.control.errors?.minlength as error">
+    {{ field.validation.minLength?.text || "Value should be longer than " + error.requiredLength }}
+  </mat-error>
+
+  <mat-error *ngIf="field.control.errors?.maxlength as error">
+    {{ field.validation.maxLength?.text || "Value should be shorter than " + error.requiredLength }}
   </mat-error>
 
   <mat-error *ngIf="field.control.errors?.minDate as error">

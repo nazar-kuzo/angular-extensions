@@ -7,6 +7,16 @@
     display: none !important;
   }
 
+
+  &.d-block {
+    display: block;
+
+    mat-form-field {
+      display: block;
+      margin-right: 0;
+    }
+  }
+
   base-control {
     font-size: 14px;
 
