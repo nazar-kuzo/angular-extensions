@@ -1,16 +1,17 @@
 <div class="bootstrap vh-100 d-flex align-items-center">
   <div class="container">
     <div class="display-4 text-center">
-      <div class="d-block h-1em">Angular Extensions</div>
+      <div class="d-block">Angular Extensions</div>
     </div>
 
     <div class="text-center text-muted">
       <button mat-stroked-button
               color="primary"
-              class="bg-white button-rounded shadow-sm mt-4 py-1 px-4">
+              class="bg-white button-rounded shadow-sm mt-4 py-1 px-4"
+              [routerLink]="['dashboard']">
         <mat-icon class="mr-2">login</mat-icon>
 
-        Sign In
+        See demo
       </button>
     </div>
   </div>

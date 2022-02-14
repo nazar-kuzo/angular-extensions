@@ -2,7 +2,7 @@ import { Injector, NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Router, RouterModule } from "@angular/router";
 import { extendRouterConfigWithStatefulModals } from "angular-extensions/core/material";
-import { ControlsModule } from "angular-extensions";
+import { NgxControlsModule } from "angular-extensions";
 
 import { AppLayoutComponent } from "./components/app-layout/app-layout.component";
 import { HomePageComponent } from "./components";
@@ -11,7 +11,7 @@ import { HomePageComponent } from "./components";
   imports: [
     CommonModule,
     RouterModule,
-    ControlsModule,
+    NgxControlsModule,
   ],
   declarations: [
     AppLayoutComponent,
@@ -20,7 +20,7 @@ import { HomePageComponent } from "./components";
   exports: [
     CommonModule,
     RouterModule,
-    ControlsModule,
+    NgxControlsModule,
   ],
 })
 export class SharedModule {

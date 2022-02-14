@@ -4,10 +4,9 @@
   "scripts": {
     "ng": "ng",
     "build": "ng build angular-extensions --configuration production",
-    "start-dashboard": "ng serve dashboard --open",
-    "build-dashboard": "ng build dashboard",
     "pack": "npm pack ./dist/angular-extensions",
     "publish": "npm publish ./dist/angular-extensions",
+    "start": "ng serve dashboard --open",
     "analyze": "ng build dashboard --configuration production --stats-json && webpack-bundle-analyzer dist/dashboard/stats.json",
     "watch": "ng build --watch --configuration development"
   },
