@@ -6,7 +6,7 @@ import { FormControl, FormGroup } from "@angular/forms";
 import {} from "angular-extensions/core";
 import { DatePipe, DateTimePipe, StartCasePipe } from "angular-extensions/pipes";
 import { Validation, ValueProvider, ValidationConstructor } from "./validation.model";
-import { MAT_DATE_APP_FORMATS } from "./date-formats.model";
+import { NGX_DATE_FORMATS } from "./date-formats.model";
 
 /**
  * Constructor object for Field class
@@ -45,7 +45,7 @@ export const Formatters = {
    * @returns String
    */
   utcDateFormatter: (field: Field<Date>): string => {
-    return new DatePipe(MAT_DATE_APP_FORMATS).transform(field.value, "yyyy-MM-dd");
+    return new DatePipe(NGX_DATE_FORMATS).transform(field.value, "yyyy-MM-dd");
   },
 
   /**
@@ -55,27 +55,27 @@ export const Formatters = {
    * @returns String
    */
   utcDateTimeFormatter: (field: Field<Date>): string => {
-    return new DatePipe(MAT_DATE_APP_FORMATS).transform(field.value?.toUtcDate(), "yyyy-MM-dd'T'HH:mm:ss'Z'");
+    return new DatePipe(NGX_DATE_FORMATS).transform(field.value?.toUtcDate(), "yyyy-MM-dd'T'HH:mm:ss'Z'");
   },
 
   /**
-   * Formats Field<Date> value to date string with {@link DatePipe} and {@link MAT_DATE_APP_FORMATS}
+   * Formats Field<Date> value to date string with {@link DatePipe} and {@link NGX_DATE_FORMATS}
    *
    * @param field Field<Date>
    * @returns String
    */
   dateFormatter: (field: Field<Date>) => {
-    return new DatePipe(MAT_DATE_APP_FORMATS).transform(field.value);
+    return new DatePipe(NGX_DATE_FORMATS).transform(field.value);
   },
 
   /**
-   * Formats Field<Date> value to date/time string with {@link DateTimePipe} and {@link MAT_DATE_APP_FORMATS}
+   * Formats Field<Date> value to date/time string with {@link DateTimePipe} and {@link NGX_DATE_FORMATS}
    *
    * @param field Field<Date>
    * @returns String
    */
   dateTimeFormatter: (field: Field<Date>) => {
-    return new DateTimePipe(MAT_DATE_APP_FORMATS).transform(field.value);
+    return new DateTimePipe(NGX_DATE_FORMATS).transform(field.value);
   }
 };
 

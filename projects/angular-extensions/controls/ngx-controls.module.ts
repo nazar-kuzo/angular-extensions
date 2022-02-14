@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { NgModule } from "@angular/core";
+import { ModuleWithProviders, NgModule, Type } from "@angular/core";
 import { CommonModule } from "@angular/common";
 
 import {
@@ -10,7 +10,7 @@ import {
   NGX_MAT_DATE_FORMATS,
 } from "@angular-material-components/datetime-picker";
 
-import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from "@angular/material/core";
+import { DateAdapter, MatDateFormats, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from "@angular/material/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
@@ -21,7 +21,7 @@ import { MatDatepickerModule } from "@angular/material/datepicker";
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
 import { Platform } from "@angular/cdk/platform";
 
-import { MAT_DATE_APP_FORMATS } from "angular-extensions/models";
+import { NGX_DATE_FORMATS } from "angular-extensions/models";
 
 import { NgxDirectivesModule } from "angular-extensions/directives";
 import { NgxBaseControlModule } from "angular-extensions/controls/base-control";
@@ -38,7 +38,7 @@ import { TimeControlComponent } from "./time-control/time-control.component";
 import { SpinnerComponent } from "./spinner/spinner.component";
 import { CollectionControlComponent } from "./collection-control/collection-control.component";
 
-export class AppDateAdapter extends NgxMatNativeDateAdapter {
+export class NgxDateAdapter extends NgxMatNativeDateAdapter {
 
   public getFirstDayOfWeek(): number {
     return 1;
@@ -47,6 +47,27 @@ export class AppDateAdapter extends NgxMatNativeDateAdapter {
   public format(date: Date, displayFormat: string): string {
     return format(date, displayFormat);
   }
+}
+
+/**
+ * Configure default behavior of NgxControlsModule like: locale, date adpater, date format, etc.
+ */
+export interface NgxControlsConfig {
+
+  /**
+   * Date adapter used between AngularMaterial and NgxMatDatePicker, by default {@link NgxDateAdapter}
+   */
+  dateAdapterType: Type<NgxMatNativeDateAdapter>;
+
+  /**
+   * Date locale, by default "en-GB"
+   */
+  dateLocale: string;
+
+  /**
+   * Date/time formats, by default {@link NGX_DATE_FORMATS}
+   */
+  dateFormats: MatDateFormats;
 }
 
 @NgModule({
@@ -69,7 +90,6 @@ export class AppDateAdapter extends NgxMatNativeDateAdapter {
     NgxMatDatetimePickerModule,
     NgxMatTimepickerModule,
     NgxMatSelectSearchModule,
-
   ],
   declarations: [
     CheckboxControlComponent,
@@ -110,30 +130,48 @@ export class AppDateAdapter extends NgxMatNativeDateAdapter {
     TimeControlComponent,
     SpinnerComponent,
     CollectionControlComponent,
-  ],
-  providers: [
-    {
-      provide: DateAdapter,
-      useClass: AppDateAdapter,
-      deps: [MAT_DATE_LOCALE, Platform]
-    },
-    {
-      provide: NgxMatDateAdapter,
-      useClass: AppDateAdapter,
-      deps: [MAT_DATE_LOCALE, Platform]
-    },
-    {
-      provide: MAT_DATE_LOCALE,
-      useValue: "en-GB"
-    },
-    {
-      provide: MAT_DATE_FORMATS,
-      useValue: MAT_DATE_APP_FORMATS
-    },
-    {
-      provide: NGX_MAT_DATE_FORMATS,
-      useValue: MAT_DATE_APP_FORMATS
-    },
   ]
 })
-export class ControlsModule { }
+export class NgxControlsModule {
+
+  public static configure(config: Partial<NgxControlsConfig>): ModuleWithProviders<NgxControlsModule> {
+
+    let moduleConfig = Object.assign<NgxControlsConfig, Partial<NgxControlsConfig>>({
+      dateFormats: NGX_DATE_FORMATS,
+      dateAdapterType: NgxDateAdapter,
+      dateLocale: "en-GB",
+    }, config);
+
+    if (config.dateFormats) {
+      Object.assign(NGX_DATE_FORMATS, config.dateFormats);
+    }
+
+    return {
+      ngModule: NgxControlsModule,
+      providers: [
+        {
+          provide: DateAdapter,
+          useClass: moduleConfig.dateAdapterType,
+          deps: [MAT_DATE_LOCALE, Platform]
+        },
+        {
+          provide: NgxMatDateAdapter,
+          useClass: moduleConfig.dateAdapterType,
+          deps: [MAT_DATE_LOCALE, Platform]
+        },
+        {
+          provide: MAT_DATE_LOCALE,
+          useValue: moduleConfig.dateLocale
+        },
+        {
+          provide: MAT_DATE_FORMATS,
+          useValue: moduleConfig.dateFormats
+        },
+        {
+          provide: NGX_MAT_DATE_FORMATS,
+          useValue: moduleConfig.dateFormats
+        },
+      ]
+    };
+  }
+}

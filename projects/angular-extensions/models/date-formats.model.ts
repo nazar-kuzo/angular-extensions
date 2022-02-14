@@ -3,7 +3,7 @@ import type { MatDateFormats } from "@angular/material/core";
 /**
  * Provides consolidated application's default date formats
  */
-export const MAT_DATE_APP_FORMATS: MatDateFormats = {
+export const NGX_DATE_FORMATS: MatDateFormats = {
   parse: {
     dateInput: "LL",
   },
