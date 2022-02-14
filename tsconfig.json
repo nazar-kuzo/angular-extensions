@@ -10,7 +10,13 @@
       "angular-extensions/*": [
         "projects/angular-extensions/*",
         "projects/angular-extensions"
-      ]
+      ],
+      "app/*": [
+        "src/app/*"
+      ],
+      "environments/*": [
+        "src/environments/*"
+      ],
     },
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",

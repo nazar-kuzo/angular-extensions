@@ -1,0 +1,11 @@
+@import "~src/styles/variables";
+
+:host {
+  display: block;
+    padding-top: $header-height;
+    height: 100%;
+
+  .layout {
+    min-height: 100%;
+  }
+}
