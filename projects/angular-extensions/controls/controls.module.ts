@@ -23,7 +23,6 @@ import { Platform } from "@angular/cdk/platform";
 
 import { MAT_DATE_APP_FORMATS } from "angular-extensions/models";
 
-import { NgxPipesModule } from "angular-extensions/pipes";
 import { NgxDirectivesModule } from "angular-extensions/directives";
 import { NgxBaseControlModule } from "angular-extensions/controls/base-control";
 import { NgxTextControlModule } from "angular-extensions/controls/text-control";
@@ -53,7 +52,6 @@ export class AppDateAdapter extends NgxMatNativeDateAdapter {
 @NgModule({
   imports: [
     CommonModule,
-    NgxPipesModule,
     NgxDirectivesModule,
     NgxBaseControlModule,
     NgxTextControlModule,
@@ -85,7 +83,6 @@ export class AppDateAdapter extends NgxMatNativeDateAdapter {
   ],
   exports: [
     CommonModule,
-    NgxPipesModule,
     NgxDirectivesModule,
     NgxBaseControlModule,
     NgxTextControlModule,

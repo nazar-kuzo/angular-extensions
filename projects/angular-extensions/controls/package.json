@@ -8,7 +8,8 @@
         "lodash-es": "lodash-es",
         "@angular-material-components/datetime-picker": "datetime-picker",
         "ngx-mat-select-search": "ngx-mat-select-search",
-        "ngx-mask": "ngx-mask"
+        "ngx-mask": "ngx-mask",
+        "angular-extensions/pipes": "pipes"
       }
     }
   }

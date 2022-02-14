@@ -6,6 +6,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 
+import { NgxPipesModule } from "angular-extensions/pipes";
 import { BaseControlComponent } from "./base-control.component";
 
 @NgModule({
@@ -17,6 +18,8 @@ import { BaseControlComponent } from "./base-control.component";
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
+
+    NgxPipesModule,
   ],
   declarations: [
     BaseControlComponent,
@@ -29,6 +32,8 @@ import { BaseControlComponent } from "./base-control.component";
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
+
+    NgxPipesModule,
 
     BaseControlComponent,
   ]

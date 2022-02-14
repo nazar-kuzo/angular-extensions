@@ -1,6 +1,8 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 
+import "angular-extensions/core";
+
 import { DatePipe } from "./date.pipe";
 import { DateTimePipe } from "./dateTime.pipe";
 import { FilterPipe } from "./filter.pipe";

@@ -1,7 +1,5 @@
 import { Pipe, PipeTransform } from "@angular/core";
 
-import {} from "angular-extensions/core";
-
 @Pipe({
   name: "groupBy"
 })
