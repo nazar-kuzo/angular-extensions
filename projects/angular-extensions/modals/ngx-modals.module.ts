@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { MatButtonModule } from "@angular/material/button";
 import { MatDialogModule, MatDialogConfig, MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material/dialog";
 
 import { NgxTextControlModule } from "angular-extensions/controls/text-control";
@@ -11,6 +12,7 @@ import { ModalPromptComponent } from "./modal-prompt/modal-prompt.component";
   imports: [
     CommonModule,
     MatDialogModule,
+    MatButtonModule,
     NgxTextControlModule,
     NgxTextAreaControlModule,
   ],
@@ -21,6 +23,7 @@ import { ModalPromptComponent } from "./modal-prompt/modal-prompt.component";
   exports: [
     CommonModule,
     MatDialogModule,
+    MatButtonModule,
     NgxTextControlModule,
     NgxTextAreaControlModule,
 
