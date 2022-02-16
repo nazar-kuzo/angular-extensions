@@ -4,6 +4,8 @@ import { ActivatedRoute, ActivatedRouteSnapshot, ActivationEnd, NavigationStart,
 
 import { flatten } from "angular-extensions/core";
 
+let statefulModalsInitialized = false;
+
 /**
  * Extends router config with stateful modals support.
  *
@@ -16,6 +18,10 @@ import { flatten } from "angular-extensions/core";
  * @param injector Angular Injector
  */
 export function extendRouterConfigWithStatefulModals(router: Router, injector: Injector) {
+  if (statefulModalsInitialized) {
+    return;
+  }
+
   router.events.subscribe(event => {
     // render statefull modal component
     if (event instanceof ActivationEnd && event.snapshot.data?.modalComponent) {
@@ -56,6 +62,8 @@ export function extendRouterConfigWithStatefulModals(router: Router, injector: I
       });
     }
   });
+
+  statefulModalsInitialized = true;
 }
 
 function getActivatedRouteInjector(snapshot: ActivatedRouteSnapshot): Injector {
