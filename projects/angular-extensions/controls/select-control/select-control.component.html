@@ -17,6 +17,7 @@
                 [matTooltip]="select.triggerValue"
                 [formControl]="field.control"
                 [disableOptionCentering]="searchable"
+                [compareWith]="optionComparer"
                 [multiple]="multiple">
 
       <mat-select-trigger *ngIf="triggerTemplate">
@@ -25,7 +26,7 @@
 
       <mat-option *ngIf="searchable">
         <ngx-mat-select-search placeholderLabel="Search"
-                               noEntriesFoundLabel="No items found"
+                               [noEntriesFoundLabel]="$any(null)"
                                [formControl]="filterControl"
                                [searching]="field.isQuerying"></ngx-mat-select-search>
       </mat-option>
@@ -40,7 +41,7 @@
           <ng-container *ngIf="field.optionsGroupProvider">
             <mat-optgroup *ngFor="let group of options | groupBy : field.optionsGroupProvider"
                           [label]="group.key | map : field.optionGroupLabel">
-              <mat-option *ngFor="let option of group.items; trackBy : field.optionId"
+              <mat-option *ngFor="let option of group.items; trackBy : optionTracker"
                           [matTooltip]="option | map : field.optionLabel"
                           [context]="option"
                           [value]="option | map : field.optionValue"
@@ -52,7 +53,7 @@
           </ng-container>
 
           <ng-container *ngIf="!field.optionsGroupProvider">
-            <mat-option *ngFor="let option of options; trackBy : field.optionId"
+            <mat-option *ngFor="let option of options; trackBy : optionTracker"
                         [matTooltip]="option | map : field.optionLabel"
                         [context]="option"
                         [value]="option | map : field.optionValue"
@@ -87,14 +88,14 @@
 </base-control>
 
 <ng-template #noItemsTemplate>
-  <mat-option *ngIf="searchable && !search?._formControl?.value"
-              [disabled]="true">Type to search items</mat-option>
-
   <mat-option *ngIf="field.isQuerying"
               [disabled]="true">Loading...</mat-option>
 
-  <mat-option *ngIf="!filterControl.value && !field.isQuerying"
-              [disabled]="true">No items available</mat-option>
+  <mat-option *ngIf="!field.isQuerying && !filterControl.value && searchable"
+              [disabled]="true">Type to search items</mat-option>
+
+  <mat-option *ngIf="!field.isQuerying && filterControl.value"
+              [disabled]="true">No items found</mat-option>
 </ng-template>
 
 <ng-template #defaultOptionTempalte

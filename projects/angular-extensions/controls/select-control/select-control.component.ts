@@ -1,15 +1,14 @@
 import { of, Subject } from "rxjs";
-import { debounceTime, distinctUntilChanged, switchMap, takeUntil, tap } from "rxjs/operators";
+import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, takeUntil, tap } from "rxjs/operators";
 import {
-  Component, OnInit, Input, Optional, ElementRef,
-  ViewChild, OnDestroy, AfterViewInit, ContentChild, TemplateRef,
+  Component, OnInit, Input, Optional, ElementRef, ChangeDetectorRef,
+  ViewChild, OnDestroy, AfterViewInit, ContentChild, TemplateRef, ChangeDetectionStrategy,
 } from "@angular/core";
 import { MatOption } from "@angular/material/core";
 import { MatSelect } from "@angular/material/select";
 import { MatFormFieldAppearance } from "@angular/material/form-field";
 import { FormControl } from "@angular/forms";
 import { MatMenuTrigger } from "@angular/material/menu";
-import { MatSelectSearchComponent } from "ngx-mat-select-search";
 
 import { Field } from "angular-extensions/models";
 import { overrideFunction } from "angular-extensions/core";
@@ -18,7 +17,8 @@ import { MatOptionWithContext } from "./option-context/option-context.directive"
 @Component({
   selector: "select-control",
   templateUrl: "./select-control.component.html",
-  styleUrls: ["./select-control.component.scss"]
+  styleUrls: ["./select-control.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectControlComponent<TValue, TOption> implements OnInit, AfterViewInit, OnDestroy {
 
@@ -51,9 +51,6 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
 
   @Input()
   public filter = "";
-
-  @ViewChild(MatSelectSearchComponent)
-  public search?: MatSelectSearchComponent;
 
   @ViewChild("select", { static: true })
   public select: MatSelect;
@@ -96,6 +93,7 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
 
   constructor(
     elementRef: ElementRef<HTMLElement>,
+    private changeDetectorRef: ChangeDetectorRef,
     @Optional() matMenuTrigger: MatMenuTrigger,
   ) {
     // provides ability to have select-control to open
@@ -114,6 +112,10 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
 
   public ngOnInit() {
     this.filterControl.setValue(this.filter);
+
+    this.field.optionChanges
+      .pipe(takeUntil(this.destroy))
+      .subscribe(() => this.changeDetectorRef.markForCheck());
 
     if (this.multiple && this.showSelectAll) {
       this.select.optionSelectionChanges
@@ -169,28 +171,24 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
         { capture: true });
     }
 
-    if (this.searchable && this.search && this.field.optionsSearchProvider) {
+    if (this.searchable && this.field.optionsSearchProvider) {
       let optionsSearchProvider = this.field.optionsSearchProvider;
 
-      this.search?._formControl.valueChanges
+      this.filterControl.valueChanges
         .pipe(
+          filter((query: string) => query != ""),
           distinctUntilChanged(),
           tap(() => {
-            this.field.isQuerying = true;
             this.field.options = [];
+            this.field.isQuerying = true;
           }),
           debounceTime(300),
-          switchMap((query: string) => !!query ? optionsSearchProvider(query) : of([])),
-          takeUntil(this.destroy))
-        .subscribe({
-          next: options => {
-            this.field.options = options;
-            this.field.isQuerying = false;
-          },
-          error: () => {
-            this.field.options = [];
-            this.field.isQuerying = false;
-          }
+          switchMap((query: string) => !!query
+            ? optionsSearchProvider(query).pipe(catchError(() => of([] as TOption[])))
+            : of([])))
+        .subscribe(options => {
+          this.field.options = options;
+          this.field.isQuerying = false;
         });
     }
   }
@@ -199,6 +197,14 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
     this.destroy.next();
     this.destroy.complete();
   }
+
+  public optionTracker = (index: number, option: TOption) => {
+    return this.field.optionId(option, index);
+  };
+
+  public optionComparer = (left?: TOption, right?: TOption) => {
+    return left != null && right != null && this.field.optionId(left) == this.field.optionId(right);
+  };
 
   private toggleSelectAll() {
     let shouldSelect = (this.select.selected as MatOption[])?.length < this.field.options?.length;

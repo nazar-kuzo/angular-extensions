@@ -97,7 +97,7 @@ export class Form {
     this.fields.push(field);
     this.formGroup.registerControl(field.name, field.control);
 
-    if (!(field as any)._initialStatus?.disabled) {
+    if (!field._initialStatus?.disabled) {
       field.control.enable({ onlySelf: true });
     }
   }

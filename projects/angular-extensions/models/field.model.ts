@@ -3,7 +3,7 @@ import { Observable, Subject } from "rxjs";
 import { filter as filterPredicate, first, pairwise, startWith, takeUntil } from "rxjs/operators";
 import { FormControl, FormGroup } from "@angular/forms";
 
-import {} from "angular-extensions/core";
+import "angular-extensions/core";
 import { DatePipe, DateTimePipe, StartCasePipe } from "angular-extensions/pipes";
 import { Validation, ValueProvider, ValidationConstructor } from "./validation.model";
 import { NGX_DATE_FORMATS } from "./date-formats.model";
@@ -13,25 +13,25 @@ import { NGX_DATE_FORMATS } from "./date-formats.model";
  */
 type FieldConstructor<TValue, TOption = any, TOptionGroup = any, TConvertedValue = any> =
   Partial<Omit<Field<TValue, TOption, TOptionGroup, TConvertedValue>,
-  "control" | "options" | "onValueChange" | "onOptionsChange" | "validation"> & {
-    options: TOption[] | Observable<TOption[]>;
+    "control" | "options" | "onValueChange" | "onOptionsChange" | "validation"> & {
+      options: TOption[] | Observable<TOption[]>;
 
-    onValueChange: (value: TValue, previous?: TValue) => any;
+      onValueChange: (value: TValue, previous?: TValue) => any;
 
-    onOptionsChange: (value: TOption[]) => any;
+      onOptionsChange: (value: TOption[]) => any;
 
-    validation: ValidationConstructor<TValue>;
+      validation: ValidationConstructor<TValue>;
 
-    /**
-     * Indicates field initial state
-     */
-    disabled: boolean;
+      /**
+       * Indicates field initial state
+       */
+      disabled: boolean;
 
-    /**
-     * Configures when {@link valueChanges} should emit event.
-     */
-    updateOn?: "change" | "blur" | "submit";
-  }>;
+      /**
+       * Configures when {@link valueChanges} should emit event.
+       */
+      updateOn?: "change" | "blur" | "submit";
+    }>;
 
 /**
  * Commonly used Field value formatters
@@ -143,7 +143,7 @@ export class Field<TValue, TOption = any, TOptionGroup = any, TConvertedValue = 
 
   private _options: TOption[];
 
-  private _initialStatus: { disabled: boolean };
+  public _initialStatus: { disabled: boolean };
 
   /**
    * Angular FormControl of field. Control components communicates via this control between Field and UI
@@ -264,7 +264,25 @@ export class Field<TValue, TOption = any, TOptionGroup = any, TConvertedValue = 
   public set options(value: TOption[]) {
     this._options = value;
 
+    if (this.value != null) {
+      this.setFromOptions(option => {
+        if (typeof this.value == typeof option) {
+          return this.optionId(this.value as any) == this.optionId(option);
+        }
+        else {
+          return this.value == this.optionValue(option);
+        }
+      });
+    }
+
     this.optionChanges$.next(value);
+  }
+
+  /**
+   * Gets option changes stream
+   */
+  public get optionChanges() {
+    return this.optionChanges$.asObservable().pipe(takeUntil(this.destroy$));
   }
 
   /**
@@ -275,7 +293,7 @@ export class Field<TValue, TOption = any, TOptionGroup = any, TConvertedValue = 
   /**
    * Custom option identifier that is used by select-control to compare options
    */
-  public optionId: (index: number, option: TOption) => any;
+  public optionId: (option: TOption, index?: number) => any;
 
   /**
    * Custom option label provider that is used by select-control
@@ -313,7 +331,11 @@ export class Field<TValue, TOption = any, TOptionGroup = any, TConvertedValue = 
   public optionGroupLabel: (optionGroup: TOptionGroup) => string;
 
   constructor(props: FieldConstructor<TValue, TOption, TOptionGroup>) {
-    this.validation = new Validation(props.validation || {});
+    if (props.validation) {
+      this.validation = new Validation(props.validation);
+
+      delete props.validation;
+    }
 
     this.control = new FormControl(
       {
@@ -327,6 +349,21 @@ export class Field<TValue, TOption = any, TOptionGroup = any, TConvertedValue = 
         validators: Validation.getValidators(this.validation),
         updateOn: props.updateOn,
       });
+
+    this.optionsFilterPredicate = (option: any, filter) => this.optionLabel(option)?.toLowerCase().includes(filter.toLowerCase());
+    this.visibilityProvider = () => true;
+    this.optionGroupLabel = (optionGroup: TOptionGroup) => optionGroup as any;
+    this.optionId = (option: any) => option.id || option;
+    this.optionLabel = (option: any) => option.label || "";
+    this.optionDisabled = _ => false;
+    this.optionValue = (option: any) => {
+      if (option instanceof Option) {
+        return option.value;
+      }
+      else {
+        return option;
+      }
+    };
 
     // indicated form that control should remain disabled
     if (props.disabled) {
@@ -364,26 +401,6 @@ export class Field<TValue, TOption = any, TOptionGroup = any, TConvertedValue = 
 
       delete props.options;
     }
-
-    delete props.validation;
-
-    this.optionsFilterPredicate = (option: any, filter) => {
-      return this.optionLabel(option)?.toLowerCase().includes(filter.toLowerCase());
-    };
-
-    this.visibilityProvider = () => true;
-    this.optionGroupLabel = (optionGroup: TOptionGroup) => optionGroup as any;
-    this.optionId = (index: number, option: any) => option.id || option;
-    this.optionLabel = (option: any) => option.label || "";
-    this.optionDisabled = _ => false;
-    this.optionValue = (option: any) => {
-      if (option instanceof Option) {
-        return option.value;
-      }
-      else {
-        return option;
-      }
-    };
 
     Object.assign(this, props);
   }
