@@ -350,7 +350,11 @@ export class Field<TValue, TOption = any, TOptionGroup = any, TConvertedValue = 
         updateOn: props.updateOn,
       });
 
-    this.optionsFilterPredicate = (option: any, filter) => this.optionLabel(option)?.toLowerCase().includes(filter.toLowerCase());
+    // do not filter option if search provider is used
+    this.optionsFilterPredicate = props.optionsSearchProvider
+      ? () => true
+      : (option: any, filter) => this.optionLabel(option)?.toLowerCase().includes(filter.toLowerCase());
+
     this.visibilityProvider = () => true;
     this.optionGroupLabel = (optionGroup: TOptionGroup) => optionGroup as any;
     this.optionId = (option: any) => option.id || option;
