@@ -32,11 +32,13 @@ export class Form {
   constructor(...fields: Field<any>[]) {
     this.formGroup = new FormGroup({});
 
-    fields.forEach(field => {
-      this.addField(field);
-    });
+    if (fields.length > 0) {
+      fields.forEach(field => {
+        this.addField(field);
+      });
 
-    this.formGroup.updateValueAndValidity({ onlySelf: true });
+      this.formGroup.updateValueAndValidity({ onlySelf: true });
+    }
   }
 
   /**
@@ -98,7 +100,8 @@ export class Form {
     this.formGroup.registerControl(field.name, field.control);
 
     if (!field._initialStatus?.disabled) {
-      field.control.enable({ onlySelf: true });
+      // do not emit initial value since it is known during init phase
+      field.control.enable({ onlySelf: true, emitEvent: false });
     }
   }
 

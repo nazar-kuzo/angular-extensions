@@ -56,6 +56,7 @@ export class DashboardEditor extends BaseEditor {
       },
       optionId: country => country.cca3,
       optionLabel: country => country.name.common,
+      onValueChange: country => console.error(country.name.common),
       options: this.api
         .get<Country[]>(
           `https://restcountries.com/v3.1/all`,
