@@ -3,7 +3,7 @@ import { Observable, Subject } from "rxjs";
 import { filter as filterPredicate, first, pairwise, startWith, takeUntil } from "rxjs/operators";
 import { FormControl, FormGroup } from "@angular/forms";
 
-import "angular-extensions/core";
+import { handleError } from "angular-extensions/core";
 import { DatePipe, DateTimePipe, StartCasePipe } from "angular-extensions/pipes";
 import { Validation, ValueProvider, ValidationConstructor } from "./validation.model";
 import { NGX_DATE_FORMATS } from "./date-formats.model";
@@ -135,7 +135,7 @@ export class Option<TValue, TId = string> {
 /**
  * Provides simplified api to work with Angular reactive forms and predefined control compomnents.
  */
-export class Field<TValue, TOption = any, TOptionGroup = any, TConvertedValue = any> {
+export class Field<TValue, TOption = TValue, TOptionGroup = any, TConvertedValue = any> {
 
   private optionChanges$ = new Subject<TOption[]>();
 
@@ -316,9 +316,9 @@ export class Field<TValue, TOption = any, TOptionGroup = any, TConvertedValue = 
   public optionDisabled: (option: TOption) => boolean;
 
   /**
-   * Options query provider of field
+   * Options provider function accepting string query
    */
-  public optionsSearchProvider?: (query: string) => Observable<TOption[]>;
+  public optionsProvider?: (query: string) => Observable<TOption[]>;
 
   /**
    * Options group provider that is used by select-control.
@@ -351,7 +351,7 @@ export class Field<TValue, TOption = any, TOptionGroup = any, TConvertedValue = 
       });
 
     // do not filter option if search provider is used
-    this.optionsFilterPredicate = props.optionsSearchProvider
+    this.optionsFilterPredicate = props.optionsProvider
       ? () => true
       : (option: any, filter) => this.optionLabel(option)?.toLowerCase().includes(filter.toLowerCase());
 
@@ -387,15 +387,17 @@ export class Field<TValue, TOption = any, TOptionGroup = any, TConvertedValue = 
           pairwise(),
           takeUntil(this.destroy$),
         )
-        .subscribe(([previous, current]) => onValueChange(current as TValue, previous));
+        .subscribe(([previous, current]) => handleError(() => onValueChange(current as TValue, previous)));
 
       delete props.onValueChange;
     }
 
     if (props.onOptionsChange) {
+      let onOptionsChange = props.onOptionsChange;
+
       this.optionChanges$
         .pipe(takeUntil(this.destroy$))
-        .subscribe(props.onOptionsChange);
+        .subscribe(options => handleError(() => onOptionsChange(options)));
 
       delete props.onOptionsChange;
     }
@@ -416,16 +418,18 @@ export class Field<TValue, TOption = any, TOptionGroup = any, TConvertedValue = 
     if (value instanceof Observable) {
       this.isQuerying = true;
 
-      value.subscribe({
-        next: options => {
-          this.options = options;
+      value
+        .pipe(first())
+        .subscribe({
+          next: options => {
+            this.options = options;
 
-          this.isQuerying = false;
-        },
-        error: () => {
-          this.isQuerying = false;
-        }
-      });
+            this.isQuerying = false;
+          },
+          error: () => {
+            this.isQuerying = false;
+          }
+        });
     }
     else {
       this.options = value;

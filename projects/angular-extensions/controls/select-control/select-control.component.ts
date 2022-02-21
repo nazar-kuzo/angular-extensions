@@ -171,8 +171,8 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
         { capture: true });
     }
 
-    if (this.searchable && this.field.optionsSearchProvider) {
-      let optionsSearchProvider = this.field.optionsSearchProvider;
+    if (this.searchable && this.field.optionsProvider) {
+      let optionsProvider = this.field.optionsProvider;
 
       this.filterControl.valueChanges
         .pipe(
@@ -184,8 +184,9 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
           }),
           debounceTime(300),
           switchMap((query: string) => !!query
-            ? optionsSearchProvider(query).pipe(catchError(() => of([] as TOption[])))
-            : of([])))
+            ? optionsProvider(query).pipe(catchError(() => of([] as TOption[])))
+            : of([])),
+          takeUntil(this.destroy))
         .subscribe(options => {
           this.field.options = options;
           this.field.isQuerying = false;

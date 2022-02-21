@@ -134,7 +134,16 @@ export function getDayOfWeek(this: Date) {
 
 export function trimEnd(this: String, charlist = "\s") {
   return this?.replace(new RegExp("[" + charlist + "]+$"), "");
-};
+}
+
+export function handleError(action: () => any) {
+  try {
+    action();
+  }
+  catch (error) {
+    console.error(error);
+  }
+}
 
 
 Date.prototype.getDayOfWeek = getDayOfWeek;

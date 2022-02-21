@@ -17,7 +17,7 @@ export class DashboardEditor extends BaseEditor {
 
   public lastName: Field<string>;
 
-  public dayOfBirth: Field<DayOfWeek>;
+  public dayOfBirth: Field<DayOfWeek, Option<DayOfWeek>>;
 
   public coutry: Field<Country>;
 
@@ -41,12 +41,12 @@ export class DashboardEditor extends BaseEditor {
       },
     });
 
-    this.dayOfBirth = new Field({
+    this.dayOfBirth = new Field<DayOfWeek, Option<DayOfWeek>>({
       label: "Day of Birth",
       validation: {
         required: { value: true }
       },
-      options: Option.ForEnum(DayOfWeek),
+      options: Option.ForEnum<DayOfWeek>(DayOfWeek),
     });
 
     this.coutry = new Field<Country, Country>({
@@ -56,7 +56,13 @@ export class DashboardEditor extends BaseEditor {
       },
       optionId: country => country.cca3,
       optionLabel: country => country.name.common,
-      onValueChange: country => console.error(country.name.common),
+      onValueChange: country => {
+        if (country.name.common == "Poland") {
+          throw new Error("You cannot select Poland");
+        }
+
+        console.error(country.name.common);
+      },
       options: this.api
         .get<Country[]>(
           `https://restcountries.com/v3.1/all`,
@@ -69,7 +75,7 @@ export class DashboardEditor extends BaseEditor {
             responseType: "json",
           })
         .pipe(map(response => response.body || [])),
-      optionsSearchProvider: query => {
+      optionsProvider: query => {
         return this.api
           .get<Country[]>(
             `https://restcountries.com/v3.1/name/${query}`,
