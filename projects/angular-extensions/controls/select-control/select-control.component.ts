@@ -113,9 +113,11 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
   public ngOnInit() {
     this.filterControl.setValue(this.filter);
 
-    this.field.optionChanges
+    this.field.control.statusChanges
       .pipe(takeUntil(this.destroy))
-      .subscribe(() => this.changeDetectorRef.markForCheck());
+      .subscribe(() => {
+        this.changeDetectorRef.markForCheck();
+      });
 
     if (this.multiple && this.showSelectAll) {
       this.select.optionSelectionChanges

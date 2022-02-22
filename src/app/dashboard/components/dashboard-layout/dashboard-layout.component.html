@@ -5,21 +5,28 @@
 
   <div class="row">
     <div class="col-sm-6">
-      <text-control class="d-block" [field]="editor.firstName"></text-control>
+      <text-control class="d-block"
+                    [field]="editor.firstName"></text-control>
     </div>
 
     <div class="col-sm-6">
-      <text-control class="d-block" [field]="editor.lastName"></text-control>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-sm-6">
-      <select-control class="d-block" [field]="editor.dayOfBirth"></select-control>
+      <text-control class="d-block"
+                    [field]="editor.lastName"></text-control>
     </div>
 
     <div class="col-sm-6">
-      <select-control class="d-block" [field]="editor.coutry" [searchable]="true"></select-control>
+      <select-control class="d-block"
+                      [field]="editor.dayOfBirth"></select-control>
+    </div>
+
+    <div class="col-sm-6">
+      <select-control class="d-block"
+                      [field]="editor.coutry"
+                      [searchable]="true"></select-control>
+
+      <button mat-raised-button
+              color="primary"
+              (click)="editor.reloadCountries()">Reload countries</button>
     </div>
   </div>
 </div>

@@ -63,18 +63,7 @@ export class DashboardEditor extends BaseEditor {
 
         console.error(country.name.common);
       },
-      options: this.api
-        .get<Country[]>(
-          `https://restcountries.com/v3.1/all`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "X-Requested-With": "XMLHttpRequest"
-            },
-            observe: "response",
-            responseType: "json",
-          })
-        .pipe(map(response => response.body || [])),
+      options: this.loadAllCountries(),
       optionsProvider: query => {
         return this.api
           .get<Country[]>(
@@ -92,5 +81,24 @@ export class DashboardEditor extends BaseEditor {
     });
 
     super.initialize();
+  }
+
+  public reloadCountries() {
+    this.coutry.setOptions(this.loadAllCountries());
+  }
+
+  private loadAllCountries() {
+    return this.api
+      .get<Country[]>(
+        `https://restcountries.com/v3.1/all`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest"
+          },
+          observe: "response",
+          responseType: "json",
+        })
+      .pipe(map(response => response.body || []));
   }
 }

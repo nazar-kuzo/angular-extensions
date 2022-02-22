@@ -1,6 +1,6 @@
 import { toString } from "lodash-es";
-import { Observable, Subject } from "rxjs";
-import { filter as filterPredicate, first, pairwise, startWith, takeUntil } from "rxjs/operators";
+import { Observable, of, Subject } from "rxjs";
+import { catchError, filter as filterPredicate, first, pairwise, startWith, takeUntil } from "rxjs/operators";
 import { FormControl, FormGroup } from "@angular/forms";
 
 import { handleError } from "angular-extensions/core";
@@ -418,16 +418,20 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TConvertedValue
     if (value instanceof Observable) {
       this.isQuerying = true;
 
+      // emit control status change event to trigger change detection by controls
+      this.control.markAsPending({ onlySelf: true });
+
       value
-        .pipe(first())
+        .pipe(
+          first(),
+          catchError(() => of([])))
         .subscribe({
           next: options => {
             this.options = options;
+            this.isQuerying = false;
 
-            this.isQuerying = false;
-          },
-          error: () => {
-            this.isQuerying = false;
+            // opposite action to "control.markAsPending"
+            this.control.setErrors(this.control.errors);
           }
         });
     }
