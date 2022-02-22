@@ -141,7 +141,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TConvertedValue
 
   private destroy$ = new Subject();
 
-  private _options: TOption[];
+  private _options: TOption[] = [];
 
   public _initialStatus: { disabled: boolean };
 
