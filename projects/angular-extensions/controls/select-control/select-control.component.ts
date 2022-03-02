@@ -183,6 +183,8 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
           tap(() => {
             this.field.options = [];
             this.field.isQuerying = true;
+
+            this.changeDetectorRef.markForCheck();
           }),
           debounceTime(300),
           switchMap((query: string) => !!query
@@ -192,6 +194,8 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
         .subscribe(options => {
           this.field.options = options;
           this.field.isQuerying = false;
+
+          this.changeDetectorRef.markForCheck();
         });
     }
   }
