@@ -1,6 +1,14 @@
 <ng-content></ng-content>
 
-<ng-template>
+<ng-template #hintTemplate>
+  <mat-hint class="text-truncate"
+            style="cursor: default;"
+            [matTooltip]="$any(field.info)">
+    {{ field.info }}
+  </mat-hint>
+</ng-template>
+
+<ng-template #errorsTemplate>
   <mat-error *ngIf="field.control.errors?.required as error">
     {{ field.validation.text || "Field is required" }}
   </mat-error>

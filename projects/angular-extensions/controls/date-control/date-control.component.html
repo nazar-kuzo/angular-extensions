@@ -9,7 +9,7 @@
     </mat-label>
 
     <mat-hint>
-      {{ field.info }}
+      <ng-container *ngTemplateOutlet="baseControl.hintTemplate"></ng-container>
     </mat-hint>
 
     <input matInput

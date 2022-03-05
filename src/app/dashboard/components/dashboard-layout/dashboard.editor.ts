@@ -51,6 +51,8 @@ export class DashboardEditor extends BaseEditor {
 
     this.coutry = new Field<Country, Country>({
       label: "Country",
+      info: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
+        "Ut lacus metus, molestie sed mi non, accumsan molestie elit.",
       validation: {
         required: { value: true }
       },
