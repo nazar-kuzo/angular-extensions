@@ -59,11 +59,10 @@ export class DashboardEditor extends BaseEditor {
       optionId: country => country.cca3,
       optionLabel: country => country.name.common,
       onValueChange: country => {
-        if (country.name.common == "Poland") {
+        if (country?.name.common == "Poland") {
           throw new Error("You cannot select Poland");
         }
-
-        console.error(country.name.common);
+        console.error(`Selected country: ${country?.name.common}`);
       },
       options: this.loadAllCountries(),
       optionsProvider: query => {

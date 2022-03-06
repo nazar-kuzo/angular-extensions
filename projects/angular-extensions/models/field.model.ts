@@ -16,7 +16,7 @@ type FieldConstructor<TValue, TOption = any, TOptionGroup = any, TConvertedValue
     "control" | "options" | "onValueChange" | "onOptionsChange" | "validation"> & {
       options: TOption[] | Observable<TOption[]>;
 
-      onValueChange: (value: TValue, previous?: TValue) => any;
+      onValueChange: (value?: TValue, previous?: TValue) => any;
 
       onOptionsChange: (value: TOption[]) => any;
 

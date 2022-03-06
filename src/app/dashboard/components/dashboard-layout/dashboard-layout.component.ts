@@ -19,4 +19,8 @@ export class DashboardLayoutComponent implements OnInit {
 
   public ngOnInit() {
   }
+
+  public submit() {
+    this.editor.form.validate();
+  }
 }

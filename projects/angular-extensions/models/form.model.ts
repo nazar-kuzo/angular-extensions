@@ -135,6 +135,16 @@ export class Form {
   }
 
   /**
+   * Marks Form and all descendants as Touched and updates their value
+   */
+  public validate() {
+    this.applyAction(control => {
+      control.markAsTouched({ onlySelf: true });
+      control.updateValueAndValidity({ onlySelf: true });
+    });
+  }
+
+  /**
    * Destroys each field in a form
    */
   public destroy() {
