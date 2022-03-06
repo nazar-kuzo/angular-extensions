@@ -65,6 +65,8 @@ export class FileControlComponent implements OnInit {
       () => {
         // replace file is single select mode
         if (!this.multiple) {
+          this.field.control.setValue([], { emitEvent: false, emitModelToViewChange: false });
+
           this.filePicker.files = [];
         }
 
