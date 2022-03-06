@@ -15,10 +15,10 @@ export class BaseControlComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input()
   public field: Field<any>;
 
-  @ViewChild(TemplateRef)
+  @ViewChild(TemplateRef, { static: true })
   public hintTemplate: TemplateRef<any>;
 
-  @ViewChild(TemplateRef)
+  @ViewChild(TemplateRef, { static: true })
   public errorsTemplate: TemplateRef<any>;
 
   public initialized: boolean;
