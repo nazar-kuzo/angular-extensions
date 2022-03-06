@@ -18,7 +18,7 @@ export class BaseControlComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(TemplateRef, { static: true })
   public hintTemplate: TemplateRef<any>;
 
-  @ViewChild(TemplateRef, { static: true })
+  @ViewChild(TemplateRef)
   public errorsTemplate: TemplateRef<any>;
 
   public initialized: boolean;
