@@ -5,16 +5,19 @@ import { FileSizePipe, NgxFilesizeModule } from "ngx-filesize";
 
 import { NgxBaseControlModule } from "angular-extensions/controls/base-control";
 import { FileControlComponent } from "./file-control.component";
+import { MatButtonModule } from "@angular/material/button";
 
 @NgModule({
   imports: [
     CommonModule,
     NgxBaseControlModule,
+    MatButtonModule,
     NgxFilesizeModule,
     FilePickerModule,
   ],
   exports: [
     NgxBaseControlModule,
+    MatButtonModule,
     NgxFilesizeModule,
     FilePickerModule,
 

@@ -1,6 +1,7 @@
 export * from "angular-extensions/controls/base-control";
 export * from "angular-extensions/controls/text-control";
 export * from "angular-extensions/controls/textarea-control";
+export * from "angular-extensions/controls/file-control";
 
 export * from "./date-control/date-control.component";
 export * from "./time-control/time-control.component";

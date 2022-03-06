@@ -28,6 +28,10 @@
               color="secondary"
               (click)="editor.reloadCountries()">Reload countries</button>
     </div>
+
+    <div class="col-sm-6">
+      <file-control [field]="editor.image" [showPreview]="true"></file-control>
+    </div>
   </div>
 
   <button mat-raised-button

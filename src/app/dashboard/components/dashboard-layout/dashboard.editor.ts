@@ -1,4 +1,4 @@
-import { HttpClient, HttpResponse } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BaseEditor, DayOfWeek, Field, Option } from "angular-extensions";
 import { map } from "rxjs/operators";
@@ -20,6 +20,8 @@ export class DashboardEditor extends BaseEditor {
   public dayOfBirth: Field<DayOfWeek, Option<DayOfWeek>>;
 
   public coutry: Field<Country>;
+
+  public image: Field<File[]>;
 
   constructor(
     private api: HttpClient,
@@ -47,6 +49,13 @@ export class DashboardEditor extends BaseEditor {
         required: { value: true }
       },
       options: Option.ForEnum<DayOfWeek>(DayOfWeek),
+    });
+
+    this.image = new Field<File[]>({
+      label: "Image",
+      validation: {
+        required: { value: true }
+      }
     });
 
     this.coutry = new Field<Country, Country>({

@@ -4,19 +4,20 @@
   }
 
   ::ng-deep {
-
     ngx-awesome-uploader {
       max-width: none !important;
     }
 
     .file-drop-wrapper {
-      background: #fff !important;
+      width: auto !important;
+      background: none !important;
       padding-top: 0 !important;
 
       #dropZone {
         padding: 5px 0;
         border: none;
         max-width: none;
+        background: none;
       }
 
       file-drop {

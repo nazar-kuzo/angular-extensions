@@ -1,6 +1,6 @@
-import { Component, Input, OnInit, Output, EventEmitter } from "@angular/core";
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, OnInit } from "@angular/core";
 import { FileSizePipe } from "ngx-filesize";
-import { FilePickerAdapter, FilePreviewModel, FileValidationTypes, ValidationError } from "ngx-awesome-uploader";
+import { FilePickerAdapter, FilePickerComponent, FilePreviewModel, FileValidationTypes, ValidationError } from "ngx-awesome-uploader";
 
 import { Field } from "angular-extensions/models";
 import { FileService } from "./file.service";
@@ -23,7 +23,7 @@ export class FileControlComponent implements OnInit {
   public multiple: boolean;
 
   @Input()
-  public allowedFileExtensions: string[] = [];
+  public allowedFileExtensions: string[];
 
   @Input()
   public accept: string[] = [];
@@ -40,19 +40,37 @@ export class FileControlComponent implements OnInit {
   @Input()
   public adapter: FilePickerAdapter;
 
+  @Input()
+  public showPreview: boolean;
+
   @Output()
   public changes: EventEmitter<File[]> = new EventEmitter<File[]>();
+
+  @ViewChild(FilePickerComponent)
+  public filePicker: FilePickerComponent;
 
   public validationErrors: ValidationError[] = [];
 
   constructor(
+    private elementRef: ElementRef<HTMLFieldSetElement>,
     private fileSizePipe: FileSizePipe,
-    public defaultAdapter: FileService
+    public defaultAdapter: FileService,
   ) {
     this.adapter = this.adapter || defaultAdapter;
   }
 
   public ngOnInit() {
+    this.elementRef.nativeElement.addEventListener(
+      "change",
+      () => {
+        // replace file is single select mode
+        if (!this.multiple) {
+          this.filePicker.files = [];
+        }
+
+        this.field.control.markAsTouched();
+      },
+      { capture: true });
   }
 
   public onValidationError(error: ValidationError) {

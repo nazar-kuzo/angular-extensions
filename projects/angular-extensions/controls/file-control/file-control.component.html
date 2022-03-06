@@ -1,14 +1,13 @@
 <base-control #baseControl
               [field]="field">
   <div class="field-label">
-
     <ngx-awesome-uploader #uploader
                           [adapter]="adapter"
                           [showeDragDropZone]="true"
+                          [showPreviewContainer]="showPreview"
                           [uploadType]="multiple ? 'multi' : 'single'"
                           [fileMaxSize]="maxFileSize"
                           [totalMaxSize]="totalFileSize"
-                          [fileMaxCount]="multiple ? $any(undefined) : 1"
                           [accept]="accept.toString()"
                           [itemTemplate]="fileItemTemplate"
                           [enableAutoUpload]="autoUpload"
@@ -18,12 +17,9 @@
 
       <div class="dropzoneTemplate">
         <button mat-raised-button
-                type="button"
-                (click)="field.control.markAsTouched()">{{ field.label }}</button>
+                type="button">{{ field.label }}</button>
       </div>
-
     </ngx-awesome-uploader>
-
   </div>
 
   <mat-error *ngIf="baseControl.initialized && field.control.touched">
