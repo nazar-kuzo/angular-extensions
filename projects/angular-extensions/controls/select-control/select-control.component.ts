@@ -213,6 +213,17 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
     return left != null && right != null && this.field.optionId(left) == this.field.optionId(right);
   };
 
+  public showClearButton() {
+    let isVisible = this.clearable && !this.field.isQuerying;
+
+    if (this.multiple && Array.isArray(this.field.value)) {
+      return isVisible && this.field.value.length > 0;
+    }
+    else {
+      return isVisible && this.field.value != null;
+    }
+  }
+
   private toggleSelectAll() {
     let shouldSelect = (this.select.selected as MatOption[])?.length < this.field.options?.length;
 

@@ -22,17 +22,28 @@
     <div class="col-sm-6">
       <select-control class="d-block"
                       [field]="editor.coutry"
-                      [searchable]="true"></select-control>
-
-      <button mat-raised-button
-              color="secondary"
-              (click)="editor.reloadCountries()">Reload countries</button>
+                      [searchable]="true"
+                      [clearable]="true"></select-control>
     </div>
 
     <div class="col-sm-6">
-      <file-control [field]="editor.image" [showPreview]="true"></file-control>
+      <select-control class="d-block"
+                      [field]="editor.allies"
+                      [multiple]="true"
+                      [searchable]="true"
+                      [clearable]="true"></select-control>
+    </div>
+
+    <div class="col-sm-6">
+      <file-control [field]="editor.image"
+                    [showPreview]="true"></file-control>
     </div>
   </div>
+
+  <button class="mr-3"
+          mat-raised-button
+          color="secondary"
+          (click)="editor.reloadCountries()">Reload countries</button>
 
   <button mat-raised-button
           color="primary"

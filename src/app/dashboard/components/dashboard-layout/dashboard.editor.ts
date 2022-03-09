@@ -23,6 +23,8 @@ export class DashboardEditor extends BaseEditor {
 
   public image: Field<File[]>;
 
+  public allies: Field<Country[], Country>;
+
   constructor(
     private api: HttpClient,
   ) {
@@ -88,6 +90,17 @@ export class DashboardEditor extends BaseEditor {
             })
           .pipe(map(response => response.body || []));
       },
+    });
+
+    this.allies = new Field<Country[], Country>({
+      label: "Allies",
+      validation: {
+        required: { value: true }
+      },
+      optionId: country => country.cca3,
+      optionLabel: country => country.name.common,
+      options: this.loadAllCountries(),
+      value: [],
     });
 
     super.initialize();

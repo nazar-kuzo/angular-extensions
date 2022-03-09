@@ -72,12 +72,12 @@
                [size]="20"></spinner>
     </span>
 
-    <button *ngIf="!multiple && clearable && field.value != null && !field.isQuerying"
+    <button *ngIf="showClearButton()"
             mat-button
             matSuffix
             mat-icon-button
             matTooltip="Clear"
-            (click)="$any(field).value = null; $event.stopPropagation()">
+            (click)="$any(field).value = multiple ? [] : null; $event.stopPropagation()">
       <mat-icon>close</mat-icon>
     </button>
 
