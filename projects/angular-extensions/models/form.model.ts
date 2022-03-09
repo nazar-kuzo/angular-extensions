@@ -135,23 +135,9 @@ export class Form {
   }
 
   /**
-   * Marks Form and all descendants as Touched and updates their value
+   * Iterates through descendants
    */
-  public validate() {
-    this.applyAction(control => {
-      control.markAsTouched({ onlySelf: true });
-      control.updateValueAndValidity({ onlySelf: true });
-    });
-  }
-
-  /**
-   * Destroys each field in a form
-   */
-  public destroy() {
-    this.fields.forEach(field => field.destroy());
-  }
-
-  private applyAction(action: (control: AbstractControl) => void) {
+  public applyAction(action: (control: AbstractControl) => void) {
     let controls = Object.values(this.formGroup.controls)
       .flatMap(control => {
         if (control instanceof FormGroup) {
@@ -166,6 +152,13 @@ export class Form {
       });
 
     [...controls, this.formGroup].forEach(control => action(control));
+  }
+
+  /**
+   * Destroys each field in a form
+   */
+  public destroy() {
+    this.fields.forEach(field => field.destroy());
   }
 }
 
