@@ -140,7 +140,7 @@ export class Form {
   public validate() {
     this.applyAction(control => {
       control.markAsTouched({ onlySelf: true });
-      control.setErrors(control.errors);
+      control.setErrors(control.validator?.(control));
     });
   }
 
