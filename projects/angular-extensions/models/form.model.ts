@@ -135,6 +135,16 @@ export class Form {
   }
 
   /**
+   * Shows validation errors for all descendants
+   */
+  public validate() {
+    this.applyAction(control => {
+      control.markAsTouched({ onlySelf: true });
+      control.setErrors(control.errors);
+    });
+  }
+
+  /**
    * Iterates through descendants
    */
   public applyAction(action: (control: AbstractControl) => void) {
