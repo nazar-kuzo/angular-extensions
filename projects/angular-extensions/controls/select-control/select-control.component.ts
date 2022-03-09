@@ -56,7 +56,7 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
   public select: MatSelect;
 
   @ViewChild("selectAllOption")
-  public selectAllOption: MatOption;
+  public selectAllOption?: MatOption;
 
   @ContentChild("optionTemplate", { static: true })
   public optionTemplate: TemplateRef<{ $implicit: string; option: TOption }>;
@@ -124,11 +124,7 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
         .pipe(
           debounceTime(0),
           takeUntil(this.destroy))
-        .subscribe(() => {
-          let selectedOptions = this.select.selected as MatOption[];
-
-          this.setSelectAllState(selectedOptions?.length > 0 && selectedOptions?.length == this.field.options?.length);
-        });
+        .subscribe(() => this.setSelectAllState(this.getSelectAllState()));
     }
   }
 
@@ -163,7 +159,7 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
     }
 
     if (this.multiple && this.showSelectAll) {
-      this.selectAllOption._getHostElement().addEventListener(
+      this.selectAllOption?._getHostElement().addEventListener(
         "click",
         event => {
           this.toggleSelectAll();
@@ -225,10 +221,10 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
   }
 
   private toggleSelectAll() {
-    let shouldSelect = (this.select.selected as MatOption[])?.length < this.field.options?.length;
+    let shouldSelect = !this.getSelectAllState();
 
     this.select.options
-      .filter(option => !option.disabled && option.id != this.selectAllOption.id)
+      .filter(option => !option.disabled && option.id != this.selectAllOption?.id)
       .forEach(option => {
         if (shouldSelect) {
           option.select();
@@ -237,14 +233,32 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
           option.deselect();
         }
       });
-
-    this.setSelectAllState(shouldSelect);
   }
 
-  private setSelectAllState(selected: boolean) {
+  private getSelectAllState() {
+    let selectedOptions = this.select.selected as MatOption[];
+
+    return !selectedOptions?.length
+      ? false
+      : selectedOptions.length === this.field.options?.length
+        ? true : null;
+  }
+
+  private setSelectAllState(selected: boolean | null) {
     if (this.selectAllOption) {
-      (this.selectAllOption as any)._selected = selected;
-      (this.selectAllOption as any)._changeDetectorRef.markForCheck();
+      let matCheckbox = ((this.selectAllOption as any)._element.nativeElement as HTMLElement)
+        .querySelector("mat-pseudo-checkbox");
+
+      if (selected == null) {
+        matCheckbox?.classList.remove("mat-pseudo-checkbox-checked");
+
+        matCheckbox?.classList.add("mat-pseudo-checkbox-indeterminate");
+      }
+      else {
+        matCheckbox?.classList.remove("mat-pseudo-checkbox-indeterminate");
+
+        matCheckbox?.classList.toggle("mat-pseudo-checkbox-checked", selected);
+      }
     }
   }
 }

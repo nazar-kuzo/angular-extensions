@@ -31,10 +31,13 @@
                                [searching]="field.isQuerying"></ngx-mat-select-search>
       </mat-option>
 
-      <mat-option #selectAllOption
-                  *ngIf="multiple && showSelectAll && !filterControl.value">
-        All
-      </mat-option>
+      <ng-container *ngIf="multiple && showSelectAll && !filterControl.value">
+        <mat-option #selectAllOption>
+          All
+        </mat-option>
+
+        <hr style="border-bottom:none; border-color: #0000001f">
+      </ng-container>
 
       <ng-container *ngIf="field.options | filter : field.optionsFilterPredicate : filterControl.value as options">
         <ng-container *ngIf="options.length; else noItemsTemplate">
