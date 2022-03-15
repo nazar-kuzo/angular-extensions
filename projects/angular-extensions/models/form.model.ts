@@ -49,11 +49,12 @@ export class Form {
    * @param model {@link BaseEditor} model
    * @returns Form
    */
-  public static Create<TModel>(model: TModel) {
+  public static Create<TModel>(model: TModel, ...fieldsToIgnore: string[]) {
     let form = new Form();
 
     Object
       .keys(model)
+      .filter(key => !fieldsToIgnore.contains(key))
       .forEach(key => {
         if ((model as any)[key] instanceof Field) {
           ((model as any)[key] as Field<any>).name = key;
@@ -62,6 +63,7 @@ export class Form {
 
     Object
       .keys(model)
+      .filter(key => !fieldsToIgnore.contains(key))
       .map(prop => (model as any)[prop])
       .filter(field => field instanceof Field && field.name)
       .forEach((field: Field<any>) => {
@@ -70,6 +72,7 @@ export class Form {
 
     Object
       .keys(model)
+      .filter(key => !fieldsToIgnore.contains(key))
       .forEach(key => {
         if ((model as any)[key] instanceof BaseEditor) {
           form.formGroup.addControl(key, ((model as any)[key] as BaseEditor).form.formGroup);
@@ -183,7 +186,7 @@ export abstract class BaseEditor {
     this.form.destroy();
   }
 
-  protected initialize() {
-    (this as any).__proto__.form = Form.Create(this);
+  protected initialize(...fieldsToIgnore: string[]) {
+    (this as any).__proto__.form = Form.Create(this, ...fieldsToIgnore);
   }
 }
