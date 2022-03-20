@@ -23,7 +23,7 @@ export class DateControlComponent implements OnChanges {
   public appearance: MatFormFieldAppearance = "outline";
 
   @Input()
-  public targetView: "month" | "day" = "day";
+  public targetView: "year" | "month" | "day" = "day";
 
   @Input()
   public startView: MatCalendarView = "month";
@@ -47,7 +47,11 @@ export class DateControlComponent implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges<DateControlComponent>) {
     if (changes.targetView) {
-      if (changes.targetView.currentValue == "month") {
+      if (changes.targetView.currentValue == "year") {
+        this.startView = "multi-year";
+        this.format = "yyyy";
+      }
+      else if (changes.targetView.currentValue == "month") {
         this.startView = "year";
         this.format = this.dateFormats.display.monthYearA11yLabel;
       }
@@ -58,13 +62,13 @@ export class DateControlComponent implements OnChanges {
     }
   }
 
-  public monthSelected(month: Date, datePicker: MatDatepicker<Date>) {
-    if (this.targetView == "month") {
-      this.field.value = month.asUtcDate();
+  public dateSelected(date: Date, datePicker: MatDatepicker<Date>, isTargetView = false) {
+    if (isTargetView) {
+      this.field.value = date.asUtcDate();
 
       datePicker.close();
 
-      // hide content since we cannot prevent currentView showing month view
+      // hide content since we cannot prevent currentView showing next view
       this.getCalendarElement(datePicker).style.display = "none";
     }
   }
