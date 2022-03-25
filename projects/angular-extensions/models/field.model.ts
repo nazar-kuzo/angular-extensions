@@ -1,4 +1,4 @@
-import { toString } from "lodash-es";
+import { toString, xorBy } from "lodash-es";
 import { Observable, of, Subject } from "rxjs";
 import { catchError, filter as filterPredicate, first, pairwise, startWith, takeUntil } from "rxjs/operators";
 import { FormControl, FormGroup } from "@angular/forms";
@@ -16,9 +16,9 @@ type FieldConstructor<TValue, TOption = any, TOptionGroup = any, TConvertedValue
     "control" | "options" | "onValueChange" | "onOptionsChange" | "validation"> & {
       options: TOption[] | Observable<TOption[]>;
 
-      onValueChange: (value?: TValue, previous?: TValue) => any;
+      onValueChange: (value?: TValue, previous?: TValue) => void;
 
-      onOptionsChange: (value: TOption[]) => any;
+      onOptionsChange: (value: TOption[]) => void;
 
       validation: ValidationConstructor<TValue>;
 
@@ -105,7 +105,7 @@ export class Option<TValue, TId = string> {
     Object.assign(this, props);
 
     if (!this.name) {
-      this.name = this.value as any as string;
+      this.name = this.value?.toString();
     }
   }
 
@@ -266,14 +266,18 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TConvertedValue
 
     if (this.value != null) {
       this.setFromOptions(option => {
-        if (typeof this.value == typeof option) {
-          return this.optionId(this.value as any) == this.optionId(option);
+        if (this.value instanceof Array) {
+          return this.value.map(this.optionId).contains(this.optionId(option));
         }
         else {
-          return this.value == this.optionValue(option);
+          return this.value == this.optionValue(option) ||
+            this.optionId(this.value as any) == this.optionId(option);
         }
       });
     }
+
+    // triggers change detection for internal controls
+    this.control.setErrors(this.control.errors);
 
     this.optionChanges$.next(value);
   }
@@ -293,7 +297,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TConvertedValue
   /**
    * Custom option identifier that is used by select-control to compare options
    */
-  public optionId: (option: TOption, index?: number) => any;
+  public optionId: (option: TOption, index?: number) => number | string;
 
   /**
    * Custom option label provider that is used by select-control
@@ -308,7 +312,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TConvertedValue
   /**
    * Custom option value provider that is used by select-control
    */
-  public optionValue: (option: TOption) => any;
+  public optionValue: (option: TOption) => TValue;
 
   /**
    * Custom option availability provider that is used by select-control
@@ -353,21 +357,14 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TConvertedValue
     // do not filter option if search provider is used
     this.optionsFilterPredicate = props.optionsProvider
       ? () => true
-      : (option: any, filter) => this.optionLabel(option)?.toLowerCase().includes(filter.toLowerCase());
+      : (option, filter) => this.optionLabel(option)?.toLowerCase().includes(filter.toLowerCase());
 
     this.visibilityProvider = () => true;
-    this.optionGroupLabel = (optionGroup: TOptionGroup) => optionGroup as any;
-    this.optionId = (option: any) => option.id || option;
-    this.optionLabel = (option: any) => option.label || "";
+    this.optionGroupLabel = optionGroup => optionGroup?.toString();
+    this.optionId = option => option instanceof Option ? option.id : option;
+    this.optionLabel = option => option instanceof Option ? option.label : "";
+    this.optionValue = option => option instanceof Option ? option.value : option;
     this.optionDisabled = _ => false;
-    this.optionValue = (option: any) => {
-      if (option instanceof Option) {
-        return option.value;
-      }
-      else {
-        return option;
-      }
-    };
 
     // indicated form that control should remain disabled
     if (props.disabled) {
@@ -453,12 +450,19 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TConvertedValue
   ) {
     return new Promise<void>(resolve => {
       let optionsProvider = () => {
-        let value = this.value instanceof Array
-          ? this.options.filter(optionPredicate).map(this.optionValue)
-          : this.optionValue(this.options.find(optionPredicate) as TOption) || config.defaultValue as any;
+        if (this.value instanceof Array) {
+          let value = this.options.filter(optionPredicate).map(this.optionValue);
 
-        if (value !== this.control.value) {
-          this.control.setValue(value, { emitEvent: config.emitEvent });
+          if (xorBy(this.control.value, value, this.optionId as any).length > 0) {
+            this.control.setValue(value, { emitEvent: config.emitEvent });
+          }
+        }
+        else {
+          let value = this.optionValue(this.options.find(optionPredicate)) || config.defaultValue;
+
+          if (this.optionId(value as any) !== this.optionId(this.control.value as any)) {
+            this.control.setValue(value, { emitEvent: config.emitEvent });
+          }
         }
 
         resolve();

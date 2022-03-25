@@ -101,13 +101,19 @@ export class DashboardEditor extends BaseEditor {
       optionLabel: country => country.name.common,
       options: this.loadAllCountries(),
       value: [],
+      onValueChange: allies => {
+        console.error(`Selected allies: ${allies.map(country => country.name.common).join(", ")}`);
+      },
     });
 
     super.initialize();
   }
 
-  public reloadCountries() {
+  public reloadControls() {
+    this.dayOfBirth.options = [...this.dayOfBirth.options];
+
     this.coutry.setOptions(this.loadAllCountries());
+    this.allies.setOptions(this.loadAllCountries());
   }
 
   private loadAllCountries() {
