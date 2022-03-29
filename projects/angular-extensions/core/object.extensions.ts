@@ -59,6 +59,36 @@ export function overrideFunction<TIntance extends { [prop: string]: TFunc | any 
   };
 }
 
+export function overrideProperty<TIntance extends { [prop: string]: TProp | any }, TProp extends Object>(
+  context: TIntance,
+  propertyProvider: (instance: TIntance) => TProp,
+  propertyConfig: {
+    get?: (originalProperty: TProp, propertyContext: TIntance) => TProp;
+    set?: (originalProperty: (value: TProp) => void, propertyContext: TIntance, value: TProp) => void;
+  }
+) {
+  let propertyName = nameOf<TIntance>(propertyProvider);
+
+  let originalProperty = Object.getOwnPropertyDescriptor(context, propertyName) ||
+    Object.getOwnPropertyDescriptor(context.__proto__, propertyName);
+
+  let newProperty = Object.assign({}, originalProperty, {
+    get() {
+      return propertyConfig.get(
+        Object.setPrototypeOf(Object.assign({}, originalProperty), this).get(),
+        context);
+    },
+    set(value: TProp) {
+      propertyConfig.set(
+        Object.setPrototypeOf(Object.assign({}, originalProperty), this).set,
+        context,
+        value);
+    },
+  });
+
+  Object.defineProperty(context, propertyName, newProperty);
+}
+
 export function isDate(date: any) {
   // avoid parsing simple ISO formats
   return typeof date == "string" &&
