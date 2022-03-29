@@ -6,7 +6,11 @@
   <div class="row">
     <div class="col-sm-6">
       <text-control class="d-block"
-                    [field]="editor.firstName"></text-control>
+                    [field]="editor.firstName"
+                    [clearable]="true"
+                    actionButtonIcon="qr_code_scanner"
+                    actionButtonTooltip="Scan"
+                    (actionButton)="scan($event)"></text-control>
     </div>
 
     <div class="col-sm-6">

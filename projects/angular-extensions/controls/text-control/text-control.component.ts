@@ -1,21 +1,21 @@
-import { Component, Input, ViewChild } from "@angular/core";
+import { Component, EventEmitter, Input, Output, ViewChild } from "@angular/core";
 import { MatFormFieldAppearance } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 
-import { Field, TimeOfDay } from "angular-extensions/models";
+import { Field } from "angular-extensions/models";
 
 @Component({
   selector: "text-control",
   templateUrl: "./text-control.component.html",
   styleUrls: ["./text-control.component.scss"]
 })
-export class TextControlComponent {
+export class TextControlComponent<T> {
 
   @ViewChild(MatInput)
   public input: MatInput;
 
   @Input()
-  public field: Field<string> | Field<number> | Field<TimeOfDay>;
+  public field: Field<T>;
 
   @Input()
   public fieldClass: string;
@@ -43,4 +43,13 @@ export class TextControlComponent {
 
   @Input()
   public clearable = false;
+
+  @Input()
+  public actionButtonIcon?: string;
+
+  @Input()
+  public actionButtonTooltip?: string;
+
+  @Output()
+  public actionButton = new EventEmitter<Field<T>>();
 }

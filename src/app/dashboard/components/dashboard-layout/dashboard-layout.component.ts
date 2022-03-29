@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { Field } from "angular-extensions";
 import { DashboardApiService } from "app/dashboard/services";
 import { DashboardEditor } from "./dashboard.editor";
 
@@ -18,6 +19,10 @@ export class DashboardLayoutComponent implements OnInit {
   }
 
   public ngOnInit() {
+  }
+
+  public scan(field: Field<string>) {
+    console.error(`Action button triigered for: ${field.name}`);
   }
 
   public submit() {

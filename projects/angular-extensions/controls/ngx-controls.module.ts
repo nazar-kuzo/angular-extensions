@@ -11,8 +11,6 @@ import {
 } from "@angular-material-components/datetime-picker";
 
 import { DateAdapter, MatDateFormats, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from "@angular/material/core";
-import { MatButtonModule } from "@angular/material/button";
-import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatSelectModule } from "@angular/material/select";
@@ -70,6 +68,12 @@ export interface NgxControlsConfig {
   dateFormats: MatDateFormats;
 }
 
+const moduleConfigDefaults: NgxControlsConfig = {
+  dateFormats: NGX_DATE_FORMATS,
+  dateAdapterType: NgxDateAdapter,
+  dateLocale: "en-GB",
+};
+
 @NgModule({
   imports: [
     CommonModule,
@@ -79,8 +83,6 @@ export interface NgxControlsConfig {
     NgxTextAreaControlModule,
     NgxModalsModule,
 
-    MatButtonModule,
-    MatTooltipModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatSelectModule,
@@ -101,6 +103,30 @@ export interface NgxControlsConfig {
     SpinnerComponent,
     CollectionControlComponent,
   ],
+  providers: [
+    {
+      provide: DateAdapter,
+      useClass: moduleConfigDefaults.dateAdapterType,
+      deps: [MAT_DATE_LOCALE, Platform]
+    },
+    {
+      provide: NgxMatDateAdapter,
+      useClass: moduleConfigDefaults.dateAdapterType,
+      deps: [MAT_DATE_LOCALE, Platform]
+    },
+    {
+      provide: MAT_DATE_LOCALE,
+      useValue: moduleConfigDefaults.dateLocale
+    },
+    {
+      provide: MAT_DATE_FORMATS,
+      useValue: moduleConfigDefaults.dateFormats
+    },
+    {
+      provide: NGX_MAT_DATE_FORMATS,
+      useValue: moduleConfigDefaults.dateFormats
+    },
+  ],
   exports: [
     CommonModule,
     NgxDirectivesModule,
@@ -109,8 +135,6 @@ export interface NgxControlsConfig {
     NgxTextAreaControlModule,
     NgxModalsModule,
 
-    MatButtonModule,
-    MatTooltipModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatSelectModule,
@@ -136,11 +160,7 @@ export class NgxControlsModule {
 
   public static configure(config: Partial<NgxControlsConfig>): ModuleWithProviders<NgxControlsModule> {
 
-    let moduleConfig = Object.assign<NgxControlsConfig, Partial<NgxControlsConfig>>({
-      dateFormats: NGX_DATE_FORMATS,
-      dateAdapterType: NgxDateAdapter,
-      dateLocale: "en-GB",
-    }, config);
+    let moduleConfig = Object.assign<NgxControlsConfig, Partial<NgxControlsConfig>>(moduleConfigDefaults, config);
 
     if (config.dateFormats) {
       Object.assign(NGX_DATE_FORMATS, config.dateFormats);
