@@ -64,7 +64,7 @@ export function overrideProperty<TIntance extends { [prop: string]: TProp | any 
   propertyProvider: (instance: TIntance) => TProp,
   propertyConfig: {
     get?: (originalProperty: TProp, propertyContext: TIntance) => TProp;
-    set?: (originalProperty: (value: TProp) => void, propertyContext: TIntance, value: TProp) => void;
+    set?: (originalProperty: ((value: TProp) => void) | null, propertyContext: TIntance, value: TProp) => void;
   }
 ) {
   let propertyName = nameOf<TIntance>(propertyProvider);
@@ -72,19 +72,39 @@ export function overrideProperty<TIntance extends { [prop: string]: TProp | any 
   let originalProperty = Object.getOwnPropertyDescriptor(context, propertyName) ||
     Object.getOwnPropertyDescriptor(context.__proto__, propertyName);
 
-  let newProperty = Object.assign({}, originalProperty, {
-    get() {
-      return propertyConfig.get(
-        Object.setPrototypeOf(Object.assign({}, originalProperty), this).get(),
-        context);
-    },
-    set(value: TProp) {
-      propertyConfig.set(
-        Object.setPrototypeOf(Object.assign({}, originalProperty), this).set,
-        context,
-        value);
-    },
-  });
+  let newProperty: PropertyDescriptor = Object.assign({}, originalProperty);
+
+  if (propertyConfig.get) {
+    let propertyValue = newProperty.value as TProp;
+
+    delete newProperty.value;
+
+    Object.assign(newProperty, {
+      get() {
+        return propertyConfig.get(
+          originalProperty.get
+            ? Object.setPrototypeOf(Object.assign({}, originalProperty), this).get()
+            : propertyValue,
+          context);
+      },
+    });
+  }
+
+  if (propertyConfig.set) {
+    delete newProperty.value;
+    delete newProperty.writable;
+
+    Object.assign(newProperty, {
+      set(value: TProp) {
+        propertyConfig.set(
+          originalProperty.set
+            ? Object.setPrototypeOf(Object.assign({}, originalProperty), this).set
+            : null,
+          context,
+          value);
+      },
+    });
+  }
 
   Object.defineProperty(context, propertyName, newProperty);
 }
