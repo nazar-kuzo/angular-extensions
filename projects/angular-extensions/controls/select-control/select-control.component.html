@@ -25,9 +25,9 @@
       </mat-select-trigger>
 
       <mat-option *ngIf="searchable">
-        <ngx-mat-select-search [placeholderLabel]="!field.options?.length && !field.optionsProvider ? 'No items available' : 'Search'"
-                               [disableInitialFocus]="!field.options?.length && !field.optionsProvider"
-                               [ngStyle]="{'pointer-events': !field.options?.length && !field.optionsProvider ? 'none' : 'all'}"
+        <ngx-mat-select-search [placeholderLabel]="isSearchAvailable() ? 'Type to search items' : 'No items available'"
+                               [disableInitialFocus]="!isSearchAvailable()"
+                               [ngStyle]="{'pointer-events': isSearchAvailable() ? 'all' : 'none'}"
                                [noEntriesFoundLabel]="$any(null)"
                                [formControl]="filterControl"
                                [searching]="field.isQuerying"></ngx-mat-select-search>
@@ -100,11 +100,6 @@
   <ng-container *ngIf="!field.isQuerying">
     <ng-container *ngIf="filterControl.value">
       <mat-option [disabled]="true">No items found</mat-option>
-    </ng-container>
-
-    <ng-container *ngIf="!filterControl.value">
-      <mat-option *ngIf="field.optionsProvider"
-                  [disabled]="true">Type to search items</mat-option>
     </ng-container>
   </ng-container>
 </ng-template>

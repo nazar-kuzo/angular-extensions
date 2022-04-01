@@ -222,7 +222,13 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
     }
   }
 
-  public toggleSelectAll() {
+  public isSearchAvailable() {
+    return this.field.isQuerying ||
+      this.field.options?.length ||
+      this.field.optionsProvider;
+  }
+
+  private toggleSelectAll() {
     let shouldSelect = !this.getSelectAllState();
 
     let options = this.select.options
