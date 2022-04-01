@@ -125,6 +125,19 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
           debounceTime(0),
           takeUntil(this.destroy))
         .subscribe(() => this.setSelectAllState(this.getSelectAllState()));
+
+      overrideFunction(
+        MatOption.prototype,
+        option => option._selectViaInteraction,
+        (select, option) => {
+          if (option == this.selectAllOption) {
+            this.toggleSelectAll();
+            this.setSelectAllState(this.getSelectAllState());
+          }
+          else {
+            select();
+          }
+        });
     }
   }
 
@@ -156,17 +169,6 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
             select.stateChanges.next();
           });
         });
-    }
-
-    if (this.multiple && this.showSelectAll) {
-      this.selectAllOption?._getHostElement().addEventListener(
-        "click",
-        event => {
-          this.toggleSelectAll();
-          event.preventDefault();
-          event.stopImmediatePropagation();
-        },
-        { capture: true });
     }
 
     if (this.searchable && this.field.optionsProvider) {
@@ -220,19 +222,33 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
     }
   }
 
-  private toggleSelectAll() {
+  public toggleSelectAll() {
     let shouldSelect = !this.getSelectAllState();
 
-    this.select.options
-      .filter(option => !option.disabled && option.id != this.selectAllOption?.id)
+    let options = this.select.options
+      .filter(option => !option.disabled && option.id != this.selectAllOption?.id);
+
+    options
       .forEach(option => {
         if (shouldSelect) {
-          option.select();
+          (option as any)._selected = true;
+          (option as any)._changeDetectorRef.markForCheck();
         }
         else {
-          option.deselect();
+          (option as any)._selected = false;
+          (option as any)._changeDetectorRef.markForCheck();
         }
       });
+
+    if (shouldSelect) {
+      this.select._selectionModel.select(...options);
+    }
+    else {
+      this.select._selectionModel.deselect(...options);
+    }
+
+    (this.select as any)._propagateChanges();
+    this.changeDetectorRef.markForCheck();
   }
 
   private getSelectAllState() {

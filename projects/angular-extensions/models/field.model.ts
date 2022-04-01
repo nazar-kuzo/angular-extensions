@@ -460,7 +460,10 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TConvertedValue
         else {
           let value = this.optionValue(this.options.find(optionPredicate)) || config.defaultValue;
 
-          if (this.optionId(value as any) !== this.optionId(this.control.value as any)) {
+          if (value != null && this.control.value != null && this.optionId(value as any) !== this.optionId(this.control.value as any)) {
+            this.control.setValue(value, { emitEvent: config.emitEvent });
+          }
+          else if ((value != null) != (this.control.value != null)) {
             this.control.setValue(value, { emitEvent: config.emitEvent });
           }
         }
