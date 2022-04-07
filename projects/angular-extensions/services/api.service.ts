@@ -35,10 +35,14 @@ export class ApiService {
 
   private httpOptions: DefaultHttpClientOptions;
 
+  public apiUrl: string;
+
   constructor(
     private http: HttpClient,
-    @Inject(API_CONFIG) private config: ApiConfig,
+    @Inject(API_CONFIG) config: ApiConfig,
   ) {
+    this.apiUrl = config.apiUrl;
+
     this.httpOptions = {
       headers: {
         "Content-Type": "application/json",
@@ -51,25 +55,25 @@ export class ApiService {
 
   public get<T>(url: string, params?: HttpParams, httpOptions?: HttpClientOptions) {
     return this.http
-      .get<T>(`${this.config.apiUrl}/${url}`, this.getHttpOptions(params, httpOptions))
+      .get<T>(`${this.apiUrl}/${url}`, this.getHttpOptions(params, httpOptions))
       .pipe(map(response => response.body as T));
   }
 
   public post<T>(url: string, body?: any, params?: HttpParams, httpOptions?: HttpClientOptions) {
     return this.http
-      .post<T>(`${this.config.apiUrl}/${url}`, JSON.stringify(body), this.getHttpOptions(params, httpOptions))
+      .post<T>(`${this.apiUrl}/${url}`, JSON.stringify(body), this.getHttpOptions(params, httpOptions))
       .pipe(map(response => response.body as T));
   }
 
   public put<T>(url: string, body?: any, params?: HttpParams, httpOptions?: HttpClientOptions) {
     return this.http
-      .put<T>(`${this.config.apiUrl}/${url}`, JSON.stringify(body), this.getHttpOptions(params, httpOptions))
+      .put<T>(`${this.apiUrl}/${url}`, JSON.stringify(body), this.getHttpOptions(params, httpOptions))
       .pipe(map(response => response.body as T));
   }
 
   public delete<T>(url: string, params?: HttpParams, httpOptions?: HttpClientOptions) {
     return this.http
-      .delete<T>(`${this.config.apiUrl}/${url}`, this.getHttpOptions(params, httpOptions))
+      .delete<T>(`${this.apiUrl}/${url}`, this.getHttpOptions(params, httpOptions))
       .pipe(map(response => response.body as T));
   }
 
