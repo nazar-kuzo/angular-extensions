@@ -1,5 +1,5 @@
 import { of, Subject } from "rxjs";
-import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, takeUntil, tap } from "rxjs/operators";
+import { catchError, debounceTime, filter, switchMap, takeUntil, tap } from "rxjs/operators";
 import {
   Component, OnInit, Input, Optional, ElementRef, ChangeDetectorRef,
   ViewChild, OnDestroy, AfterViewInit, ContentChild, TemplateRef, ChangeDetectionStrategy,
@@ -105,12 +105,6 @@ export class SelectControlComponent<TValue, TOption> extends ControlBase<TValue,
   public ngOnInit() {
     this.filterControl.setValue(this.filter);
 
-    this.field.control.statusChanges
-      .pipe(takeUntil(this.destroy))
-      .subscribe(() => {
-        this.changeDetectorRef.markForCheck();
-      });
-
     if (this.multiple && this.showSelectAll) {
       this.select.optionSelectionChanges
         .pipe(
@@ -169,7 +163,6 @@ export class SelectControlComponent<TValue, TOption> extends ControlBase<TValue,
       this.filterControl.valueChanges
         .pipe(
           filter((query: string) => query != ""),
-          distinctUntilChanged(),
           tap(() => {
             this.field.options = [];
             this.field.isQuerying = true;

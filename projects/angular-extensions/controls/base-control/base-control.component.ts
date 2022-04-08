@@ -1,15 +1,23 @@
-import { Subject } from "rxjs";
+import { merge, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import {
-  Component, Input, ViewChild, TemplateRef, ElementRef,
-  OnInit, OnDestroy, ViewEncapsulation, AfterViewInit, Directive, ChangeDetectionStrategy, ChangeDetectorRef,
-} from "@angular/core";
 import { MatFormFieldAppearance } from "@angular/material/form-field";
+import {
+  Component, Input, ViewChild, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef,
+  OnInit, OnDestroy, ViewEncapsulation, AfterViewInit, Directive, HostBinding,
+} from "@angular/core";
 
 import { Field } from "angular-extensions/models";
 
 @Directive()
 export class ControlBase<TValue, TOption = any> {
+
+  @HostBinding("class")
+  public class = "control";
+
+  @HostBinding("class.d-none")
+  public get visible() {
+    return !this.field?.visible;
+  };
 
   @Input()
   public field: Field<TValue, TOption>;
@@ -43,26 +51,18 @@ export class BaseControlComponent<TValue> extends ControlBase<TValue> implements
   public destroy = new Subject();
 
   constructor(
-    private emenentRef: ElementRef<HTMLElement>,
     private changeDetectorRef: ChangeDetectorRef,
   ) {
     super();
-
-    this.emenentRef.nativeElement.parentElement?.classList.add("control");
   }
 
   public ngOnInit() {
-    if (this.field.formGroup) {
-      this.field
-        .formGroup
-        .valueChanges
-        .pipe(takeUntil(this.destroy))
-        .subscribe(() => {
-          this.emenentRef.nativeElement.parentElement?.classList.toggle("d-none", !this.field.visible);
-        });
-
-      this.field.formGroup.updateValueAndValidity();
-    }
+    // update control when status changes
+    merge(this.field.control.statusChanges, this.field.control.root.valueChanges)
+      .pipe(takeUntil(this.destroy))
+      .subscribe(() => {
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   public ngAfterViewInit() {
