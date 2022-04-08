@@ -1,7 +1,7 @@
 <ng-content></ng-content>
 
 <ng-template #hintTemplate>
-  <mat-hint class="text-truncate"
+  <mat-hint [ngClass]="hintClass"
             style="cursor: default;"
             [matTooltip]="$any(field.info)">
     {{ field.info }}

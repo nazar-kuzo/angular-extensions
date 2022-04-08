@@ -1,23 +1,14 @@
-import { Component, ElementRef, Input, ViewEncapsulation } from "@angular/core";
-import { MatFormFieldAppearance } from "@angular/material/form-field";
-import { Field } from "angular-extensions/models";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, ViewEncapsulation } from "@angular/core";
+import { ControlBase } from "angular-extensions/controls/base-control";
 
 @Component({
   selector: "time-control",
   templateUrl: "./time-control.component.html",
   styleUrls: ["./time-control.component.scss"],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimeControlComponent {
-
-  @Input()
-  public field: Field<Date | null>;
-
-  @Input()
-  public fieldClass: string;
-
-  @Input()
-  public appearance: MatFormFieldAppearance = "outline";
+export class TimeControlComponent<TValue> extends ControlBase<TValue> {
 
   @Input()
   public initialTime: number[];
@@ -27,7 +18,10 @@ export class TimeControlComponent {
 
   constructor(
     elementRef: ElementRef<HTMLElement>,
-  ) {
+    private changeDetectorRef: ChangeDetectorRef,
+    ) {
+    super();
+
     elementRef
       .nativeElement
       .addEventListener("blur", event => event.stopPropagation(), { capture: true });
@@ -39,6 +33,8 @@ export class TimeControlComponent {
 
       event.preventDefault();
       event.stopImmediatePropagation();
+
+      this.changeDetectorRef.markForCheck();
     }
 
     (document.activeElement as HTMLElement).blur();

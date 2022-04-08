@@ -1,8 +1,9 @@
 <base-control #baseControl
-              [field]="field">
+              [field]="field"
+              [hintClass]="hintClass">
   <mat-form-field cdkTrapFocus
                   [appearance]="appearance"
-                  [class]="fieldClass"
+                  [ngClass]="fieldClass"
                   [cdkTrapFocusAutoCapture]="focused"
                   (click)="input.focus()">
     <mat-label>

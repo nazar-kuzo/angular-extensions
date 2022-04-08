@@ -1,7 +1,8 @@
 <base-control #baseControl
-              [field]="field">
+              [field]="field"
+              [hintClass]="hintClass">
   <mat-form-field [appearance]="appearance"
-                  [class]="fieldClass"
+                  [ngClass]="fieldClass"
                   (click)="dateTimePicker.open(); $event.preventDefault();">
     <mat-label>
       {{ field.label }}

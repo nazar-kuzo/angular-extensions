@@ -1,8 +1,9 @@
 <base-control #baseControl
-              [field]="field">
+              [field]="field"
+              [hintClass]="hintClass">
   <mat-form-field class="cursor-pointer"
                   [appearance]="appearance"
-                  [class]="fieldClass"
+                  [ngClass]="fieldClass"
                   (click)="datePicker.open(); $event.preventDefault();">
     <mat-label>
       {{ field.label }}

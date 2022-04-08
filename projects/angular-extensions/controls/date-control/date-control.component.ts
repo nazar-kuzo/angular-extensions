@@ -1,26 +1,17 @@
-import { Component, ComponentRef, ElementRef, Inject, Input, OnChanges } from "@angular/core";
-import { MatFormFieldAppearance } from "@angular/material/form-field";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentRef, ElementRef, Inject, Input, OnChanges } from "@angular/core";
 import { MatCalendarView, MatDatepicker, MatDatepickerContent } from "@angular/material/datepicker";
 import { MatDateFormats, MAT_DATE_FORMATS } from "@angular/material/core";
 
 import { SimpleChanges } from "angular-extensions/core";
-import { Field } from "angular-extensions/models";
+import { ControlBase } from "angular-extensions/controls/base-control";
 
 @Component({
   selector: "date-control",
   templateUrl: "./date-control.component.html",
-  styleUrls: ["./date-control.component.scss"]
+  styleUrls: ["./date-control.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DateControlComponent implements OnChanges {
-
-  @Input()
-  public field: Field<Date>;
-
-  @Input()
-  public fieldClass: string;
-
-  @Input()
-  public appearance: MatFormFieldAppearance = "outline";
+export class DateControlComponent extends ControlBase<Date> implements OnChanges {
 
   @Input()
   public targetView: "year" | "month" | "day" = "day";
@@ -36,8 +27,11 @@ export class DateControlComponent implements OnChanges {
 
   constructor(
     elementRef: ElementRef<HTMLElement>,
+    private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DATE_FORMATS) private dateFormats: MatDateFormats,
   ) {
+    super();
+
     this.format = dateFormats.display.dateInput;
 
     elementRef
@@ -59,6 +53,8 @@ export class DateControlComponent implements OnChanges {
         this.startView = "month";
         this.format = this.dateFormats.display.dateInput;
       }
+
+      this.changeDetectorRef.markForCheck();
     }
   }
 
@@ -70,6 +66,8 @@ export class DateControlComponent implements OnChanges {
 
       // hide content since we cannot prevent currentView showing next view
       this.getCalendarElement(datePicker).style.display = "none";
+
+      this.changeDetectorRef.markForCheck();
     }
   }
 
@@ -77,6 +75,8 @@ export class DateControlComponent implements OnChanges {
     // fix issue when clicking on year selector it shows "month" view which is not correct
     if (this.targetView == "month" && view == "month") {
       this.getCalendar(datePicker).currentView = "multi-year";
+
+      this.changeDetectorRef.markForCheck();
     }
   }
 
@@ -86,6 +86,8 @@ export class DateControlComponent implements OnChanges {
 
       event.preventDefault();
       event.stopImmediatePropagation();
+
+      this.changeDetectorRef.markForCheck();
     }
 
     (document.activeElement as HTMLElement).blur();

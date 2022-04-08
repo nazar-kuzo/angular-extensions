@@ -1,17 +1,12 @@
-import { Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ControlBase } from "angular-extensions/controls/base-control";
 
-import { Field } from "angular-extensions/models";
 
 @Component({
   selector: "checkbox-control",
   templateUrl: "./checkbox-control.component.html",
-  styleUrls: ["./checkbox-control.component.scss"]
+  styleUrls: ["./checkbox-control.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CheckboxControlComponent {
-
-  @Input()
-  public field: Field<boolean>;
-
-  @Input()
-  public fieldClass: string;
+export class CheckboxControlComponent extends ControlBase<boolean> {
 }

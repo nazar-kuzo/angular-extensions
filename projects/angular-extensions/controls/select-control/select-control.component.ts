@@ -6,13 +6,12 @@ import {
 } from "@angular/core";
 import { MatOption } from "@angular/material/core";
 import { MatSelect } from "@angular/material/select";
-import { MatFormFieldAppearance } from "@angular/material/form-field";
 import { FormControl } from "@angular/forms";
 import { MatMenuTrigger } from "@angular/material/menu";
 
-import { Field } from "angular-extensions/models";
 import { overrideFunction } from "angular-extensions/core";
 import { MatOptionWithContext } from "./option-context/option-context.directive";
+import { ControlBase } from "angular-extensions/controls/base-control";
 
 @Component({
   selector: "select-control",
@@ -20,19 +19,10 @@ import { MatOptionWithContext } from "./option-context/option-context.directive"
   styleUrls: ["./select-control.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectControlComponent<TValue, TOption> implements OnInit, AfterViewInit, OnDestroy {
-
-  @Input()
-  public field: Field<TValue, TOption>;
-
-  @Input()
-  public fieldClass: string;
+export class SelectControlComponent<TValue, TOption> extends ControlBase<TValue, TOption> implements OnInit, AfterViewInit, OnDestroy {
 
   @Input()
   public dropdownClass = "";
-
-  @Input()
-  public appearance: MatFormFieldAppearance = "outline";
 
   @Input()
   public multiple: boolean;
@@ -96,6 +86,8 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
     private changeDetectorRef: ChangeDetectorRef,
     @Optional() matMenuTrigger: MatMenuTrigger,
   ) {
+    super();
+
     // provides ability to have select-control to open
     // custom popup menu without processing actual event
     if (matMenuTrigger) {
@@ -238,12 +230,12 @@ export class SelectControlComponent<TValue, TOption> implements OnInit, AfterVie
       .forEach(option => {
         if (shouldSelect) {
           (option as any)._selected = true;
-          (option as any)._changeDetectorRef.markForCheck();
         }
         else {
           (option as any)._selected = false;
-          (option as any)._changeDetectorRef.markForCheck();
         }
+
+        (option as any)._changeDetectorRef.markForCheck();
       });
 
     if (shouldSelect) {

@@ -10,5 +10,4 @@ export * from "./select-control/select-control.component";
 export * from "./select-control/option-context/option-context.directive";
 export * from "./checkbox-control/checkbox-control.component";
 export * from "./spinner/spinner.component";
-export * from "./collection-control/collection-control.component";
 export * from "./ngx-controls.module";

@@ -1,9 +1,10 @@
-import { Component, Input, ContentChild, TemplateRef } from "@angular/core";
+import { Component, Input, ContentChild, TemplateRef, ChangeDetectionStrategy } from "@angular/core";
 
 @Component({
   selector: "spinner",
   templateUrl: "./spinner.component.html",
-  styleUrls: ["./spinner.component.scss"]
+  styleUrls: ["./spinner.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SpinnerComponent {
 

@@ -34,7 +34,6 @@ import { DateControlComponent } from "./date-control/date-control.component";
 import { DateTimeControlComponent } from "./datetime-control/datetime-control.component";
 import { TimeControlComponent } from "./time-control/time-control.component";
 import { SpinnerComponent } from "./spinner/spinner.component";
-import { CollectionControlComponent } from "./collection-control/collection-control.component";
 
 export class NgxDateAdapter extends NgxMatNativeDateAdapter {
 
@@ -101,7 +100,6 @@ const moduleConfigDefaults: NgxControlsConfig = {
     DateTimeControlComponent,
     TimeControlComponent,
     SpinnerComponent,
-    CollectionControlComponent,
   ],
   providers: [
     {
@@ -153,7 +151,6 @@ const moduleConfigDefaults: NgxControlsConfig = {
     DateTimeControlComponent,
     TimeControlComponent,
     SpinnerComponent,
-    CollectionControlComponent,
   ]
 })
 export class NgxControlsModule {

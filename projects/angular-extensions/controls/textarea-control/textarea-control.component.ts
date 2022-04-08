@@ -1,20 +1,11 @@
-import { Component, Input } from "@angular/core";
-import { MatFormFieldAppearance } from "@angular/material/form-field";
-import { Field } from "angular-extensions/models";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ControlBase } from "angular-extensions/controls/base-control";
 
 @Component({
   selector: "textarea-control",
   templateUrl: "./textarea-control.component.html",
-  styleUrls: ["./textarea-control.component.scss"]
+  styleUrls: ["./textarea-control.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TextAreaControlComponent {
-
-  @Input()
-  public field: Field<string>;
-
-  @Input()
-  public fieldClass: string;
-
-  @Input()
-  public appearance: MatFormFieldAppearance = "outline";
+export class TextAreaControlComponent<TValue> extends ControlBase<TValue> {
 }

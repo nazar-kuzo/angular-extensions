@@ -1,9 +1,11 @@
 <base-control #baseControl
-              [field]="field">
+              [field]="field"
+              [hintClass]="hintClass">
   <div class="field-label">
     <ngx-awesome-uploader #uploader
                           [adapter]="adapter"
                           [showeDragDropZone]="true"
+                          [ngClass]="fieldClass"
                           [showPreviewContainer]="showPreview"
                           [uploadType]="multiple ? 'multi' : 'single'"
                           [fileMaxSize]="maxFileSize"
@@ -17,7 +19,7 @@
 
       <div class="dropzoneTemplate">
         <button mat-raised-button
-                type="button">{{ field.label }}</button>
+                (click)="onDialogOpen()">{{ field.label }}</button>
       </div>
     </ngx-awesome-uploader>
   </div>

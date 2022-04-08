@@ -1,23 +1,22 @@
-import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, OnInit } from "@angular/core";
+import {
+  Component, Input, Output, EventEmitter, ViewChild,
+  ElementRef, OnInit, ChangeDetectorRef, ChangeDetectionStrategy,
+} from "@angular/core";
+
 import { FileSizePipe } from "ngx-filesize";
 import { FilePickerAdapter, FilePickerComponent, FilePreviewModel, FileValidationTypes, ValidationError } from "ngx-awesome-uploader";
 
-import { Field } from "angular-extensions/models";
 import { FileService } from "./file.service";
+import { ControlBase } from "angular-extensions/controls/base-control";
 
 @Component({
   selector: "file-control",
   templateUrl: "./file-control.component.html",
   styleUrls: ["./file-control.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [FileService]
 })
-export class FileControlComponent implements OnInit {
-
-  @Input()
-  public field: Field<File[]>;
-
-  @Input()
-  public disabled: boolean;
+export class FileControlComponent extends ControlBase<File[]> implements OnInit {
 
   @Input()
   public multiple: boolean;
@@ -53,26 +52,40 @@ export class FileControlComponent implements OnInit {
 
   constructor(
     private elementRef: ElementRef<HTMLFieldSetElement>,
+    private changeDetectorRef: ChangeDetectorRef,
     private fileSizePipe: FileSizePipe,
     public defaultAdapter: FileService,
   ) {
+    super();
+
     this.adapter = this.adapter || defaultAdapter;
   }
 
   public ngOnInit() {
-    this.elementRef.nativeElement.addEventListener(
-      "change",
-      () => {
-        // replace file is single select mode
-        if (!this.multiple) {
+    // replace file in single select mode
+    if (!this.multiple) {
+      this.elementRef.nativeElement.addEventListener(
+        "change",
+        () => {
           this.field.control.setValue([], { emitEvent: false, emitModelToViewChange: false });
 
           this.filePicker.files = [];
-        }
 
+          this.changeDetectorRef.markForCheck();
+        },
+        { capture: true });
+    }
+  }
+
+  public onDialogOpen() {
+    this.elementRef.nativeElement.addEventListener(
+      "focus",
+      () => {
         this.field.control.markAsTouched();
+
+        this.changeDetectorRef.markForCheck();
       },
-      { capture: true });
+      { capture: true, once: true });
   }
 
   public onValidationError(error: ValidationError) {
@@ -85,6 +98,8 @@ export class FileControlComponent implements OnInit {
     else {
       this.validationErrors.push(error);
     }
+
+    this.changeDetectorRef.markForCheck();
   }
 
   public onFileAdded(file: FilePreviewModel) {
@@ -93,6 +108,8 @@ export class FileControlComponent implements OnInit {
     this.field.value = this.field.value
       ? [...this.field.value, file.file as File]
       : [file.file as File];
+
+    this.changeDetectorRef.markForCheck();
   }
 
   public onFileRemoved(removedFile: FilePreviewModel) {
@@ -101,6 +118,8 @@ export class FileControlComponent implements OnInit {
     this.field.value = this.field.value
       ? this.field.value.filter(file => file.name != removedFile.fileName)
       : [removedFile.file as File];
+
+    this.changeDetectorRef.markForCheck();
   }
 
   private getValidationErrorMessage(errorType: FileValidationTypes) {
