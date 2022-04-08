@@ -1,9 +1,10 @@
 <base-control #baseControl
               [field]="field"
               [hintClass]="hintClass">
-  <mat-form-field [appearance]="appearance"
+  <mat-form-field class="cursor-pointer"
+                  [appearance]="appearance"
                   [ngClass]="fieldClass"
-                  (click)="timePicker.open(); $event.preventDefault();">
+                  (click)="onFieldClick($event)">
     <mat-label>
       {{ field.label }}
     </mat-label>

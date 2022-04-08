@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from "@angular/core";
 import { MatInput } from "@angular/material/input";
 
 import { Field } from "angular-extensions/models";
@@ -44,4 +44,18 @@ export class TextControlComponent<TValue> extends ControlBase<TValue> {
 
   @ViewChild(MatInput)
   public input: MatInput;
+
+  constructor(
+    private elementRef: ElementRef<HTMLElement>,
+    ) {
+    super();
+  }
+
+  public onFieldClick(event: MouseEvent) {
+    if (this.elementRef.nativeElement.querySelector(".mat-form-field-flex").contains(event.target as HTMLElement)) {
+      this.input.focus();
+    }
+
+    event.preventDefault();
+  }
 }

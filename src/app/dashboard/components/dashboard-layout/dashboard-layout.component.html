@@ -19,6 +19,24 @@
     </div>
 
     <div class="col-sm-6">
+      <date-control class="d-block"
+                      [field]="editor.dateOfBirth"
+                      [clearable]="true"></date-control>
+    </div>
+
+    <div class="col-sm-6">
+      <datetime-control class="d-block"
+                      [field]="editor.dateTimeOfBirth"
+                      [clearable]="true"></datetime-control>
+    </div>
+
+    <div class="col-sm-6">
+      <time-control class="d-block"
+                      [field]="editor.timeOfBirth"
+                      [clearable]="true"></time-control>
+    </div>
+
+    <div class="col-sm-6">
       <select-control class="d-block"
                       [field]="editor.dayOfBirth"></select-control>
     </div>

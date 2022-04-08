@@ -81,7 +81,7 @@ export class FileControlComponent extends ControlBase<File[]> implements OnInit 
     this.elementRef.nativeElement.addEventListener(
       "focus",
       () => {
-        this.field.control.markAsTouched();
+        this.field.control.markAsTouched({ onlySelf: true });
 
         this.changeDetectorRef.markForCheck();
       },

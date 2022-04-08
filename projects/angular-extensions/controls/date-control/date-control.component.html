@@ -4,7 +4,7 @@
   <mat-form-field class="cursor-pointer"
                   [appearance]="appearance"
                   [ngClass]="fieldClass"
-                  (click)="datePicker.open(); $event.preventDefault();">
+                  (click)="onFieldClick($event)">
     <mat-label>
       {{ field.label }}
     </mat-label>

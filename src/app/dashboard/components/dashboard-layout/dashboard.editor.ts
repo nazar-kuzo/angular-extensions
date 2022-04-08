@@ -17,6 +17,12 @@ export class DashboardEditor extends BaseEditor {
 
   public lastName: Field<string>;
 
+  public dateOfBirth: Field<Date>;
+
+  public dateTimeOfBirth: Field<Date>;
+
+  public timeOfBirth: Field<Date>;
+
   public dayOfBirth: Field<DayOfWeek, Option<DayOfWeek>>;
 
   public coutry: Field<Country>;
@@ -40,6 +46,27 @@ export class DashboardEditor extends BaseEditor {
 
     this.lastName = new Field({
       label: "Last Name",
+      validation: {
+        required: { value: true }
+      },
+    });
+
+    this.dateOfBirth = new Field<Date>({
+      label: "Date of Birth",
+      validation: {
+        required: { value: true }
+      },
+    });
+
+    this.dateTimeOfBirth = new Field<Date>({
+      label: "Date/Time of Birth",
+      validation: {
+        required: { value: true }
+      },
+    });
+
+    this.timeOfBirth = new Field<Date>({
+      label: "Time of Birth",
       validation: {
         required: { value: true }
       },

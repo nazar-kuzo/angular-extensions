@@ -3,7 +3,7 @@
               [hintClass]="hintClass">
   <mat-form-field [appearance]="appearance"
                   [ngClass]="fieldClass"
-                  (click)="dateTimePicker.open(); $event.preventDefault();">
+                  (click)="onFieldClick($event)">
     <mat-label>
       {{ field.label }}
     </mat-label>

@@ -1,4 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentRef, ElementRef, Inject, Input, OnChanges } from "@angular/core";
+import {
+  ChangeDetectionStrategy, ChangeDetectorRef, Component,
+  ComponentRef, ElementRef, Inject, Input, OnChanges, ViewChild,
+} from "@angular/core";
 import { MatCalendarView, MatDatepicker, MatDatepickerContent } from "@angular/material/datepicker";
 import { MatDateFormats, MAT_DATE_FORMATS } from "@angular/material/core";
 
@@ -25,8 +28,11 @@ export class DateControlComponent extends ControlBase<Date> implements OnChanges
   @Input()
   public clearable: boolean;
 
+  @ViewChild(MatDatepicker, { static: true })
+  public datePicker: MatDatepicker<any>;
+
   constructor(
-    elementRef: ElementRef<HTMLElement>,
+    private elementRef: ElementRef<HTMLElement>,
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DATE_FORMATS) private dateFormats: MatDateFormats,
   ) {
@@ -58,6 +64,14 @@ export class DateControlComponent extends ControlBase<Date> implements OnChanges
     }
   }
 
+  public onFieldClick(event: MouseEvent) {
+    if (this.elementRef.nativeElement.querySelector(".mat-form-field-flex").contains(event.target as HTMLElement)) {
+      this.datePicker.open();
+    }
+
+    event.preventDefault();
+  }
+
   public dateSelected(date: Date, datePicker: MatDatepicker<Date>, isTargetView = false) {
     if (isTargetView) {
       this.field.value = date.asUtcDate();
@@ -83,6 +97,8 @@ export class DateControlComponent extends ControlBase<Date> implements OnChanges
   public onToggle(event: MouseEvent) {
     if (this.clearable && this.field.value != null) {
       this.field.value = null as any;
+
+      (this.datePicker.datepickerInput as any)._formField._control.focused = false;
 
       event.preventDefault();
       event.stopImmediatePropagation();

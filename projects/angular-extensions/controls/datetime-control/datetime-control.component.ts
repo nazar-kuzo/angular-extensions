@@ -1,4 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, Input, ViewEncapsulation } from "@angular/core";
+import { NgxMatDatetimePicker } from "@angular-material-components/datetime-picker";
+import {
+  ChangeDetectionStrategy, ChangeDetectorRef, Component,
+  ElementRef, Inject, Input, ViewChild, ViewEncapsulation,
+} from "@angular/core";
 import { MatDateFormats, MAT_DATE_FORMATS } from "@angular/material/core";
 
 import { ControlBase } from "angular-extensions/controls/base-control";
@@ -27,8 +31,11 @@ export class DateTimeControlComponent extends ControlBase<Date> {
   @Input()
   public format: string;
 
+  @ViewChild(NgxMatDatetimePicker, { static: true })
+  public dateTimePicker: NgxMatDatetimePicker<any>;
+
   constructor(
-    elementRef: ElementRef<HTMLElement>,
+    private elementRef: ElementRef<HTMLElement>,
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DATE_FORMATS) dateFormats: MatDateFormats,
   ) {
@@ -41,11 +48,21 @@ export class DateTimeControlComponent extends ControlBase<Date> {
       .addEventListener("blur", event => event.stopPropagation(), { capture: true });
   }
 
+  public onFieldClick(event: MouseEvent) {
+    if (this.elementRef.nativeElement.querySelector(".mat-form-field-flex").contains(event.target as HTMLElement)) {
+      this.dateTimePicker.open();
+    }
+
+    event.preventDefault();
+  }
+
   public onToggle(event: MouseEvent) {
     if (this.clearable && this.field.control.enabled && this.field.value != null) {
       this.field.value = null as any;
 
-      this.field.control.markAsTouched();
+      this.field.control.markAsTouched({ onlySelf: true });
+
+      (this.dateTimePicker.datepickerInput as any)._formField._control.focused = false;
 
       event.preventDefault();
       event.stopImmediatePropagation();
