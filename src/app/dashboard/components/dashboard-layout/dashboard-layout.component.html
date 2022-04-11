@@ -19,21 +19,31 @@
     </div>
 
     <div class="col-sm-6">
+      <text-control class="d-block"
+                    [field]="editor.phone"
+                    [type]="'tel'"
+                    [prefix]="'+ '"
+                    [mask]="'00-000-000-000'"
+                    [showMaskTyped]="true"
+                    [clearable]="true"></text-control>
+    </div>
+
+    <div class="col-sm-6">
       <date-control class="d-block"
-                      [field]="editor.dateOfBirth"
-                      [clearable]="true"></date-control>
+                    [field]="editor.dateOfBirth"
+                    [clearable]="true"></date-control>
     </div>
 
     <div class="col-sm-6">
       <datetime-control class="d-block"
-                      [field]="editor.dateTimeOfBirth"
-                      [clearable]="true"></datetime-control>
+                        [field]="editor.dateTimeOfBirth"
+                        [clearable]="true"></datetime-control>
     </div>
 
     <div class="col-sm-6">
       <time-control class="d-block"
-                      [field]="editor.timeOfBirth"
-                      [clearable]="true"></time-control>
+                    [field]="editor.timeOfBirth"
+                    [clearable]="true"></time-control>
     </div>
 
     <div class="col-sm-6">
@@ -59,17 +69,28 @@
     </div>
 
     <div class="col-sm-6">
-      <file-control [field]="editor.image"
+      <textarea-control class="d-block"
+                        [field]="editor.anthem"></textarea-control>
+    </div>
+
+    <div class="col-sm-6">
+      <checkbox-control class="d-block"
+                        [field]="editor.isOfficial"></checkbox-control>
+    </div>
+
+    <div class="col-sm-6">
+      <file-control class="d-inline-block mr-3 p-0"
+                    [field]="editor.image"
                     [showPreview]="true"></file-control>
+
+      <button class="mr-3"
+              mat-raised-button
+              color="secondary"
+              (click)="editor.reloadControls()">Reload controls</button>
+
+      <button mat-raised-button
+              color="primary"
+              (click)="submit()">Submit</button>
     </div>
   </div>
-
-  <button class="mr-3"
-          mat-raised-button
-          color="secondary"
-          (click)="editor.reloadControls()">Reload controls</button>
-
-  <button mat-raised-button
-          color="primary"
-          (click)="submit()">Submit</button>
 </div>

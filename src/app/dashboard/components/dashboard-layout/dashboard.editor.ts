@@ -17,6 +17,8 @@ export class DashboardEditor extends BaseEditor {
 
   public lastName: Field<string>;
 
+  public phone: Field<string>;
+
   public dateOfBirth: Field<Date>;
 
   public dateTimeOfBirth: Field<Date>;
@@ -30,6 +32,10 @@ export class DashboardEditor extends BaseEditor {
   public image: Field<File[]>;
 
   public allies: Field<Country[], Country>;
+
+  public anthem: Field<string>;
+
+  public isOfficial: Field<boolean>;
 
   constructor(
     private api: HttpClient,
@@ -46,6 +52,13 @@ export class DashboardEditor extends BaseEditor {
 
     this.lastName = new Field({
       label: "Last Name",
+      validation: {
+        required: { value: true }
+      },
+    });
+
+    this.phone = new Field({
+      label: "Phone",
       validation: {
         required: { value: true }
       },
@@ -128,6 +141,17 @@ export class DashboardEditor extends BaseEditor {
       onValueChange: allies => {
         console.error(`Selected allies: ${allies.map(country => country.name.common).join(", ")}`);
       },
+    });
+
+    this.anthem = new Field({
+      label: "Anthem",
+      validation: {
+        required: { value: true },
+      },
+    });
+
+    this.isOfficial = new Field({
+      label: "Is official",
     });
 
     super.initialize();

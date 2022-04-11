@@ -9,7 +9,7 @@ import { TextControlComponent } from "./text-control.component";
   imports: [
     CommonModule,
     NgxBaseControlModule,
-    NgxMaskModule.forChild(),
+    NgxMaskModule.forRoot(),
   ],
   declarations: [
     TextControlComponent,

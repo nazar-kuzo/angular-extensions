@@ -7,14 +7,14 @@
   <mat-dialog-content>
     <ng-container *ngIf="settings.multiline">
       <textarea-control class="d-block"
-                        fieldClass="d-block"
-                        [field]="field"></textarea-control>
+                        [field]="field"
+                        [focused]="true"></textarea-control>
     </ng-container>
 
     <ng-container *ngIf="!settings.multiline">
       <text-control class="d-block"
-                    fieldClass="d-block"
-                    [field]="field"></text-control>
+                    [field]="field"
+                    [focused]="true"></text-control>
     </ng-container>
   </mat-dialog-content>
 

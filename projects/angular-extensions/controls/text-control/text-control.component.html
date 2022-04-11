@@ -1,10 +1,7 @@
 <base-control #baseControl
-              [field]="field"
-              [hintClass]="hintClass">
-  <mat-form-field cdkTrapFocus
-                  [appearance]="appearance"
+              [control]="this">
+  <mat-form-field [appearance]="appearance"
                   [ngClass]="fieldClass"
-                  [cdkTrapFocusAutoCapture]="focused"
                   (click)="onFieldClick($event)">
     <mat-label>
       {{ field.label }}

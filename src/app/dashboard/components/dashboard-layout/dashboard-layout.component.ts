@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
-import { Field } from "angular-extensions";
+import { MatDialog } from "@angular/material/dialog";
+import { Field, ModalPromptComponent, ModalPromptSettings } from "angular-extensions";
 import { DashboardApiService } from "app/dashboard/services";
 import { DashboardEditor } from "./dashboard.editor";
 
@@ -15,6 +16,7 @@ export class DashboardLayoutComponent implements OnInit {
   constructor(
     public editor: DashboardEditor,
     private dashboardApiServise: DashboardApiService,
+    private dialog: MatDialog,
   ) {
   }
 
@@ -22,8 +24,13 @@ export class DashboardLayoutComponent implements OnInit {
   }
 
   public scan(field: Field<string>) {
-    console.error(`Action button triigered for: ${field.name}`);
+    this.dialog.open<ModalPromptComponent, ModalPromptSettings>(ModalPromptComponent, {
+      data: {
+        title: "Scan text",
+      }
+    });
   }
+
 
   public submit() {
     this.editor.form.validate();

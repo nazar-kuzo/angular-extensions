@@ -1,59 +1,59 @@
 <ng-content></ng-content>
 
 <ng-template #hintTemplate>
-  <mat-hint [ngClass]="hintClass"
+  <mat-hint [ngClass]="control.hintClass"
             style="cursor: default;"
-            [matTooltip]="$any(field.info)">
-    {{ field.info }}
+            [matTooltip]="$any(control.field.info)">
+    {{ control.field.info }}
   </mat-hint>
 </ng-template>
 
 <ng-template #errorsTemplate>
-  <mat-error *ngIf="field.control.errors?.required as error">
-    {{ field.validation.text || "Field is required" }}
+  <mat-error *ngIf="control.field.control.errors?.required as error">
+    {{ control.field.validation.text || "Field is required" }}
   </mat-error>
 
-  <mat-error *ngIf="field.control.errors?.requiredTrue as error">
-    {{ field.validation.requiredTrue?.text || "Field is required" }}
+  <mat-error *ngIf="control.field.control.errors?.requiredTrue as error">
+    {{ control.field.validation.requiredTrue?.text || "Field is required" }}
   </mat-error>
 
-  <mat-error *ngIf="field.control.errors?.min as error">
-    {{ field.validation.min?.text || "Value should be greater than " + error.min }}
+  <mat-error *ngIf="control.field.control.errors?.min as error">
+    {{ control.field.validation.min?.text || "Value should be greater than " + error.min }}
   </mat-error>
 
-  <mat-error *ngIf="field.control.errors?.max as error">
-    {{ field.validation.max?.text || "Value should be smaller than " + error.max }}
+  <mat-error *ngIf="control.field.control.errors?.max as error">
+    {{ control.field.validation.max?.text || "Value should be smaller than " + error.max }}
   </mat-error>
 
-  <mat-error *ngIf="field.control.errors?.minlength as error">
-    {{ field.validation.minLength?.text || "Value should be longer than " + error.requiredLength }}
+  <mat-error *ngIf="control.field.control.errors?.minlength as error">
+    {{ control.field.validation.minLength?.text || "Value should be longer than " + error.requiredLength }}
   </mat-error>
 
-  <mat-error *ngIf="field.control.errors?.maxlength as error">
-    {{ field.validation.maxLength?.text || "Value should be shorter than " + error.requiredLength }}
+  <mat-error *ngIf="control.field.control.errors?.maxlength as error">
+    {{ control.field.validation.maxLength?.text || "Value should be shorter than " + error.requiredLength }}
   </mat-error>
 
-  <mat-error *ngIf="field.control.errors?.minDate as error">
-    {{ field.validation.minDate?.text || "Date should be after the " + (error.minDate | date) }}
+  <mat-error *ngIf="control.field.control.errors?.minDate as error">
+    {{ control.field.validation.minDate?.text || "Date should be after the " + (error.minDate | date) }}
   </mat-error>
 
-  <mat-error *ngIf="field.control.errors?.minOrEqualDate as error">
-    {{ field.validation.minOrEqualDate?.text || "Date should be same or after the " + (error.minOrEqualDate | date) }}
+  <mat-error *ngIf="control.field.control.errors?.minOrEqualDate as error">
+    {{ control.field.validation.minOrEqualDate?.text || "Date should be same or after the " + (error.minOrEqualDate | date) }}
   </mat-error>
 
-  <mat-error *ngIf="field.control.errors?.maxDate as error">
-    {{ field.validation.maxDate?.text || "Date should be before the " + (error.maxDate | date) }}
+  <mat-error *ngIf="control.field.control.errors?.maxDate as error">
+    {{ control.field.validation.maxDate?.text || "Date should be before the " + (error.maxDate | date) }}
   </mat-error>
 
-  <mat-error *ngIf="field.control.errors?.maxOrEqualDate as error">
-    {{ field.validation.maxOrEqualDate?.text || "Date should be same or before the " + (error.maxOrEqualDate | date) }}
+  <mat-error *ngIf="control.field.control.errors?.maxOrEqualDate as error">
+    {{ control.field.validation.maxOrEqualDate?.text || "Date should be same or before the " + (error.maxOrEqualDate | date) }}
   </mat-error>
 
-  <mat-error *ngIf="field.control.errors?.pattern as error">
-    {{ field.validation.pattern?.text || error.message }}
+  <mat-error *ngIf="control.field.control.errors?.pattern as error">
+    {{ control.field.validation.pattern?.text || error.message }}
   </mat-error>
 
-  <mat-error *ngIf="field.control.errors?.custom as error">
-    {{ field.validation.custom?.text || error.message }}
+  <mat-error *ngIf="control.field.control.errors?.custom as error">
+    {{ control.field.validation.custom?.text || error.message }}
   </mat-error>
 </ng-template>

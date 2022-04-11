@@ -1,6 +1,5 @@
 <base-control #baseControl
-              [field]="field"
-              [hintClass]="hintClass">
+              [control]="this">
   <mat-checkbox [formControl]="field.control"
                 [ngClass]="fieldClass">
     {{ field.label }}&nbsp;

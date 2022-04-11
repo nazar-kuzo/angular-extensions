@@ -25,9 +25,6 @@ export class TextControlComponent<TValue> extends ControlBase<TValue> {
   public showMaskTyped: boolean;
 
   @Input()
-  public focused = false;
-
-  @Input()
   public icon: string;
 
   @Input()

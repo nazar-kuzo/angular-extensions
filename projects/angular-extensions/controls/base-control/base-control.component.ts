@@ -1,9 +1,9 @@
 import { merge, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { MatFormFieldAppearance } from "@angular/material/form-field";
+import { MatFormField, MatFormFieldAppearance } from "@angular/material/form-field";
 import {
   Component, Input, ViewChild, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef,
-  OnInit, OnDestroy, ViewEncapsulation, AfterViewInit, Directive, HostBinding,
+  OnInit, OnDestroy, ViewEncapsulation, AfterViewInit, Directive, HostBinding, ContentChild, ElementRef,
 } from "@angular/core";
 
 import { Field } from "angular-extensions/models";
@@ -30,6 +30,9 @@ export class ControlBase<TValue, TOption = any> {
 
   @Input()
   public appearance: MatFormFieldAppearance = "outline";
+
+  @Input()
+  public focused = false;
 }
 
 @Component({
@@ -39,7 +42,10 @@ export class ControlBase<TValue, TOption = any> {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BaseControlComponent<TValue> extends ControlBase<TValue> implements OnInit, AfterViewInit, OnDestroy {
+export class BaseControlComponent<TValue> implements OnInit, AfterViewInit, OnDestroy {
+
+  @Input()
+  public control: ControlBase<TValue>;
 
   @ViewChild("hintTemplate", { static: true })
   public hintTemplate: TemplateRef<any>;
@@ -47,18 +53,21 @@ export class BaseControlComponent<TValue> extends ControlBase<TValue> implements
   @ViewChild("errorsTemplate")
   public errorsTemplate: TemplateRef<any>;
 
+  @ContentChild(MatFormField)
+  public formField?: MatFormField;
+
   public initialized: boolean;
   public destroy = new Subject();
 
   constructor(
+    private elementRef: ElementRef<HTMLElement>,
     private changeDetectorRef: ChangeDetectorRef,
   ) {
-    super();
   }
 
   public ngOnInit() {
     // update control when status changes
-    merge(this.field.control.statusChanges, this.field.control.root.valueChanges)
+    merge(this.control.field.control.statusChanges, this.control.field.control.root.valueChanges)
       .pipe(takeUntil(this.destroy))
       .subscribe(() => {
         this.changeDetectorRef.markForCheck();
@@ -66,6 +75,13 @@ export class BaseControlComponent<TValue> extends ControlBase<TValue> implements
   }
 
   public ngAfterViewInit() {
+    if (this.control.focused) {
+
+      let formElement = (this.formField?._elementRef || this.elementRef)?.nativeElement as HTMLElement;
+
+      setTimeout(() => (formElement?.querySelector("input,[matInput],mat-select,button") as HTMLElement)?.focus());
+    }
+
     setTimeout(() => {
       this.initialized = true;
 
