@@ -6,7 +6,7 @@ import { HttpClient, HttpHeaders as AngularHttpHeaders, HttpParams as AngularHtt
 import { patchAngularHttpParams } from "angular-extensions/core";
 
 type HttpHeaders = AngularHttpHeaders | { [header: string]: string | string[] };
-type HttpParams = AngularHttpParams | { [param: string]: string | string[] };
+type HttpParams = AngularHttpParams | { [param: string]: any };
 
 interface DefaultHttpClientOptions {
   headers?: HttpHeaders;

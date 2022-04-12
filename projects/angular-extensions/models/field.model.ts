@@ -44,7 +44,7 @@ export const Formatters = {
    * @param field Field<Date>
    * @returns String
    */
-  utcDateFormatter: (field: Field<Date>): string => {
+  utcDateFormatter: (field: Field<Date, any>): string => {
     return new DatePipe(NGX_DATE_FORMATS).transform(field.value, "yyyy-MM-dd");
   },
 
@@ -54,7 +54,7 @@ export const Formatters = {
    * @param field Field<Date>
    * @returns String
    */
-  utcDateTimeFormatter: (field: Field<Date>): string => {
+  utcDateTimeFormatter: (field: Field<Date, any>): string => {
     return new DatePipe(NGX_DATE_FORMATS).transform(field.value?.toUtcDate(), "yyyy-MM-dd'T'HH:mm:ss'Z'");
   },
 
@@ -64,7 +64,7 @@ export const Formatters = {
    * @param field Field<Date>
    * @returns String
    */
-  dateFormatter: (field: Field<Date>) => {
+  dateFormatter: (field: Field<Date, any>) => {
     return new DatePipe(NGX_DATE_FORMATS).transform(field.value);
   },
 
@@ -74,7 +74,7 @@ export const Formatters = {
    * @param field Field<Date>
    * @returns String
    */
-  dateTimeFormatter: (field: Field<Date>) => {
+  dateTimeFormatter: (field: Field<Date, any>) => {
     return new DateTimePipe(NGX_DATE_FORMATS).transform(field.value);
   }
 };
