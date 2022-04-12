@@ -347,7 +347,9 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TConvertedValue
 
         // suppresses validation that might have dependencies
         // on other fields that are not currently instantiated
-        disabled: true,
+        disabled: props.disabled !== undefined
+          ? props.disabled
+          : true,
       },
       {
         validators: Validation.getValidators(this.validation),
