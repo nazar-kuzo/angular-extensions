@@ -17,8 +17,8 @@
                           (fileAdded)="onFileAdded($event)">
 
       <div class="dropzoneTemplate">
-        <button mat-raised-button
-                (click)="onDialogOpen()">{{ field.label }}</button>
+        <a mat-raised-button
+           (click)="onDialogOpen()">{{ field.label }}</a>
       </div>
     </ngx-awesome-uploader>
   </div>
@@ -42,12 +42,10 @@
     </span>
 
     <div *ngIf="fileItem">
-      <button mat-button
-              mat-icon-button
-              type="button"
-              (click)="uploader.removeFile(fileItem); onFileRemoved(fileItem)">
+      <a mat-icon-button
+         (click)="uploader.removeFile(fileItem); onFileRemoved(fileItem)">
         <mat-icon>clear</mat-icon>
-      </button>
+      </a>
     </div>
   </div>
 </ng-template>

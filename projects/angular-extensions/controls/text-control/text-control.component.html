@@ -14,24 +14,21 @@
     <mat-icon *ngIf="icon"
               matPrefix>{{icon}}</mat-icon>
 
-    <button *ngIf="!(field.value && clearable) && actionButtonIcon && actionButton.observers.length"
-            mat-icon-button
-            matSuffix
-            [matTooltip]="actionButtonTooltip"
-            (click)="actionButton.emit(field)"
-            type="button">
+    <a *ngIf="!(field.value && clearable) && actionButtonIcon && actionButton.observers.length"
+       mat-icon-button
+       matSuffix
+       [matTooltip]="actionButtonTooltip"
+       (click)="actionButton.emit(field)">
       <mat-icon>{{ actionButtonIcon }}</mat-icon>
-    </button>
+    </a>
 
-    <button *ngIf="field.value && clearable"
-            mat-icon-button
-            matSuffix
-            aria-label="Clear"
-            matTooltip="Clear"
-            (click)="field.value = null"
-            type="button">
+    <a *ngIf="field.value && clearable"
+       mat-icon-button
+       matSuffix
+       matTooltip="Clear"
+       (click)="field.value = null">
       <mat-icon>close</mat-icon>
-    </button>
+    </a>
 
     <ng-container *ngIf="mask">
       <input #input

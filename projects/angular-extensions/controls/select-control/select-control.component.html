@@ -77,14 +77,13 @@
                [size]="20"></spinner>
     </span>
 
-    <button *ngIf="showClearButton()"
-            mat-button
-            matSuffix
-            mat-icon-button
-            matTooltip="Clear"
-            (click)="$any(field).value = multiple ? [] : null; $event.stopPropagation()">
+    <a *ngIf="showClearButton()"
+       mat-icon-button
+       matSuffix
+       matTooltip="Clear"
+       (click)="$any(field).value = multiple ? [] : null; $event.stopPropagation()">
       <mat-icon>close</mat-icon>
-    </button>
+    </a>
 
     <mat-error *ngIf="baseControl.initialized">
       <ng-container *ngTemplateOutlet="baseControl.errorsTemplate"></ng-container>
