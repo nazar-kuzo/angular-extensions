@@ -19,11 +19,19 @@ export class DashboardEditor extends BaseEditor {
 
   public phone: Field<string>;
 
+  public yearOfBirth: Field<Date>;
+
+  public monthOfBirth: Field<Date>;
+
   public dateOfBirth: Field<Date>;
 
   public dateTimeOfBirth: Field<Date>;
 
   public timeOfBirth: Field<Date>;
+
+  public vacationFrom: Field<Date>;
+
+  public vacationTo: Field<Date>;
 
   public dayOfBirth: Field<DayOfWeek, Option<DayOfWeek>>;
 
@@ -64,6 +72,20 @@ export class DashboardEditor extends BaseEditor {
       },
     });
 
+    this.yearOfBirth = new Field<Date>({
+      label: "Year of Birth",
+      validation: {
+        required: { value: true }
+      },
+    });
+
+    this.monthOfBirth = new Field<Date>({
+      label: "Month of Birth",
+      validation: {
+        required: { value: true }
+      },
+    });
+
     this.dateOfBirth = new Field<Date>({
       label: "Date of Birth",
       validation: {
@@ -82,6 +104,22 @@ export class DashboardEditor extends BaseEditor {
       label: "Time of Birth",
       validation: {
         required: { value: true }
+      },
+    });
+
+    this.vacationFrom = new Field<Date>({
+      label: "Vacation from",
+      validation: {
+        required: { value: true },
+        maxDate: { value: () => this.vacationTo.value }
+      },
+    });
+
+    this.vacationTo = new Field<Date>({
+      label: "Vacation to",
+      validation: {
+        required: { value: true },
+        minDate: { value: () => this.vacationFrom.value }
       },
     });
 

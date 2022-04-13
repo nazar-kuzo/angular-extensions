@@ -2,11 +2,20 @@ import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component,
   ComponentRef, ElementRef, Inject, Input, OnChanges, ViewChild,
 } from "@angular/core";
-import { MatCalendarView, MatDatepicker, MatDatepickerContent } from "@angular/material/datepicker";
+import { MatCalendarView, MatDatepicker, MatDatepickerContent, MatSingleDateSelectionModel } from "@angular/material/datepicker";
 import { MatDateFormats, MAT_DATE_FORMATS } from "@angular/material/core";
 
 import { SimpleChanges } from "angular-extensions/core";
 import { ControlBase } from "angular-extensions/controls/base-control";
+
+interface AppMatDatepicker<T> {
+
+  _model: MatSingleDateSelectionModel<T>;
+
+  _componentRef?: ComponentRef<MatDatepickerContent<T>>;
+
+  _popupComponentRef?: ComponentRef<MatDatepickerContent<T>>;
+}
 
 @Component({
   selector: "date-control",
@@ -74,12 +83,14 @@ export class DateControlComponent extends ControlBase<Date> implements OnChanges
 
   public dateSelected(date: Date, datePicker: MatDatepicker<Date>, isTargetView = false) {
     if (isTargetView) {
-      this.field.value = date.asUtcDate();
+      (this.datePicker as any as AppMatDatepicker<Date>)._model.add(date.asUtcDate());
 
       datePicker.close();
 
       // hide content since we cannot prevent currentView showing next view
-      this.getCalendarElement(datePicker).style.display = "none";
+      if (this.getDatepickerContent(datePicker as any)) {
+        (this.getDatepickerContent(datePicker as any)._elementRef.nativeElement as HTMLElement).style.display = "none";
+      }
 
       this.changeDetectorRef.markForCheck();
     }
@@ -88,7 +99,9 @@ export class DateControlComponent extends ControlBase<Date> implements OnChanges
   public viewChanged(view: MatCalendarView, datePicker: MatDatepicker<Date>) {
     // fix issue when clicking on year selector it shows "month" view which is not correct
     if (this.targetView == "month" && view == "month") {
-      this.getCalendar(datePicker).currentView = "multi-year";
+      if (this.getDatepickerContent(datePicker as any)) {
+        this.getDatepickerContent(datePicker as any)._calendar.currentView = "multi-year";
+      }
 
       this.changeDetectorRef.markForCheck();
     }
@@ -109,16 +122,7 @@ export class DateControlComponent extends ControlBase<Date> implements OnChanges
     (document.activeElement as HTMLElement).blur();
   }
 
-  private getCalendar(datePicker: MatDatepicker<Date>) {
-    return ((datePicker as any)._popupComponentRef as ComponentRef<MatDatepickerContent<Date>>)
-      .instance
-      ._calendar;
-  }
-
-  private getCalendarElement(datePicker: MatDatepicker<Date>) {
-    return ((datePicker as any)._popupComponentRef as ComponentRef<MatDatepickerContent<Date>>)
-      .instance
-      ._elementRef
-      .nativeElement as HTMLElement;
+  private getDatepickerContent(datePicker: AppMatDatepicker<Date>): MatDatepickerContent<Date> | null {
+    return (datePicker._componentRef || datePicker._popupComponentRef)?.instance;
   }
 }

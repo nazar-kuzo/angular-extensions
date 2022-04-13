@@ -110,10 +110,10 @@ export class Option<TValue, TId = string> {
   }
 
   /**
-   * Creates options from specified Emun
+   * Creates options from specified Enum
    *
-   * @param enumType Emum type
-   * @param insertSpaceBeforeDigits Should inserta space before digit present in string. E.g. "every10Month" => "Every 10 Month"
+   * @param enumType Enum type
+   * @param insertSpaceBeforeDigits Should insert a space before digit present in string. E.g. "every10Month" => "Every 10 Month"
    * @returns Collection of options
    */
   public static ForEnum<TEnum extends number | string>(enumType: any, insertSpaceBeforeDigits = false): Option<TEnum>[] {
@@ -133,7 +133,7 @@ export class Option<TValue, TId = string> {
 }
 
 /**
- * Provides simplified api to work with Angular reactive forms and predefined control compomnents.
+ * Provides simplified api to work with Angular reactive forms and predefined control components.
  */
 export class Field<TValue, TOption = TValue, TOptionGroup = any, TConvertedValue = any> {
 
@@ -181,7 +181,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TConvertedValue
   public formatter: (field: Field<TValue, TOption, TOptionGroup>) => string;
 
   /**
-   * Field value converter, convertion is done whenever value is being read from/written to a {@link control}.
+   * Field value converter, conversion is done whenever value is being read from/written to a {@link control}.
    */
   public converter: FieldValueConverter<TValue, TConvertedValue>;
 
@@ -204,14 +204,14 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TConvertedValue
   }
 
   /**
-   * Gets fild's visibility status. Based on {@link visibilityProvider}.
+   * Gets field's visibility status. Based on {@link visibilityProvider}.
    */
   public get visible() {
     return !!this.visibilityProvider(this.value);
   }
 
   /**
-   * Sets fild's visibility status. Based on {@link visibilityProvider}.
+   * Sets field's visibility status. Based on {@link visibilityProvider}.
    */
   public set visible(isVisible: boolean) {
     this.visibilityProvider = () => !!isVisible;
@@ -220,7 +220,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TConvertedValue
   }
 
   /**
-   * Gets fild's value. Applies conversion if specified at {@link converter}.
+   * Gets field's value. Applies conversion if specified at {@link converter}.
    */
   public get value() {
     return this.converter
@@ -229,7 +229,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TConvertedValue
   }
 
   /**
-   * Sets fild's value. Applies conversion if specified at {@link converter}.
+   * Sets field's value. Applies conversion if specified at {@link converter}.
    * If previous value is the same as current value, {@link onValueChange} wont emit changes
    */
   public set value(value: TValue) {
@@ -238,7 +238,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TConvertedValue
       : value;
 
     if (convertedValue != this.control.value) {
-      this.control.setValue(convertedValue);
+      this.control.setValue(convertedValue, { onlySelf: true });
     }
   }
 
@@ -305,7 +305,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TConvertedValue
   public optionLabel: (option: TOption) => string;
 
   /**
-   * Allows to specify option display label when selected or being howered
+   * Allows to specify option display label when selected or being hovered
    */
   public optionDisplayLabel?: (option: TOption) => string;
 

@@ -1,11 +1,13 @@
 import { merge, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+import { FormControl } from "@angular/forms";
 import { MatFormField, MatFormFieldAppearance } from "@angular/material/form-field";
 import {
   Component, Input, ViewChild, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef,
   OnInit, OnDestroy, ViewEncapsulation, AfterViewInit, Directive, HostBinding, ContentChild, ElementRef,
 } from "@angular/core";
 
+import { overrideFunction } from "angular-extensions/core";
 import { Field } from "angular-extensions/models";
 
 @Directive()
@@ -34,6 +36,18 @@ export class ControlBase<TValue, TOption = any> {
   @Input()
   public focused = false;
 }
+
+// patch FormControl to avoid updating whole parent value when control value is updated
+overrideFunction(
+  FormControl.prototype,
+  control => control.setValue,
+  (setValue, _, ...[value, options]) => {
+    if (options?.emitModelToViewChange === false) {
+      options.onlySelf = true;
+    }
+
+    setValue(value, options);
+  });
 
 @Component({
   selector: "base-control",

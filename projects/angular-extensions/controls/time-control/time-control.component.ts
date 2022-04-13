@@ -24,7 +24,7 @@ export class TimeControlComponent<TValue> extends ControlBase<TValue> {
   constructor(
     private elementRef: ElementRef<HTMLElement>,
     private changeDetectorRef: ChangeDetectorRef,
-    ) {
+  ) {
     super();
 
     elementRef

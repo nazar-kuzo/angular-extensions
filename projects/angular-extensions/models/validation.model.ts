@@ -19,15 +19,15 @@ export const CustomValidators = {
   /**
    * Triggers validation of related controls by specified predicate.
    *
-   * @param control Control that triggeres validation
+   * @param control Control that triggers validation
    * @param predicate Related controls predicate
    */
   triggerValidation: (control: AbstractControl<any>, predicate: (siblingControl: AbstractControl<any>) => boolean): void => {
     if (control.parent) {
       setTimeout(() => {
         Object.values(control.parent?.controls || {})
-          .filter(siblingControl => siblingControl !== control && predicate(siblingControl))
-          .forEach(siblingControl => siblingControl.updateValueAndValidity({ emitEvent: false }));
+          .filter(siblingControl => siblingControl !== control && siblingControl.touched && predicate(siblingControl))
+          .forEach(siblingControl => siblingControl.updateValueAndValidity({ onlySelf: true }));
       });
     }
   },

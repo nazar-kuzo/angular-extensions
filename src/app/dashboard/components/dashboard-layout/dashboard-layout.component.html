@@ -4,81 +4,79 @@
   </div>
 
   <div class="row">
-    <div class="col-sm-6">
-      <text-control class="d-block"
-                    [field]="editor.firstName"
-                    [clearable]="true"
-                    actionButtonIcon="qr_code_scanner"
-                    actionButtonTooltip="Scan"
-                    (actionButton)="scan($event)"></text-control>
-    </div>
+    <text-control class="col-sm-4 d-block"
+                  [field]="editor.firstName"
+                  [clearable]="true"
+                  actionButtonIcon="qr_code_scanner"
+                  actionButtonTooltip="Scan"
+                  (actionButton)="scan($event)"></text-control>
 
-    <div class="col-sm-6">
-      <text-control class="d-block"
-                    [field]="editor.lastName"></text-control>
-    </div>
+    <text-control class="col-sm-4 d-block"
+                  [field]="editor.lastName"></text-control>
 
-    <div class="col-sm-6">
-      <text-control class="d-block"
-                    [field]="editor.phone"
-                    [type]="'tel'"
-                    [prefix]="'+ '"
-                    [mask]="'00-000-000-000'"
-                    [showMaskTyped]="true"
-                    [clearable]="true"></text-control>
-    </div>
+    <text-control class="col-sm-4 d-block"
+                  [field]="editor.phone"
+                  [type]="'tel'"
+                  [prefix]="'+ '"
+                  [mask]="'00-000-000-000'"
+                  [showMaskTyped]="true"
+                  [clearable]="true"></text-control>
 
-    <div class="col-sm-6">
-      <date-control class="d-block"
-                    [field]="editor.dateOfBirth"
-                    [clearable]="true"></date-control>
-    </div>
+    <date-control class="col-sm-4 d-block"
+                  [field]="editor.yearOfBirth"
+                  [targetView]="'year'"
+                  [clearable]="true"></date-control>
 
-    <div class="col-sm-6">
-      <datetime-control class="d-block"
-                        [field]="editor.dateTimeOfBirth"
-                        [clearable]="true"></datetime-control>
-    </div>
+    <date-control class="col-sm-4 d-block"
+                  [field]="editor.monthOfBirth"
+                  [targetView]="'month'"
+                  [clearable]="true"></date-control>
 
-    <div class="col-sm-6">
-      <time-control class="d-block"
-                    [field]="editor.timeOfBirth"
-                    [clearable]="true"></time-control>
-    </div>
+    <date-control class="col-sm-4 d-block"
+                  [field]="editor.dateOfBirth"
+                  [clearable]="true"></date-control>
 
-    <div class="col-sm-6">
-      <select-control class="d-block"
-                      [field]="editor.dayOfBirth"></select-control>
-    </div>
+    <datetime-control class="col-sm-4 d-block"
+                      [field]="editor.dateTimeOfBirth"
+                      [clearable]="true"></datetime-control>
 
-    <div class="col-sm-6">
-      <select-control class="d-block"
-                      [field]="editor.coutry"
-                      [hintClass]="'text-truncate'"
-                      [searchable]="true"
-                      [clearable]="true"></select-control>
-    </div>
+    <time-control class="col-sm-4 d-block"
+                  [field]="editor.timeOfBirth"
+                  [clearable]="true"></time-control>
 
-    <div class="col-sm-6">
-      <select-control class="d-block"
-                      [field]="editor.allies"
-                      [multiple]="true"
-                      [searchable]="true"
-                      [showSelectAll]="true"
-                      [clearable]="true"></select-control>
-    </div>
+    <select-control class="col-sm-4 d-block"
+                    [field]="editor.dayOfBirth"></select-control>
 
-    <div class="col-sm-6">
-      <textarea-control class="d-block"
-                        [field]="editor.anthem"></textarea-control>
-    </div>
+    <date-control class="col-sm-4 d-block"
+                  [field]="editor.vacationFrom"
+                  [targetView]="'month'"
+                  [clearable]="true"></date-control>
 
-    <div class="col-sm-6">
-      <checkbox-control class="d-block"
-                        [field]="editor.isOfficial"></checkbox-control>
-    </div>
+    <date-control class="col-sm-4 d-block"
+                  [field]="editor.vacationTo"
+                  [targetView]="'month'"
+                  [clearable]="true"></date-control>
 
-    <div class="col-sm-6">
+    <select-control class="col-sm-4 d-block"
+                    [field]="editor.coutry"
+                    [hintClass]="'text-truncate'"
+                    [searchable]="true"
+                    [clearable]="true"></select-control>
+
+    <select-control class="col-sm-4 d-block"
+                    [field]="editor.allies"
+                    [multiple]="true"
+                    [searchable]="true"
+                    [showSelectAll]="true"
+                    [clearable]="true"></select-control>
+
+    <textarea-control class="col-sm-4 d-block"
+                      [field]="editor.anthem"></textarea-control>
+
+    <checkbox-control class="col-sm-4 d-block"
+                      [field]="editor.isOfficial"></checkbox-control>
+
+    <div class="col-sm-4">
       <file-control class="d-inline-block mr-3 p-0"
                     [field]="editor.image"
                     [showPreview]="true"></file-control>
