@@ -270,7 +270,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TConvertedValue
           return this.value.map(this.optionId).contains(this.optionId(option));
         }
         else {
-          return this.value == this.optionValue(option) ||
+          return this.value?.valueOf() == this.optionValue(option)?.valueOf() ||
             this.optionId(this.value as any) == this.optionId(option);
         }
       });
@@ -462,7 +462,9 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TConvertedValue
         else {
           let value = this.optionValue(this.options.find(optionPredicate)) || config.defaultValue;
 
-          if (value != null && this.control.value != null && this.optionId(value as any) !== this.optionId(this.control.value as any)) {
+          if (value != null && this.control.value != null &&
+            this.optionId(value as any)?.valueOf() !== this.optionId(this.control.value as any)?.valueOf()
+          ) {
             this.control.setValue(value, { emitEvent: config.emitEvent });
           }
           else if ((value != null) != (this.control.value != null)) {
