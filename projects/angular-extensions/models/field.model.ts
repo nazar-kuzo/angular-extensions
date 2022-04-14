@@ -16,7 +16,7 @@ type FieldConstructor<TValue, TOption = any, TOptionGroup = any, TConvertedValue
     "control" | "options" | "onValueChange" | "onOptionsChange" | "validation"> & {
       options: TOption[] | Observable<TOption[]>;
 
-      onValueChange: (value?: TValue, previous?: TValue) => void;
+      onValueChange: (value: TValue, previous: TValue) => void;
 
       onOptionsChange: (value: TOption[]) => void;
 
@@ -382,7 +382,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TConvertedValue
         .valueChanges
         .pipe(
           filterPredicate(() => this.control.enabled),
-          startWith(undefined),
+          startWith(props.value),
           pairwise(),
           takeUntil(this.destroy$),
         )
