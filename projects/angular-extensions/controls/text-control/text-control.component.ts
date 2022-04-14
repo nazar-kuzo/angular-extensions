@@ -1,8 +1,22 @@
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from "@angular/core";
+import {
+  ChangeDetectionStrategy, Component, ElementRef,
+  EventEmitter, Input, OnChanges, Output, ViewChild,
+} from "@angular/core";
 import { MatInput } from "@angular/material/input";
 
+import { SimpleChanges } from "angular-extensions/core";
 import { Field } from "angular-extensions/models";
 import { ControlBase } from "angular-extensions/controls/base-control";
+
+interface MaskPattern {
+  [character: string]: {
+    pattern: string | RegExp;
+
+    optional?: boolean;
+
+    symbol?: string;
+  };
+}
 
 @Component({
   selector: "text-control",
@@ -10,7 +24,7 @@ import { ControlBase } from "angular-extensions/controls/base-control";
   styleUrls: ["./text-control.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TextControlComponent<TValue> extends ControlBase<TValue> {
+export class TextControlComponent<TValue> extends ControlBase<TValue> implements OnChanges {
 
   @Input()
   public type: "text" | "number" | "time" | "email" | "tel" = "text";
@@ -23,6 +37,9 @@ export class TextControlComponent<TValue> extends ControlBase<TValue> {
 
   @Input()
   public showMaskTyped: boolean;
+
+  @Input()
+  public pattern?: MaskPattern;
 
   @Input()
   public icon: string;
@@ -44,8 +61,18 @@ export class TextControlComponent<TValue> extends ControlBase<TValue> {
 
   constructor(
     private elementRef: ElementRef<HTMLElement>,
-    ) {
+  ) {
     super();
+  }
+
+  public ngOnChanges(changes: SimpleChanges<TextControlComponent<TValue>>) {
+    if (changes.pattern?.currentValue) {
+      Object.values(changes.pattern?.currentValue).forEach(value => {
+        if (typeof value.pattern == "string") {
+          value.pattern = new RegExp(value.pattern);
+        }
+      });
+    }
   }
 
   public onFieldClick(event: MouseEvent) {

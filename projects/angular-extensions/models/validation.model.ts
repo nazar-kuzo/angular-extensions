@@ -26,8 +26,10 @@ export const CustomValidators = {
     if (control.parent) {
       setTimeout(() => {
         Object.values(control.parent?.controls || {})
-          .filter(siblingControl => siblingControl !== control && siblingControl.touched && predicate(siblingControl))
-          .forEach(siblingControl => siblingControl.updateValueAndValidity({ onlySelf: true }));
+          .filter(siblingControl =>
+            siblingControl !== control && siblingControl.validator &&
+            siblingControl.touched && predicate(siblingControl))
+          .forEach(siblingControl => siblingControl.setErrors(siblingControl.validator(siblingControl)));
       });
     }
   },

@@ -4,6 +4,7 @@ import { NgxMaskModule } from "ngx-mask";
 
 import { NgxBaseControlModule } from "angular-extensions/controls/base-control";
 import { TextControlComponent } from "./text-control.component";
+import { NgxMaskDirective } from "./mask.directive";
 
 @NgModule({
   imports: [
@@ -13,6 +14,7 @@ import { TextControlComponent } from "./text-control.component";
   ],
   declarations: [
     TextControlComponent,
+    NgxMaskDirective,
   ],
   exports: [
     CommonModule,
