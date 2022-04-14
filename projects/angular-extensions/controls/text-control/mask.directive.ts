@@ -22,7 +22,7 @@ export class NgxMaskDirective {
         let input = event.target as HTMLInputElement;
 
         let invalidSelection = maskDirective.prefix.length > 0 &&
-          maskDirective.prefix.length == input.selectionStart &&
+          maskDirective.prefix.length >= input.selectionStart &&
           input.selectionEnd != input.selectionStart;
 
         if (invalidSelection) {
