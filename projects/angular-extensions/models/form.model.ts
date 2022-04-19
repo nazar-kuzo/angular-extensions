@@ -176,7 +176,7 @@ export class Form {
 }
 
 /**
- * Base editor model that didecated page editors should derive from. Used by {@link Form}
+ * Base editor model that dedicated page editors should derive from. Used by {@link Form}
  */
 export abstract class BaseEditor {
 
@@ -187,6 +187,6 @@ export abstract class BaseEditor {
   }
 
   protected initialize(...fieldsToIgnore: string[]) {
-    (this as any).__proto__.form = Form.Create(this, ...fieldsToIgnore);
+    this.form = Form.Create(this, ...fieldsToIgnore);
   }
 }
