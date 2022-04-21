@@ -11,7 +11,7 @@ import { HomePageComponent } from "./components";
   imports: [
     CommonModule,
     RouterModule,
-    NgxControlsModule,
+    NgxControlsModule.configure({ strictControlChangeDetection: true }),
   ],
   declarations: [
     AppLayoutComponent,

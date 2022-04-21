@@ -18,7 +18,9 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
 import { Platform } from "@angular/cdk/platform";
+import { FormControl } from "@angular/forms";
 
+import { overrideFunction } from "angular-extensions/core";
 import { NGX_DATE_FORMATS } from "angular-extensions/models";
 
 import { NgxDirectivesModule } from "angular-extensions/directives";
@@ -65,12 +67,19 @@ export interface NgxControlsConfig {
    * Date/time formats, by default {@link NGX_DATE_FORMATS}
    */
   dateFormats: MatDateFormats;
+
+  /**
+   * It true, disables default FormControls behavior which
+   * updates all values inside form group whenever any value is updated
+   */
+  strictControlChangeDetection: boolean;
 }
 
 const moduleConfigDefaults: NgxControlsConfig = {
   dateFormats: NGX_DATE_FORMATS,
   dateAdapterType: NgxDateAdapter,
   dateLocale: "en-GB",
+  strictControlChangeDetection: false,
 };
 
 @NgModule({
@@ -161,6 +170,20 @@ export class NgxControlsModule {
 
     if (config.dateFormats) {
       Object.assign(NGX_DATE_FORMATS, config.dateFormats);
+    }
+
+    if (config.strictControlChangeDetection) {
+      // patch FormControl to avoid updating whole parent value when control value is updated
+      overrideFunction(
+        FormControl.prototype,
+        control => control.setValue,
+        (setValue, _, ...[value, options]) => {
+          if (options?.emitModelToViewChange === false) {
+            options.onlySelf = true;
+          }
+
+          setValue(value, options);
+        });
     }
 
     return {
