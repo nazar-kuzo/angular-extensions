@@ -14,6 +14,10 @@ export enum TimePart {
   Day,
 
   Month,
+
+  Quarter,
+
+  Year,
 }
 
 /**
