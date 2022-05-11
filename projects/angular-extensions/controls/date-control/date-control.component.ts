@@ -83,7 +83,7 @@ export class DateControlComponent extends ControlBase<Date> implements OnChanges
 
   public dateSelected(date: Date, datePicker: MatDatepicker<Date>, isTargetView = false) {
     if (isTargetView) {
-      (this.datePicker as any as AppMatDatepicker<Date>)._model.add(date.asUtcDate());
+      (this.datePicker as any as AppMatDatepicker<Date>)._model.add(date.withoutTimezone());
 
       datePicker.close();
 

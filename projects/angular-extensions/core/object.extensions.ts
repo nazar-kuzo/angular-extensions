@@ -16,9 +16,49 @@ declare global {
   }
 
   interface Date {
+
+    /**
+     * Returns zero-based index of day of week assuming that week starts with Monday
+     *
+     * @param this
+     * @returns Local date without changing time
+     */
     getDayOfWeek(this: Date): number;
+
+    /**
+     * Date wont provide Timezone information during serialization.
+     *
+     * @example
+     *  new Date("2020-01-01T00:00:00.000+02:00").toJSON();                   // returns "2019-12-31T22:00:00.000Z"
+     *  new Date("2020-01-01T00:00:00.000+02:00").withoutTimezone().toJSON(); // returns "2020-01-01T00:00:00.000"
+     *
+     * @param this
+     * @returns UTC date keeping local time
+     */
+    withoutTimezone(this: Date): Date;
+
+    /**
+     * Converts local date to UTC date keeping local time
+     *
+     * @param this
+     * @returns UTC date keeping local time
+     */
     asUtcDate(this: Date): Date;
+
+    /**
+     * Converts local date to UTC date with shifted local time
+     *
+     * @param this
+     * @returns UTC date with shifted local time
+     */
     toUtcDate(this: Date): Date;
+
+    /**
+     * Converts UTC date to local date without changing time
+     *
+     * @param this
+     * @returns Local date without changing time
+     */
     asLocalDate(this: Date): Date;
   }
 
@@ -139,6 +179,26 @@ export function parseDateProperty<T>(object: T, prop: keyof T) {
 }
 
 /**
+ * Date wont provide Timezone information during serialization.
+ *
+ * @example
+ *  new Date("2020-01-01T00:00:00.000+02:00").toJSON();                   // returns "2019-12-31T22:00:00.000Z"
+ *  new Date("2020-01-01T00:00:00.000+02:00").withoutTimezone().toJSON(); // returns "2020-01-01T00:00:00.000"
+ *
+ * @param this
+ * @returns UTC date keeping local time
+ */
+export function withoutTimezone(this: Date): Date {
+  let dateWithoutTimezone = new Date(this.valueOf());
+
+  dateWithoutTimezone.toJSON = function (this: Date, key?: any) {
+    return format(this, "yyyy-MM-dd'T'HH:mm:ss");
+  };
+
+  return dateWithoutTimezone;
+}
+
+/**
  * Converts local date to UTC date keeping local time
  *
  * @param this
@@ -197,6 +257,7 @@ export function handleError(action: () => any) {
 
 
 Date.prototype.getDayOfWeek = getDayOfWeek;
+Date.prototype.withoutTimezone = withoutTimezone;
 Date.prototype.asUtcDate = asUtcDate;
 Date.prototype.toUtcDate = toUtcDate;
 Date.prototype.asLocalDate = asLocalDate;
