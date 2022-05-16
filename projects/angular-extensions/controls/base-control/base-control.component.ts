@@ -9,7 +9,7 @@ import {
 import { Field } from "angular-extensions/models";
 
 @Directive()
-export class ControlBase<TValue, TOption = any> {
+export class ControlBase<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue = TValue, TControlValue = TValue> {
 
   @HostBinding("class")
   public class = "control";
@@ -20,7 +20,7 @@ export class ControlBase<TValue, TOption = any> {
   };
 
   @Input()
-  public field: Field<TValue, TOption>;
+  public field: Field<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>;
 
   @Input()
   public fieldClass: string;
@@ -42,10 +42,11 @@ export class ControlBase<TValue, TOption = any> {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BaseControlComponent<TValue> implements OnInit, AfterViewInit, OnDestroy {
+export class BaseControlComponent<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue = TValue, TControlValue = TValue>
+  implements OnInit, AfterViewInit, OnDestroy {
 
   @Input()
-  public control: ControlBase<TValue>;
+  public control: ControlBase<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>;
 
   @ViewChild("hintTemplate", { static: true })
   public hintTemplate: TemplateRef<any>;

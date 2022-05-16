@@ -10,7 +10,7 @@ declare global {
     orderBy(this: T[], ...properties: ((item: T) => any)[]): T[];
     orderByDesc(this: T[], property: (item: T) => any): T[];
     move(this: T[], from: number, to: number): T[];
-    groupBy(this: T[], property: (item: T) => T[keyof T]): Group<T>[];
+    groupBy<TKey>(this: T[], property: (item: T) => TKey): Group<TKey, T>[];
   }
 }
 
@@ -69,8 +69,8 @@ export function move<T>(this: T[], from: number, to: number) {
   return this.splice(to, 0, this.splice(from, 1)[0]);
 }
 
-export function groupBy<T>(this: T[], property: (item: T) => T[keyof T]): Group<T>[] {
-  let map = new Map<T[keyof T], T[]>();
+export function groupBy<T, TKey>(this: T[], property: (item: T) => TKey): Group<TKey, T>[] {
+  let map = new Map<TKey, T[]>();
 
   this.forEach(option => {
     let group = property(option);
@@ -87,7 +87,7 @@ export function groupBy<T>(this: T[], property: (item: T) => T[keyof T]): Group<
     return {
       key: group,
       items: items,
-    } as Group<T>;
+    } as Group<TKey, T>;
   });
 }
 

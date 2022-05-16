@@ -19,7 +19,9 @@ import { ControlBase } from "angular-extensions/controls/base-control";
   styleUrls: ["./select-control.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectControlComponent<TValue, TOption> extends ControlBase<TValue, TOption> implements OnInit, AfterViewInit, OnDestroy {
+export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>
+  extends ControlBase<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>
+  implements OnInit, AfterViewInit, OnDestroy {
 
   @Input()
   public dropdownClass = "";

@@ -9,17 +9,20 @@ export class GroupByPipe implements PipeTransform {
    * Groups collection of items by property selector
    *
    * @param items Collection of items
-   * @param property Property selector or property name
-   * @returns Collection of groupped items, see {@link Group} for more details
+   * @param key Property selector or property name
+   * @returns Collection of grouped items, see {@link Group} for more details
    */
-  public transform<T>(items: T[], property: keyof T | ((item: T) => T[keyof T])): Group<T>[] {
-    let propertySelector: (item: T) => T[keyof T];
+  public transform<TValue, TKey = TValue[keyof TValue]>(
+    items: TValue[],
+    key: keyof TValue | ((item: TValue) => TKey)
+  ): Group<TKey, TValue>[] {
+    let propertySelector: (item: TValue) => TKey;
 
-    if (typeof property == "function") {
-      propertySelector = property;
+    if (typeof key == "function") {
+      propertySelector = key;
     }
     else {
-      propertySelector = (item: T) => item[property];
+      propertySelector = (item: TValue) => item[key] as any as TKey;
     }
 
     return items.groupBy(propertySelector);

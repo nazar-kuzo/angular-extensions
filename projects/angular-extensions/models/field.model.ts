@@ -1,4 +1,4 @@
-import { toString, xorBy } from "lodash-es";
+import { xorBy } from "lodash-es";
 import { Observable, of, Subject } from "rxjs";
 import { catchError, filter as filterPredicate, first, pairwise, startWith, takeUntil } from "rxjs/operators";
 import { FormControl, FormGroup } from "@angular/forms";
@@ -79,11 +79,18 @@ export const Formatters = {
   }
 };
 
-interface FieldValueConverter<TValue, TConvertedValue> {
+/**
+ * Field <=> Control value converter.
+ * Useful when HTML input has different model that actual Field.
+ *
+ * @template TFieldValue Field Value
+ * @template TControlValue Field's Control Value
+ */
+interface FieldControlValueConverter<TFieldValue, TControlValue> {
 
-  fromFieldValue: (value: TConvertedValue) => TValue;
+  fromControlValue: (value: TControlValue) => TFieldValue;
 
-  toFieldValue: (value: TValue) => TConvertedValue;
+  toControlValue: (value: TFieldValue) => TControlValue;
 }
 
 /**
@@ -135,7 +142,7 @@ export class Option<TValue, TId = string> {
 /**
  * Provides simplified api to work with Angular reactive forms and predefined control components.
  */
-export class Field<TValue, TOption = TValue, TOptionGroup = any, TConvertedValue = any> {
+export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue = TValue, TControlValue = TValue> {
 
   private optionChanges$ = new Subject<TOption[]>();
 
@@ -178,12 +185,12 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TConvertedValue
   /**
    * Field value formatter which is used by {@link formattedValue}. See list of built-in {@link Formatters}
    */
-  public formatter: (field: Field<TValue, TOption, TOptionGroup>) => string;
+  public formatter: (field: Field<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>) => TFormattedValue;
 
   /**
-   * Field value converter, conversion is done whenever value is being read from/written to a {@link control}.
+   * Field's Control value converter, conversion is done whenever value is being read from/written to a {@link control}.
    */
-  public converter: FieldValueConverter<TValue, TConvertedValue>;
+  public controlConverter: FieldControlValueConverter<TValue, TControlValue>;
 
   /**
    * Configures when field should be visible, by default is always visible.
@@ -220,21 +227,21 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TConvertedValue
   }
 
   /**
-   * Gets field's value. Applies conversion if specified at {@link converter}.
+   * Gets field's value. Applies conversion if specified at {@link controlConverter}.
    */
   public get value() {
-    return this.converter
-      ? this.converter.fromFieldValue(this.control.value)
+    return this.controlConverter
+      ? this.controlConverter.fromControlValue(this.control.value)
       : this.control.value as TValue;
   }
 
   /**
-   * Sets field's value. Applies conversion if specified at {@link converter}.
+   * Sets field's value. Applies conversion if specified at {@link controlConverter}.
    * If previous value is the same as current value, {@link onValueChange} wont emit changes
    */
   public set value(value: TValue) {
-    let convertedValue = this.converter
-      ? this.converter.toFieldValue(value)
+    let convertedValue = this.controlConverter
+      ? this.controlConverter.toControlValue(value)
       : value;
 
     if (convertedValue != this.control.value) {
@@ -245,10 +252,10 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TConvertedValue
   /**
    * Gets formatted value, applies {@link formatter} if exists
    */
-  public get formattedValue(): string {
+  public get formattedValue(): TFormattedValue {
     return this.formatter
       ? this.formatter(this)
-      : toString(this.value);
+      : this.value as any;
   }
 
   /**

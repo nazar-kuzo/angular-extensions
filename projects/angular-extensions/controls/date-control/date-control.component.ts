@@ -23,7 +23,9 @@ interface AppMatDatepicker<T> {
   styleUrls: ["./date-control.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DateControlComponent extends ControlBase<Date> implements OnChanges {
+export class DateControlComponent<TOption, TOptionGroup, TFormattedValue, TControlValue>
+  extends ControlBase<Date, TOption, TOptionGroup, TFormattedValue, TControlValue>
+  implements OnChanges {
 
   @Input()
   public targetView: "year" | "month" | "day" = "day";
@@ -54,7 +56,7 @@ export class DateControlComponent extends ControlBase<Date> implements OnChanges
       .addEventListener("blur", event => event.stopPropagation(), { capture: true });
   }
 
-  public ngOnChanges(changes: SimpleChanges<DateControlComponent>) {
+  public ngOnChanges(changes: SimpleChanges<DateControlComponent<TOption, TOptionGroup, TFormattedValue, TControlValue>>) {
     if (changes.targetView) {
       if (changes.targetView.currentValue == "year") {
         this.startView = "multi-year";

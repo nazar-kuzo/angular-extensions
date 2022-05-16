@@ -9,10 +9,10 @@ declare global {
     [index: string]: T;
   }
 
-  interface Group<T> {
-    key: T[keyof T];
+  interface Group<TKey, TValue> {
+    key: TKey;
 
-    items: T[];
+    items: TValue[];
   }
 
   interface Date {

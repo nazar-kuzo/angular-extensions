@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BaseEditor, DayOfWeek, Field, Option } from "angular-extensions";
+import { BaseEditor, DayOfWeek, Field, Formatters, Option } from "angular-extensions";
 import { map } from "rxjs/operators";
 
 interface Country {
@@ -23,7 +23,7 @@ export class DashboardEditor extends BaseEditor {
 
   public monthOfBirth: Field<Date>;
 
-  public dateOfBirth: Field<Date>;
+  public dateOfBirth: Field<Date, any, any, string>;
 
   public dateTimeOfBirth: Field<Date>;
 
@@ -35,7 +35,7 @@ export class DashboardEditor extends BaseEditor {
 
   public dayOfBirth: Field<DayOfWeek, Option<DayOfWeek>>;
 
-  public coutry: Field<Country>;
+  public country: Field<Country>;
 
   public image: Field<File[]>;
 
@@ -86,8 +86,9 @@ export class DashboardEditor extends BaseEditor {
       },
     });
 
-    this.dateOfBirth = new Field<Date>({
+    this.dateOfBirth = new Field<Date, any, any, string>({
       label: "Date of Birth",
+      formatter: Formatters.dateFormatter,
       validation: {
         required: { value: true }
       },
@@ -138,7 +139,7 @@ export class DashboardEditor extends BaseEditor {
       }
     });
 
-    this.coutry = new Field<Country, Country>({
+    this.country = new Field<Country, Country>({
       label: "Country",
       info: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
         "Ut lacus metus, molestie sed mi non, accumsan molestie elit.",
@@ -198,7 +199,7 @@ export class DashboardEditor extends BaseEditor {
   public reloadControls() {
     this.dayOfBirth.options = [...this.dayOfBirth.options];
 
-    this.coutry.setOptions(this.loadAllCountries());
+    this.country.setOptions(this.loadAllCountries());
     this.allies.setOptions(this.loadAllCountries());
   }
 
