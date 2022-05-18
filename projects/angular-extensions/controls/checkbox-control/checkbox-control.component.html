@@ -1,19 +1,20 @@
 <base-control #baseControl
               [control]="this">
-  <mat-checkbox class="mat-form-field"
-                [formControl]="field.control"
-                [ngClass]="fieldClass">
-    {{ field.label }}&nbsp;
+  <div class="d-block mat-form-field">
+    <mat-checkbox [formControl]="field.control"
+                  [ngClass]="fieldClass">
+      {{ field.label }}&nbsp;
 
-    <mat-icon *ngIf="field.info"
-              class="align-bottom"
-              style="font-size: 1.25em;"
-              [inline]="true"
-              [matTooltip]="field.info">info_outline</mat-icon>
-  </mat-checkbox>
+      <mat-icon *ngIf="field.info"
+                class="align-bottom"
+                style="font-size: 1.25em;"
+                [inline]="true"
+                [matTooltip]="field.info">info_outline</mat-icon>
+    </mat-checkbox>
 
-  <div *ngIf="field.control.touched && field.control.invalid"
-       [@transitionMessages]="'enter'">
-    <ng-container *ngTemplateOutlet="baseControl.errorsTemplate"></ng-container>
+    <div *ngIf="field.control.touched && field.control.invalid"
+         [@transitionMessages]="'enter'">
+      <ng-container *ngTemplateOutlet="baseControl.errorsTemplate"></ng-container>
+    </div>
   </div>
 </base-control>
