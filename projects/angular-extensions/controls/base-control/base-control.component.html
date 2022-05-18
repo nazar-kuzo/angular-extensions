@@ -10,11 +10,7 @@
 
 <ng-template #errorsTemplate>
   <mat-error *ngIf="control.field.control.errors?.required as error">
-    {{ control.field.validation.required?.text || "Field is required" }}
-  </mat-error>
-
-  <mat-error *ngIf="control.field.control.errors?.requiredTrue as error">
-    {{ control.field.validation.requiredTrue?.text || "Field is required" }}
+    {{ control.field.validation.requiredTrue?.text || control.field.validation.required?.text || "Field is required" }}
   </mat-error>
 
   <mat-error *ngIf="control.field.control.errors?.min as error">

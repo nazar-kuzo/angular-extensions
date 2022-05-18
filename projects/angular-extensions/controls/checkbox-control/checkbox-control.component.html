@@ -1,6 +1,7 @@
 <base-control #baseControl
               [control]="this">
-  <mat-checkbox [formControl]="field.control"
+  <mat-checkbox class="mat-form-field"
+                [formControl]="field.control"
                 [ngClass]="fieldClass">
     {{ field.label }}&nbsp;
 

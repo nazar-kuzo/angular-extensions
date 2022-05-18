@@ -192,7 +192,7 @@ export class DashboardEditor extends BaseEditor {
     this.isOfficial = new Field({
       label: "Is official",
       validation: {
-        requiredTrue: { value: true },
+        requiredTrue: { value: true, text: "Please check this box" },
       },
     });
 
