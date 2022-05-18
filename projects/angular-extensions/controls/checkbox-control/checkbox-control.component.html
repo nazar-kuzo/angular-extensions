@@ -10,4 +10,9 @@
               [inline]="true"
               [matTooltip]="field.info">info_outline</mat-icon>
   </mat-checkbox>
+
+  <div *ngIf="field.control.touched && field.control.invalid"
+       [@transitionMessages]="'enter'">
+    <ng-container *ngTemplateOutlet="baseControl.errorsTemplate"></ng-container>
+  </div>
 </base-control>
