@@ -499,7 +499,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
    * @param validation Validation constructor parameters
    */
   public updateValidation(validation: ValidationConstructor<TValue>) {
-    Object.assign(this.validation, new Validation(validation));
+    Object.assign(this.validation || {}, new Validation(validation));
 
     this.control.setValidators(Validation.getValidators(this.validation));
   }

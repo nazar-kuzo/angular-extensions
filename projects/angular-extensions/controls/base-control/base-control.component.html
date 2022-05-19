@@ -46,7 +46,7 @@
   </mat-error>
 
   <mat-error *ngIf="control.field.control.errors?.pattern as error">
-    {{ control.field.validation.pattern?.text || error.message }}
+    {{ control.field.validation.pattern?.text || error.message || "Value does not match the required pattern" }}
   </mat-error>
 
   <mat-error *ngIf="control.field.control.errors?.custom as error">
