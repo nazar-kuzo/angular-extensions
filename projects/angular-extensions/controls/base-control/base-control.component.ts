@@ -9,7 +9,7 @@ import {
 import { Field } from "angular-extensions/models";
 
 @Directive()
-export class ControlBase<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue = TValue, TControlValue = TValue> {
+export class ControlBase<TValue, TOption = any, TOptionGroup = any, TFormattedValue = any, TControlValue = any> {
 
   @HostBinding("class")
   public class = "control";
@@ -42,7 +42,7 @@ export class ControlBase<TValue, TOption = TValue, TOptionGroup = any, TFormatte
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BaseControlComponent<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue = TValue, TControlValue = TValue>
+export class BaseControlComponent<TValue, TOption = any, TOptionGroup = any, TFormattedValue = any, TControlValue = any>
   implements OnInit, AfterViewInit, OnDestroy {
 
   @Input()
