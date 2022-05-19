@@ -342,11 +342,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
   public optionGroupLabel: (optionGroup: TOptionGroup) => string;
 
   constructor(props: FieldConstructor<TValue, TOption, TOptionGroup>) {
-    if (props.validation) {
-      this.validation = new Validation(props.validation);
-
-      delete props.validation;
-    }
+    this.validation = new Validation(props.validation || {});
 
     this.control = new FormControl(
       {
@@ -413,6 +409,8 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
 
       delete props.options;
     }
+
+    delete props.validation;
 
     Object.assign(this, props);
   }
@@ -499,7 +497,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
    * @param validation Validation constructor parameters
    */
   public updateValidation(validation: ValidationConstructor<TValue>) {
-    Object.assign(this.validation || {}, new Validation(validation));
+    Object.assign(this.validation, new Validation(validation));
 
     this.control.setValidators(Validation.getValidators(this.validation));
   }
