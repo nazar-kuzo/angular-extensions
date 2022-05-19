@@ -3,6 +3,7 @@ import {
   EventEmitter, Input, OnChanges, Output, ViewChild,
 } from "@angular/core";
 import { MatInput } from "@angular/material/input";
+import { initialConfig } from "ngx-mask";
 
 import { SimpleChanges } from "angular-extensions/core";
 import { Field } from "angular-extensions/models";
@@ -37,6 +38,12 @@ export class TextControlComponent<TValue> extends ControlBase<TValue> implements
 
   @Input()
   public showMaskTyped: boolean;
+
+  @Input()
+  public specialCharacters = initialConfig.specialCharacters;
+
+  @Input()
+  public dropSpecialCharacters = initialConfig.dropSpecialCharacters;
 
   @Input()
   public pattern?: MaskPattern;

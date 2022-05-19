@@ -25,14 +25,14 @@ export class NgxMaskDirective {
           maskDirective.prefix.length >= input.selectionStart &&
           input.selectionEnd != input.selectionStart;
 
-        if (invalidSelection) {
+        if (!event.ctrlKey && invalidSelection) {
           input.selectionStart = 0;
         }
 
         onKeyDown(event);
 
         // always put cursor after prefix
-        if (input.selectionStart < maskDirective.prefix.length) {
+        if (!event.ctrlKey && input.selectionStart < maskDirective.prefix.length) {
           input.selectionStart = maskDirective.prefix.length;
         }
       });
