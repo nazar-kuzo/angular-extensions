@@ -24,10 +24,15 @@ declare module "@angular/router" {
      * Provides ability to subscribe to Navigation event for activated routes
      *
      * @param route Activated Route Navigation occurred to
-     * @param isTarget Indicates whether specified route is target route navigation occurres to
+     * @param isTarget Indicates whether specified route is target route navigation occurs to
      * @returns Information about a navigation operation.
      */
     onRouteRetained(route: ActivatedRoute, isTarget?: boolean): Observable<Navigation>;
+
+    /**
+     * Gets last successful navigation. Behaves similar to {@link Router.getCurrentNavigation}.
+     */
+    getLastSuccessfulNavigation(): Navigation;
   }
 
   export interface LoadedRouterConfig {
@@ -149,5 +154,11 @@ export function addOnRouteRetainedEvent(router: Router) {
           event.snapshot.routeConfig == route.snapshot.routeConfig &&
           (!isTarget || route.snapshot.children.length == 0)),
         map(() => this.getCurrentNavigation() as Navigation));
+  };
+}
+
+export function addGetLastSuccessfulNavigation(router: Router) {
+  (router.constructor.prototype as Router).getLastSuccessfulNavigation = function (this: Router) {
+    return (this as any).lastSuccessfulNavigation as Navigation;
   };
 }

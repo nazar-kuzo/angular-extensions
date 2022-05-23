@@ -2,6 +2,7 @@ import { NgModule } from "@angular/core";
 import { Title } from "@angular/platform-browser";
 import { Routes, RouterModule, Router } from "@angular/router";
 import {
+  addGetLastSuccessfulNavigation,
   addOnRouteRetainedEvent, bindRouteConfigTitle,
   extendParamMapWithTypedParameters, extendRouteConfigWithNavigationExtras,
 } from "angular-extensions";
@@ -36,5 +37,7 @@ export class AppRoutingModule {
     extendParamMapWithTypedParameters(router);
 
     addOnRouteRetainedEvent(router);
+
+    addGetLastSuccessfulNavigation(router);
   }
 }

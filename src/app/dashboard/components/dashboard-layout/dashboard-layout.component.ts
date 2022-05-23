@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
+import { Router } from "@angular/router";
 import { Field, ModalPromptComponent, ModalPromptSettings } from "angular-extensions";
 import { DashboardApiService } from "app/dashboard/services";
 import { DashboardEditor } from "./dashboard.editor";
@@ -14,13 +15,17 @@ import { DashboardEditor } from "./dashboard.editor";
 export class DashboardLayoutComponent implements OnInit {
 
   constructor(
-    public editor: DashboardEditor,
-    private dashboardApiServise: DashboardApiService,
+    private router: Router,
+    private dashboardApiService: DashboardApiService,
     private dialog: MatDialog,
+    public editor: DashboardEditor,
   ) {
   }
 
   public ngOnInit() {
+    let navigation = this.router.getLastSuccessfulNavigation();
+
+    console.log(`Last Successful Navigation: ${navigation.finalUrl}`);
   }
 
   public scan(field: Field<string>) {
