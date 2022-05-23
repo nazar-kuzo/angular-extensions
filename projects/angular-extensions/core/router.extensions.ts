@@ -5,7 +5,7 @@ import { Title } from "@angular/platform-browser";
 import { NgModuleRef } from "@angular/core";
 import { ActivatedRoute, ActivatedRouteSnapshot, ActivationEnd, ActivationStart, Navigation, ParamMap, Router } from "@angular/router";
 
-import { isDate, parseDates } from "./object.extensions";
+import { isValidDateString, parseDates } from "./object.extensions";
 
 declare module "@angular/router" {
   export interface ParamMap {
@@ -114,7 +114,7 @@ export function extendParamMapWithTypedParameters(router: Router) {
       case value === "false":
         return false;
 
-      case isDate(value as string):
+      case isValidDateString(value):
         return parseISO(value || "") as any;
 
       case isJsonObject.test(value || ""):

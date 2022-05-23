@@ -14,7 +14,7 @@ export class DateConversionInterceptor implements HttpInterceptor {
     return next
       .handle(request)
       .pipe(tap(event => {
-        if (event instanceof HttpResponse && event.url && event.url.indexOf("/api") >= 0) {
+        if (event instanceof HttpResponse) {
           if (typeof event.body == "string") {
             parseDateProperty(event, "body");
           }

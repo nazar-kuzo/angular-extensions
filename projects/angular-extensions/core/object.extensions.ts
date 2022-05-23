@@ -69,6 +69,8 @@ declare global {
 export type Func<T> = (obj: T) => any;
 export type Class<T> = new (...params: any[]) => T;
 
+const ISO8601Regex = /\d{4}-\d{2}-\d{2}(?:[T ]\d{2}:\d{2}:\d{2}(?:.\d{1,7})?(?:[Z]?|[+-]\d{2}:\d{2}))?$/;
+
 export function nameOf<T>(func: Func<T> | Class<T>) {
   let str = func.toString();
   let classNameRegex = new RegExp(/(?:function|class) ([^ ({]+)[ ({]/);
@@ -149,11 +151,8 @@ export function overrideProperty<TIntance extends { [prop: string]: TProp | any 
   Object.defineProperty(context, propertyName, newProperty);
 }
 
-export function isDate(date: any) {
-  // avoid parsing simple ISO formats
-  return typeof date == "string" &&
-    (date.indexOf("T") > 0 || isValid(parse(date, "yyyy-MM-dd", new Date()))) &&
-    isValid(parseISO(date));
+export function isValidDateString(date: string) {
+  return ISO8601Regex.test(date);
 }
 
 export function parseDates(model: any) {
@@ -173,7 +172,7 @@ export function parseDates(model: any) {
 export function parseDateProperty<T>(object: T, prop: keyof T) {
   let date = object[prop];
 
-  if (typeof date == "string" && isDate(date)) {
+  if (typeof date == "string" && isValidDateString(date)) {
     object[prop] = parseISO(date) as any;
   }
 }
