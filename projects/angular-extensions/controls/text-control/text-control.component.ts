@@ -28,7 +28,7 @@ interface MaskPattern {
 export class TextControlComponent<TValue> extends ControlBase<TValue> implements OnChanges {
 
   @Input()
-  public type: "text" | "number" | "time" | "email" | "tel" = "text";
+  public type: "text" | "number" | "time" | "email" | "tel" | "url" = "text";
 
   @Input()
   public mask: string;
