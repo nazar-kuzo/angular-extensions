@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { BaseEditor, DayOfWeek, Field, Formatters, Option } from "angular-extensions";
 import { map } from "rxjs/operators";
 
-interface Country {
+export interface Country {
 
   cca3: string;
 

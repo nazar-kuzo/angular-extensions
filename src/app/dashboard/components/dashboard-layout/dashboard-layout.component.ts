@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
 import { Field, ModalPromptComponent, ModalPromptSettings, parseDates } from "angular-extensions";
 import { DashboardApiService } from "app/dashboard/services";
-import { DashboardEditor } from "./dashboard.editor";
+import { Country, DashboardEditor } from "./dashboard.editor";
 
 @Component({
   selector: "dashboard-layout",
@@ -18,6 +19,7 @@ export class DashboardLayoutComponent implements OnInit {
     private router: Router,
     private dashboardApiService: DashboardApiService,
     private dialog: MatDialog,
+    private snackBar: MatSnackBar,
     public editor: DashboardEditor,
   ) {
   }
@@ -51,6 +53,9 @@ export class DashboardLayoutComponent implements OnInit {
     });
   }
 
+  public copy(field: Field<Country>) {
+    this.snackBar.open(`Country: "${field.optionLabel(field.value)}" is copied to clipboard`, "Dismiss");
+  }
 
   public submit() {
     this.editor.form.validate();

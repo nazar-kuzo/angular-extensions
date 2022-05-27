@@ -91,19 +91,19 @@ export const CustomValidators = {
     };
   },
 
-  native(input?: HTMLInputElement): ValidatorFn {
-    return (control: AbstractControl<any>): ValidationErrors | null => {
-      return !input || input.checkValidity()
-        ? null
-        : { native: { value: control.value } };
-    };
-  },
-
   custom(valid: boolean): ValidatorFn {
     return (control: AbstractControl<any>): ValidationErrors | null => {
       return valid
         ? null
         : { custom: { value: control.value } };
+    };
+  },
+
+  native(input?: HTMLInputElement): ValidatorFn {
+    return (control: AbstractControl<any>): ValidationErrors | null => {
+      return !input || input.checkValidity()
+        ? null
+        : { native: { value: control.value } };
     };
   },
 };

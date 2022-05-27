@@ -85,6 +85,14 @@
       <mat-icon>close</mat-icon>
     </a>
 
+    <a *ngIf="actionButtonVisible && actionButtonIcon && actionButton.observers.length"
+       mat-icon-button
+       matSuffix
+       [matTooltip]="actionButtonTooltip"
+       (click)="actionButton.emit(field); $event.stopPropagation()">
+      <mat-icon>{{ actionButtonIcon }}</mat-icon>
+    </a>
+
     <mat-error *ngIf="baseControl.initialized">
       <ng-container *ngTemplateOutlet="baseControl.errorsTemplate"></ng-container>
     </mat-error>

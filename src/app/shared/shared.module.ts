@@ -1,6 +1,7 @@
 import { Injector, NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Router, RouterModule } from "@angular/router";
+import { MatSnackBarConfig, MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS } from "@angular/material/snack-bar";
 import { extendRouterConfigWithStatefulModals } from "angular-extensions/core/material";
 import { NgxControlsModule } from "angular-extensions";
 
@@ -11,11 +12,22 @@ import { HomePageComponent } from "./components";
   imports: [
     CommonModule,
     RouterModule,
+    MatSnackBarModule,
     NgxControlsModule.configure({ strictControlChangeDetection: true }),
   ],
   declarations: [
     AppLayoutComponent,
     HomePageComponent,
+  ],
+  providers: [
+    {
+      provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
+      useValue: {
+        duration: 1000 * 50,
+        verticalPosition: "top",
+        horizontalPosition: "right",
+      } as MatSnackBarConfig
+    },
   ],
   exports: [
     CommonModule,

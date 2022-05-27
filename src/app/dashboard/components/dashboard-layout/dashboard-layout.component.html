@@ -71,7 +71,11 @@
                     [field]="editor.country"
                     [hintClass]="'text-truncate'"
                     [searchable]="true"
-                    [clearable]="true"></select-control>
+                    [clearable]="true"
+                    actionButtonIcon="content_copy"
+                    actionButtonTooltip="Copy"
+                    [actionButtonVisible]="!!editor.country.value"
+                    (actionButton)="copy($event)"></select-control>
 
     <select-control class="col-sm-4 d-block"
                     [field]="editor.allies"

@@ -3,10 +3,21 @@ import { takeUntil } from "rxjs/operators";
 import { MatFormField, MatFormFieldAppearance } from "@angular/material/form-field";
 import {
   Component, Input, ViewChild, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef,
-  OnInit, OnDestroy, ViewEncapsulation, AfterViewInit, Directive, HostBinding, ContentChild, ElementRef,
+  OnInit, OnDestroy, ViewEncapsulation, AfterViewInit, Directive, HostBinding, ContentChild, ElementRef, EventEmitter,
 } from "@angular/core";
 
 import { Field } from "angular-extensions/models";
+
+export interface ActionableControl {
+
+  actionButtonVisible: boolean;
+
+  actionButtonIcon?: string;
+
+  actionButtonTooltip?: string;
+
+  actionButton: EventEmitter<Field<any>>;
+}
 
 @Directive()
 export class ControlBase<TValue, TOption = any, TOptionGroup = any, TFormattedValue = any, TControlValue = any> {
@@ -86,7 +97,7 @@ export class BaseControlComponent<TValue, TOption = any, TOptionGroup = any, TFo
 
     if (this.control.field.validation.native &&
       !this.control.field.validation.native.value) {
-      this.control.field.validation.native.value = () => this.formElement?.querySelector("input");
+      this.control.field.validation.native.value = () => this.formElement?.querySelector("input,[matInput]");
     }
 
     setTimeout(() => {

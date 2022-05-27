@@ -2,16 +2,17 @@ import { of, Subject } from "rxjs";
 import { catchError, debounceTime, filter, switchMap, takeUntil, tap } from "rxjs/operators";
 import {
   Component, OnInit, Input, Optional, ElementRef, ChangeDetectorRef,
-  ViewChild, OnDestroy, AfterViewInit, ContentChild, TemplateRef, ChangeDetectionStrategy,
+  ViewChild, OnDestroy, AfterViewInit, ContentChild, TemplateRef, ChangeDetectionStrategy, Output, EventEmitter,
 } from "@angular/core";
 import { MatOption } from "@angular/material/core";
 import { MatSelect } from "@angular/material/select";
 import { FormControl } from "@angular/forms";
 import { MatMenuTrigger } from "@angular/material/menu";
 
+import { Field } from "angular-extensions/models";
 import { overrideFunction } from "angular-extensions/core";
 import { MatOptionWithContext } from "./option-context/option-context.directive";
-import { ControlBase } from "angular-extensions/controls/base-control";
+import { ActionableControl, ControlBase } from "angular-extensions/controls/base-control";
 
 @Component({
   selector: "select-control",
@@ -21,7 +22,7 @@ import { ControlBase } from "angular-extensions/controls/base-control";
 })
 export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>
   extends ControlBase<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>
-  implements OnInit, AfterViewInit, OnDestroy {
+  implements OnInit, AfterViewInit, OnDestroy, ActionableControl {
 
   @Input()
   public dropdownClass = "";
@@ -43,6 +44,18 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
 
   @Input()
   public filter = "";
+
+  @Input()
+  public actionButtonVisible = true;
+
+  @Input()
+  public actionButtonIcon?: string;
+
+  @Input()
+  public actionButtonTooltip?: string;
+
+  @Output()
+  public actionButton = new EventEmitter<Field<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>>();
 
   @ViewChild("select", { static: true })
   public select: MatSelect;

@@ -7,7 +7,7 @@ import { initialConfig } from "ngx-mask";
 
 import { SimpleChanges } from "angular-extensions/core";
 import { Field } from "angular-extensions/models";
-import { ControlBase } from "angular-extensions/controls/base-control";
+import { ActionableControl, ControlBase } from "angular-extensions/controls/base-control";
 
 interface MaskPattern {
   [character: string]: {
@@ -25,7 +25,7 @@ interface MaskPattern {
   styleUrls: ["./text-control.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TextControlComponent<TValue> extends ControlBase<TValue> implements OnChanges {
+export class TextControlComponent<TValue> extends ControlBase<TValue> implements OnChanges, ActionableControl {
 
   @Input()
   public type: "text" | "number" | "time" | "email" | "tel" | "url" = "text";
@@ -54,6 +54,12 @@ export class TextControlComponent<TValue> extends ControlBase<TValue> implements
   @Input()
   public clearable = false;
 
+  @ViewChild(MatInput)
+  public input: MatInput;
+
+  @Input()
+  public actionButtonVisible = true;
+
   @Input()
   public actionButtonIcon?: string;
 
@@ -62,9 +68,6 @@ export class TextControlComponent<TValue> extends ControlBase<TValue> implements
 
   @Output()
   public actionButton = new EventEmitter<Field<TValue>>();
-
-  @ViewChild(MatInput)
-  public input: MatInput;
 
   constructor(
     private elementRef: ElementRef<HTMLElement>,
