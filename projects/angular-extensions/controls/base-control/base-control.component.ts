@@ -60,6 +60,10 @@ export class BaseControlComponent<TValue, TOption = any, TOptionGroup = any, TFo
   public initialized: boolean;
   public destroy = new Subject();
 
+  public get formElement(): HTMLElement {
+    return (this.formField?._elementRef || this.elementRef)?.nativeElement as HTMLElement;
+  }
+
   constructor(
     private elementRef: ElementRef<HTMLElement>,
     private changeDetectorRef: ChangeDetectorRef,
@@ -77,10 +81,12 @@ export class BaseControlComponent<TValue, TOption = any, TOptionGroup = any, TFo
 
   public ngAfterViewInit() {
     if (this.control.focused) {
+      setTimeout(() => (this.formElement?.querySelector("input,[matInput],mat-select,button") as HTMLElement)?.focus());
+    }
 
-      let formElement = (this.formField?._elementRef || this.elementRef)?.nativeElement as HTMLElement;
-
-      setTimeout(() => (formElement?.querySelector("input,[matInput],mat-select,button") as HTMLElement)?.focus());
+    if (this.control.field.validation.native &&
+      !this.control.field.validation.native.value) {
+      this.control.field.validation.native.value = () => this.formElement?.querySelector("input");
     }
 
     setTimeout(() => {

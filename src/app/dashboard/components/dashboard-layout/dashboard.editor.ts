@@ -17,7 +17,11 @@ export class DashboardEditor extends BaseEditor {
 
   public lastName: Field<string>;
 
+  public email: Field<string>;
+
   public phone: Field<string>;
+
+  public website: Field<string>;
 
   public yearOfBirth: Field<Date>;
 
@@ -65,12 +69,29 @@ export class DashboardEditor extends BaseEditor {
       },
     });
 
+    this.email = new Field({
+      label: "Email",
+      validation: {
+        required: { value: true },
+        native: { text: "Email is not valid" },
+      },
+    });
+
     this.phone = new Field({
       label: "Phone",
       validation: {
         required: { value: true }
       },
     });
+
+    this.website = new Field({
+      label: "Website",
+      validation: {
+        required: { value: true },
+        native: { text: "URL is not valid" },
+      },
+    });
+
 
     this.yearOfBirth = new Field<Date>({
       label: "Year of Birth",

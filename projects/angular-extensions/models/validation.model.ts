@@ -91,6 +91,14 @@ export const CustomValidators = {
     };
   },
 
+  native(input?: HTMLInputElement): ValidatorFn {
+    return (control: AbstractControl<any>): ValidationErrors | null => {
+      return !input || input.checkValidity()
+        ? null
+        : { native: { value: control.value } };
+    };
+  },
+
   custom(valid: boolean): ValidatorFn {
     return (control: AbstractControl<any>): ValidationErrors | null => {
       return valid
@@ -201,6 +209,8 @@ export class Validation<TValue> {
 
   public custom?: ValidationItem<TValue, boolean>;
 
+  public native?: ValidationItem<TValue, HTMLInputElement>;
+
   constructor(props: ValidationConstructor<TValue>) {
     Object
       .keys(props || {})
@@ -299,6 +309,10 @@ export class Validation<TValue> {
 
       if (validation.custom) {
         validators.push(validation.custom.validate(CustomValidators.custom));
+      }
+
+      if (validation.native) {
+        validators.push(validation.native.validate(CustomValidators.native));
       }
     }
 
