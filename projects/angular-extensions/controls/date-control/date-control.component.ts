@@ -113,7 +113,7 @@ export class DateControlComponent<TOption, TOptionGroup, TFormattedValue, TContr
     if (this.clearable && this.field.value != null) {
       this.field.value = null as any;
 
-      (this.datePicker.datepickerInput as any)._formField._control.focused = false;
+      this.blur();
 
       event.preventDefault();
       event.stopImmediatePropagation();
@@ -122,6 +122,10 @@ export class DateControlComponent<TOption, TOptionGroup, TFormattedValue, TContr
     }
 
     (document.activeElement as HTMLElement).blur();
+  }
+
+  public blur() {
+    (this.datePicker.datepickerInput as any)._formField._control.focused = false;
   }
 
   private getDatepickerContent(datePicker: AppMatDatepicker<Date>): MatDatepickerContent<Date> | null {

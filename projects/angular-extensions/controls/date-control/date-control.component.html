@@ -32,6 +32,7 @@
                     (viewChanged)="viewChanged($event, datePicker)"
                     (yearSelected)="dateSelected($event, datePicker, targetView == 'year')"
                     (monthSelected)="dateSelected($event, datePicker, targetView == 'month')"
+                    (closed)="blur()"
                     (closed)="field.control.markAllAsTouched()"></mat-datepicker>
 
     <mat-error *ngIf="baseControl.initialized">
