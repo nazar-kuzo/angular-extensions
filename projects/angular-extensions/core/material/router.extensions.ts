@@ -2,16 +2,19 @@ import { MatDialog } from "@angular/material/dialog";
 import { ApplicationRef, Injector, Type, ViewContainerRef } from "@angular/core";
 import {
   ActivatedRoute, ActivatedRouteSnapshot, ActivationEnd,
-  NavigationStart, Router, LoadedRouterConfig, NavigationExtras,
+  NavigationStart, Router, LoadedRouterConfig, IsActiveMatchOptions,
 } from "@angular/router";
 
 import { flatten } from "angular-extensions/core";
 
-export interface ModalNavigationExtras extends NavigationExtras {
-  skipModalHooks?: boolean;
-}
-
 let statefulModalsInitialized = false;
+
+const routeMatchOptions: IsActiveMatchOptions = {
+  paths: "exact",
+  matrixParams: "exact",
+  queryParams: "ignored",
+  fragment: "ignored"
+};
 
 /**
  * Extends router config with stateful modals support.
@@ -30,9 +33,14 @@ export function extendRouterConfigWithStatefulModals(router: Router, injector: I
   }
 
   router.events.subscribe(event => {
-    // render stateful modal component
-    if (event instanceof ActivationEnd && event.snapshot.data?.modalComponent &&
-      !(router.getCurrentNavigation().extras as ModalNavigationExtras).skipModalHooks) {
+    if (event instanceof ActivationEnd && event.snapshot.data?.modalComponent) {
+
+      let shouldOpenModal = router.getLastSuccessfulNavigation() == null ||
+        !router.isActive(router.getCurrentNavigation().initialUrl, routeMatchOptions);
+
+      if (!shouldOpenModal) {
+        return;
+      }
 
       let component = event.snapshot.data?.modalComponent;
       let scopedInjector = getActivatedRouteInjector(event.snapshot) || injector;
@@ -64,9 +72,9 @@ export function extendRouterConfigWithStatefulModals(router: Router, injector: I
         }));
 
       let subscription = router.events.subscribe(routerEvent => {
-        let skipModalHooks = (router.getCurrentNavigation().extras as ModalNavigationExtras).skipModalHooks;
+        let shouldCloseModal = !router.isActive(router.getCurrentNavigation().extractedUrl, routeMatchOptions);
 
-        if (routerEvent instanceof NavigationStart && !skipModalHooks) {
+        if (routerEvent instanceof NavigationStart && shouldCloseModal) {
           dialogRef.close();
           subscription.unsubscribe();
         }

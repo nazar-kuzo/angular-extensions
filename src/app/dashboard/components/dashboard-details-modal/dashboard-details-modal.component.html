@@ -7,6 +7,14 @@
 
 <mat-dialog-actions align="end">
   <button mat-raised-button
+          [routerLink]
+          [fragment]="'bla'">Update Url</button>
+
+  <button mat-raised-button
+          [routerLink]
+          [fragment]="'bla2'">Update Url - 2</button>
+
+  <button mat-raised-button
           color="primary"
           (click)="close()">Close</button>
 </mat-dialog-actions>
