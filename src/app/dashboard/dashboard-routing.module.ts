@@ -2,7 +2,7 @@ import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { AppLayoutComponent } from "app/shared/components";
 
-import { DashboardLayoutComponent } from "./components";
+import { DashboardDetailsModalComponent, DashboardLayoutComponent } from "./components";
 
 const routes: Routes = [
   {
@@ -11,7 +11,15 @@ const routes: Routes = [
     children: [
       {
         path: "",
-        component: DashboardLayoutComponent
+        component: DashboardLayoutComponent,
+        children: [
+          {
+            path: "details",
+            data: {
+              modalComponent: DashboardDetailsModalComponent
+            }
+          },
+        ]
       },
     ]
   },

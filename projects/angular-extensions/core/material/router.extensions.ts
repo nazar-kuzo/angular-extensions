@@ -1,8 +1,15 @@
 import { MatDialog } from "@angular/material/dialog";
 import { ApplicationRef, Injector, Type, ViewContainerRef } from "@angular/core";
-import { ActivatedRoute, ActivatedRouteSnapshot, ActivationEnd, NavigationStart, Router, LoadedRouterConfig } from "@angular/router";
+import {
+  ActivatedRoute, ActivatedRouteSnapshot, ActivationEnd,
+  NavigationStart, Router, LoadedRouterConfig, NavigationExtras,
+} from "@angular/router";
 
 import { flatten } from "angular-extensions/core";
+
+export interface ModalNavigationExtras extends NavigationExtras {
+  skipModalHooks?: boolean;
+}
 
 let statefulModalsInitialized = false;
 
@@ -23,8 +30,10 @@ export function extendRouterConfigWithStatefulModals(router: Router, injector: I
   }
 
   router.events.subscribe(event => {
-    // render statefull modal component
-    if (event instanceof ActivationEnd && event.snapshot.data?.modalComponent) {
+    // render stateful modal component
+    if (event instanceof ActivationEnd && event.snapshot.data?.modalComponent &&
+      !(router.getCurrentNavigation().extras as ModalNavigationExtras).skipModalHooks) {
+
       let component = event.snapshot.data?.modalComponent;
       let scopedInjector = getActivatedRouteInjector(event.snapshot) || injector;
       let activatedRoute = scopedInjector.get<ActivatedRoute>(ActivatedRoute);
@@ -55,7 +64,9 @@ export function extendRouterConfigWithStatefulModals(router: Router, injector: I
         }));
 
       let subscription = router.events.subscribe(routerEvent => {
-        if (routerEvent instanceof NavigationStart) {
+        let skipModalHooks = (router.getCurrentNavigation().extras as ModalNavigationExtras).skipModalHooks;
+
+        if (routerEvent instanceof NavigationStart && !skipModalHooks) {
           dialogRef.close();
           subscription.unsubscribe();
         }
