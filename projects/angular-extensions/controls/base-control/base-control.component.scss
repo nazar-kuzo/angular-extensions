@@ -20,6 +20,13 @@
   base-control {
     font-size: 14px;
 
+    mat-label {
+      &.required::after {
+        content: "*";
+        color: red;
+      }
+    }
+
     mat-form-field {
       min-width: 150px;
 

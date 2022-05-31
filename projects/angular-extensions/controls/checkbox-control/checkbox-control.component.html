@@ -3,7 +3,7 @@
   <div class="d-block mat-form-field">
     <mat-checkbox [formControl]="field.control"
                   [ngClass]="fieldClass">
-      {{ field.label }}&nbsp;
+      <mat-label>{{ field.label }}&nbsp;</mat-label>
 
       <mat-icon *ngIf="field.info"
                 class="align-bottom"

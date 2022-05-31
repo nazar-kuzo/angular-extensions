@@ -93,6 +93,10 @@ export class BaseControlComponent<TValue, TOption = any, TOptionGroup = any, TFo
   }
 
   public ngAfterViewInit() {
+    if (this.control.field.validation.required || this.control.field.validation.requiredTrue) {
+      this.control.field.element?.querySelector("mat-label")?.classList?.add("required");
+    }
+
     if (this.control.focused) {
       setTimeout(() => (this.formElement?.querySelector("input,[matInput],mat-select,button") as HTMLElement)?.focus());
     }
