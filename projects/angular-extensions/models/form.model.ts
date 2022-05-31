@@ -8,7 +8,14 @@ import { Field } from "./field.model";
  */
 export class Form {
 
-  private fields: Field<any>[] = [];
+  private _fields: Field<any>[] = [];
+
+  /**
+   * Provides all registered fields for this form
+   */
+   public get fields() {
+    return [...this._fields];
+  }
 
   /**
    * Angular's Form group
@@ -99,7 +106,7 @@ export class Form {
         ` please provide unique name to make validation working properly`);
     }
 
-    this.fields.push(field);
+    this._fields.push(field);
     this.formGroup.registerControl(field.name, field.control);
 
     if (!field._initialStatus?.disabled) {
@@ -114,7 +121,7 @@ export class Form {
    * @param field Field
    */
   public removeField(field: Field<any>) {
-    remove(this.fields, formField => formField == field);
+    remove(this._fields, formField => formField == field);
 
     this.formGroup.removeControl(field.name);
   }
@@ -171,7 +178,7 @@ export class Form {
    * Destroys each field in a form
    */
   public destroy() {
-    this.fields.forEach(field => field.destroy());
+    this._fields.forEach(field => field.destroy());
   }
 }
 
