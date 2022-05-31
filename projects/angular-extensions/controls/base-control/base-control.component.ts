@@ -82,6 +82,8 @@ export class BaseControlComponent<TValue, TOption = any, TOptionGroup = any, TFo
   }
 
   public ngOnInit() {
+    this.control.field.element = this.elementRef?.nativeElement?.parentElement;
+
     // update control when status changes
     merge(this.control.field.control.statusChanges, this.control.field.control.root.valueChanges)
       .pipe(takeUntil(this.destroy))

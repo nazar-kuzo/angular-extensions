@@ -13,7 +13,7 @@ import { NGX_DATE_FORMATS } from "./date-formats.model";
  */
 type FieldConstructor<TValue, TOption = any, TOptionGroup = any, TConvertedValue = any> =
   Partial<Omit<Field<TValue, TOption, TOptionGroup, TConvertedValue>,
-    "control" | "options" | "onValueChange" | "onOptionsChange" | "validation"> & {
+    "control" | "element" | "options" | "onValueChange" | "onOptionsChange" | "validation"> & {
       options: TOption[] | Observable<TOption[]>;
 
       onValueChange: (value: TValue, previous: TValue) => void;
@@ -156,6 +156,11 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
    * Angular FormControl of field. Control components communicates via this control between Field and UI
    */
   public control: FormControl;
+
+  /**
+   * Reference to control root HTML element
+   */
+  public element?: HTMLElement;
 
   /**
    * Name of a field inside parent's FormGroup, etc.
