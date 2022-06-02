@@ -1,6 +1,6 @@
 import { merge } from "lodash-es";
 import { map } from "rxjs/operators";
-import { Inject, Injectable, InjectionToken } from "@angular/core";
+import { Inject, Injectable, InjectionToken, Optional } from "@angular/core";
 import { HttpClient, HttpHeaders as AngularHttpHeaders, HttpParams as AngularHttpParams } from "@angular/common/http";
 
 import { patchAngularHttpParams } from "angular-extensions/core";
@@ -39,9 +39,9 @@ export class ApiService {
 
   constructor(
     private http: HttpClient,
-    @Inject(API_CONFIG) config: ApiConfig,
+    @Optional() @Inject(API_CONFIG) config: ApiConfig,
   ) {
-    this.apiUrl = config.apiUrl;
+    this.apiUrl = config?.apiUrl;
 
     this.httpOptions = {
       headers: {
@@ -55,26 +55,34 @@ export class ApiService {
 
   public get<T>(url: string, params?: HttpParams, httpOptions?: HttpClientOptions) {
     return this.http
-      .get<T>(`${this.apiUrl}/${url}`, this.getHttpOptions(params, httpOptions))
+      .get<T>(this.getUrl(url), this.getHttpOptions(params, httpOptions))
       .pipe(map(response => response.body as T));
   }
 
   public post<T>(url: string, body?: any, params?: HttpParams, httpOptions?: HttpClientOptions) {
     return this.http
-      .post<T>(`${this.apiUrl}/${url}`, JSON.stringify(body), this.getHttpOptions(params, httpOptions))
+      .post<T>(this.getUrl(url), JSON.stringify(body), this.getHttpOptions(params, httpOptions))
       .pipe(map(response => response.body as T));
   }
 
   public put<T>(url: string, body?: any, params?: HttpParams, httpOptions?: HttpClientOptions) {
     return this.http
-      .put<T>(`${this.apiUrl}/${url}`, JSON.stringify(body), this.getHttpOptions(params, httpOptions))
+      .put<T>(this.getUrl(url), JSON.stringify(body), this.getHttpOptions(params, httpOptions))
       .pipe(map(response => response.body as T));
   }
 
   public delete<T>(url: string, params?: HttpParams, httpOptions?: HttpClientOptions) {
     return this.http
-      .delete<T>(`${this.apiUrl}/${url}`, this.getHttpOptions(params, httpOptions))
+      .delete<T>(this.getUrl(url), this.getHttpOptions(params, httpOptions))
       .pipe(map(response => response.body as T));
+  }
+
+  private getUrl(url: string) {
+    if (!url.startsWith("http") && this.apiUrl) {
+      return `${this.apiUrl}/${url}`;
+    }
+
+    return url;
   }
 
   private sanitizeQueryParams(params?: HttpParams) {

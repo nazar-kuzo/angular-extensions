@@ -1,6 +1,5 @@
-import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BaseEditor, DayOfWeek, Field, Formatters, Option } from "angular-extensions";
+import { ApiService, BaseEditor, DayOfWeek, Field, Formatters, Option } from "angular-extensions";
 import { map } from "rxjs/operators";
 
 export interface Country {
@@ -50,7 +49,7 @@ export class DashboardEditor extends BaseEditor {
   public isOfficial: Field<boolean>;
 
   constructor(
-    private api: HttpClient,
+    private api: ApiService,
   ) {
     super();
 
@@ -173,20 +172,7 @@ export class DashboardEditor extends BaseEditor {
         console.error(`Selected country: ${country?.name.common}`);
       },
       options: this.loadAllCountries(),
-      optionsProvider: query => {
-        return this.api
-          .get<Country[]>(
-            `https://restcountries.com/v3.1/name/${query}`,
-            {
-              headers: {
-                "Content-Type": "application/json",
-                "X-Requested-With": "XMLHttpRequest"
-              },
-              observe: "response",
-              responseType: "json",
-            })
-          .pipe(map(response => response.body || []));
-      },
+      optionsProvider: query => this.api.get<Country[]>(`https://restcountries.com/v3.1/name/${query}`),
     });
 
     this.allies = new Field<Country[], Country>({
@@ -228,17 +214,6 @@ export class DashboardEditor extends BaseEditor {
   }
 
   private loadAllCountries() {
-    return this.api
-      .get<Country[]>(
-        `https://restcountries.com/v3.1/all`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-Requested-With": "XMLHttpRequest"
-          },
-          observe: "response",
-          responseType: "json",
-        })
-      .pipe(map(response => response.body || []));
+    return this.api.get<Country[]>(`https://restcountries.com/v3.1/all`);
   }
 }
