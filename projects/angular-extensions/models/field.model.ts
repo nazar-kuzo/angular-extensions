@@ -114,6 +114,10 @@ export class Option<TValue, TId = string> {
     if (!this.name) {
       this.name = this.value?.toString();
     }
+
+    if (!this.id) {
+      this.id = this.name as any;
+    }
   }
 
   /**
