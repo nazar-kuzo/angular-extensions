@@ -19,6 +19,6 @@ export class SecondGuard implements CanActivate, CanActivateChild {
   public canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     console.log("SecondGuard: canActivateChild");
 
-    return Promise.resolve(true);
+    return true;
   }
 }

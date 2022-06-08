@@ -1,6 +1,6 @@
 import {
   Component, Input, Output, EventEmitter, ViewChild,
-  ElementRef, OnInit, ChangeDetectorRef, ChangeDetectionStrategy,
+  ElementRef, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, ContentChild, TemplateRef,
 } from "@angular/core";
 
 import { FileSizePipe } from "ngx-filesize";
@@ -44,6 +44,9 @@ export class FileControlComponent extends ControlBase<File[]> implements OnInit 
 
   @Output()
   public changes: EventEmitter<File[]> = new EventEmitter<File[]>();
+
+  @ContentChild(TemplateRef)
+  public contentTemplate: TemplateRef<HTMLElement>;
 
   @ViewChild(FilePickerComponent)
   public filePicker: FilePickerComponent;

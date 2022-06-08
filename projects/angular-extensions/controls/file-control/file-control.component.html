@@ -17,8 +17,14 @@
                           (fileAdded)="onFileAdded($event)">
 
       <div class="dropzoneTemplate">
-        <a mat-raised-button
-           (click)="onDialogOpen()">{{ field.label }}</a>
+        <ng-container *ngIf="contentTemplate">
+          <ng-container *ngTemplateOutlet="contentTemplate; context: { $implicit: onDialogOpen.bind(this) }"></ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="!contentTemplate">
+          <a mat-raised-button
+             (click)="onDialogOpen()">{{ field.label }}</a>
+        </ng-container>
       </div>
     </ngx-awesome-uploader>
   </div>
@@ -32,6 +38,8 @@
     </ng-container>
   </mat-error>
 </base-control>
+
+<ng-content></ng-content>
 
 <ng-template #fileItemTemplate
              let-fileItem="fileItem"

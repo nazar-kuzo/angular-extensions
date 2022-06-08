@@ -20,6 +20,6 @@ export class FirstGuard implements CanActivate, CanActivateChild {
   public canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     console.log("FirstGuard: canActivateChild");
 
-    return false;
+    return true;
   }
 }
