@@ -39,7 +39,7 @@ export class SequentialGuard implements CanActivate, CanActivateChild {
   }
 
   public async canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    let guardTypes = (route.data as SequentialRouteData).canActivateChildSequence;
+    let guardTypes = this.getGuardTypes(route);
 
     if (!guardTypes?.length) {
       throw new Error("SequentialGuard: missing \"CanActivateChild\" guards for RouteConfig \"data.canActivateChildSequence\" property");
@@ -69,5 +69,19 @@ export class SequentialGuard implements CanActivate, CanActivateChild {
     else {
       return Promise.resolve(source);
     }
+  }
+
+  private getGuardTypes(route: ActivatedRouteSnapshot) {
+    let parentRoute = route.parent;
+
+    let guardTypes: Type<CanActivateChild>[];
+
+    do {
+
+      guardTypes = (parentRoute.data as SequentialRouteData).canActivateChildSequence;
+
+    } while (!guardTypes && parentRoute.parent);
+
+    return guardTypes;
   }
 }

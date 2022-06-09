@@ -2,7 +2,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { ApplicationRef, Injector, Type, ViewContainerRef } from "@angular/core";
 import {
   ActivatedRoute, ActivatedRouteSnapshot, ActivationEnd,
-  NavigationStart, Router, LoadedRouterConfig, IsActiveMatchOptions,
+  NavigationStart, Router, LoadedRouterConfig, IsActiveMatchOptions, GuardsCheckEnd,
 } from "@angular/router";
 
 import { flatten } from "angular-extensions/core";
@@ -74,7 +74,7 @@ export function extendRouterConfigWithStatefulModals(router: Router, injector: I
       let subscription = router.events.subscribe(routerEvent => {
         let shouldCloseModal = !router.isActive(router.getCurrentNavigation().extractedUrl, routeMatchOptions);
 
-        if (routerEvent instanceof NavigationStart && shouldCloseModal) {
+        if (routerEvent instanceof GuardsCheckEnd && routerEvent.shouldActivate && shouldCloseModal) {
           dialogRef.close();
           subscription.unsubscribe();
         }
