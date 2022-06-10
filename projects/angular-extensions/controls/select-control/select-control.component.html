@@ -28,7 +28,7 @@
         <ngx-mat-select-search [placeholderLabel]="isSearchAvailable() ? 'Type to search items' : 'No items available'"
                                [disableInitialFocus]="!isSearchAvailable()"
                                [ngStyle]="{'pointer-events': isSearchAvailable() ? 'all' : 'none'}"
-                               [noEntriesFoundLabel]="$any(null)"
+                               [noEntriesFoundLabel]="null"
                                [formControl]="filterControl"
                                [searching]="field.isQuerying"></ngx-mat-select-search>
       </mat-option>
@@ -81,7 +81,7 @@
        mat-icon-button
        matSuffix
        matTooltip="Clear"
-       (click)="$any(field).value = multiple ? [] : null; $event.stopPropagation()">
+       (click)="field.control.setValue(multiple ? [] : null); $event.stopPropagation()">
       <mat-icon>close</mat-icon>
     </a>
 

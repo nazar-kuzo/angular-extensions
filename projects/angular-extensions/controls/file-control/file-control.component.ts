@@ -108,9 +108,9 @@ export class FileControlComponent extends ControlBase<File[]> implements OnInit 
   public onFileAdded(file: FilePreviewModel) {
     this.validationErrors = [];
 
-    this.field.value = this.field.value
+    this.field.control.setValue(this.field.value
       ? [...this.field.value, file.file as File]
-      : [file.file as File];
+      : [file.file as File]);
 
     this.changeDetectorRef.markForCheck();
   }
@@ -118,9 +118,9 @@ export class FileControlComponent extends ControlBase<File[]> implements OnInit 
   public onFileRemoved(removedFile: FilePreviewModel) {
     this.validationErrors = [];
 
-    this.field.value = this.field.value
+    this.field.control.setValue(this.field.value
       ? this.field.value.filter(file => file.name != removedFile.fileName)
-      : [removedFile.file as File];
+      : [removedFile.file as File]);
 
     this.changeDetectorRef.markForCheck();
   }

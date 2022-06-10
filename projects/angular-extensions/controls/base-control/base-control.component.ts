@@ -88,13 +88,21 @@ export class BaseControlComponent<TValue, TOption = any, TOptionGroup = any, TFo
     merge(this.control.field.control.statusChanges, this.control.field.control.root.valueChanges)
       .pipe(takeUntil(this.destroy))
       .subscribe(() => {
+        this.control.field.element
+          ?.querySelector("mat-label")
+          ?.classList
+          ?.toggle("required", this.control.field.validation.required.getValue(this.control.field.value));
+
         this.changeDetectorRef.markForCheck();
       });
   }
 
   public ngAfterViewInit() {
     if (this.control.field.validation.required || this.control.field.validation.requiredTrue) {
-      this.control.field.element?.querySelector("mat-label")?.classList?.add("required");
+      this.control.field.element
+        ?.querySelector("mat-label")
+        ?.classList
+        ?.toggle("required", this.control.field.validation.required.getValue(this.control.field.value));
     }
 
     if (this.control.focused) {

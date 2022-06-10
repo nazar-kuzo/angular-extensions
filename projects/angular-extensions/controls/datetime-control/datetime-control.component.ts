@@ -58,7 +58,7 @@ export class DateTimeControlComponent extends ControlBase<Date> {
 
   public onToggle(event: MouseEvent) {
     if (this.clearable && this.field.control.enabled && this.field.value != null) {
-      this.field.value = null as any;
+      this.field.control.setValue(null);
 
       this.field.control.markAsTouched({ onlySelf: true });
 

@@ -111,7 +111,7 @@ export class DateControlComponent<TOption, TOptionGroup, TFormattedValue, TContr
 
   public onToggle(event: MouseEvent) {
     if (this.clearable && this.field.value != null) {
-      this.field.value = null as any;
+      this.field.control.setValue(null);
 
       this.blur();
 

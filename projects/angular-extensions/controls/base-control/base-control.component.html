@@ -3,7 +3,7 @@
 <ng-template #hintTemplate>
   <mat-hint [ngClass]="control.hintClass"
             style="cursor: default;"
-            [matTooltip]="$any(control.field.info)">
+            [matTooltip]="control.field.info">
     {{ control.field.info }}
   </mat-hint>
 </ng-template>

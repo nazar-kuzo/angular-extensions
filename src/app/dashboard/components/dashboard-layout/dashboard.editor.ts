@@ -64,7 +64,7 @@ export class DashboardEditor extends BaseEditor {
     this.lastName = new Field({
       label: "Last Name",
       validation: {
-        required: { value: true }
+        required: { value: () => !!this.firstName.value }
       },
     });
 

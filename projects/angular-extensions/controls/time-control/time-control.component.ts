@@ -42,7 +42,7 @@ export class TimeControlComponent<TValue> extends ControlBase<TValue> {
 
   public onToggle(event: MouseEvent) {
     if (this.clearable && this.field.value != null) {
-      this.field.value = null;
+      this.field.control.setValue(null);
 
       (this.timePicker.datepickerInput as any)._formField._control.focused = false;
 

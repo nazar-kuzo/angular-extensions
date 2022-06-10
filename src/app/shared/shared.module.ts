@@ -13,7 +13,7 @@ import { HomePageComponent } from "./components";
     CommonModule,
     RouterModule,
     MatSnackBarModule,
-    NgxControlsModule.configure({ strictControlChangeDetection: true }),
+    NgxControlsModule.configure({  }),
   ],
   declarations: [
     AppLayoutComponent,
