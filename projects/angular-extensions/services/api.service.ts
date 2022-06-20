@@ -71,6 +71,12 @@ export class ApiService {
       .pipe(map(response => response.body as T));
   }
 
+  public patch<T>(url: string, body?: any, params?: HttpParams, httpOptions?: HttpClientOptions) {
+    return this.http
+      .patch<T>(this.getUrl(url), JSON.stringify(body), this.getHttpOptions(params, httpOptions))
+      .pipe(map(response => response.body as T));
+  }
+
   public delete<T>(url: string, params?: HttpParams, httpOptions?: HttpClientOptions) {
     return this.http
       .delete<T>(this.getUrl(url), this.getHttpOptions(params, httpOptions))
