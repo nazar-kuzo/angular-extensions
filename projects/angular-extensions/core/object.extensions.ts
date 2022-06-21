@@ -69,7 +69,7 @@ declare global {
 export type Func<T> = (obj: T) => any;
 export type Class<T> = new (...params: any[]) => T;
 
-const ISO8601Regex = /\d{4}-\d{2}-\d{2}(?:[T ]\d{2}:\d{2}:\d{2}(?:.\d{1,7})?(?:[Z]?|[+-]\d{2}:\d{2}))?$/;
+const ISO8601Regex = /\d{4}-\d{2}-\d{2}(?:[T ]\d{2}:\d{2}:\d{2}(?:.\d{1,})?(?:[Z]?|[+-]\d{2}:\d{2}))?$/;
 
 export function nameOf<T>(func: Func<T> | Class<T>) {
   let str = func.toString();
