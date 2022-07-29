@@ -3,7 +3,9 @@
   <div class="d-block mat-form-field">
     <mat-checkbox [formControl]="field.control"
                   [ngClass]="fieldClass">
-      <mat-label>{{ field.label }}&nbsp;</mat-label>
+      <mat-label>
+        <ng-container *ngTemplateOutlet="labelTemplate || defaultLabelTemplate; context: { $implicit: field }"></ng-container>
+      </mat-label>
 
       <mat-icon *ngIf="field.info"
                 class="align-bottom"
@@ -18,3 +20,9 @@
     </div>
   </div>
 </base-control>
+
+<ng-content></ng-content>
+
+<ng-template #defaultLabelTemplate>
+  {{ field.label }}&nbsp;
+</ng-template>

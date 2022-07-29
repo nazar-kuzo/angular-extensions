@@ -88,14 +88,20 @@
                       [field]="editor.anthem"></textarea-control>
 
     <checkbox-control class="col-sm-4 d-block"
-                      [field]="editor.isOfficial"></checkbox-control>
+                      [field]="editor.isOfficial">
+      <ng-template #labelTemplate>
+        Is official <a href="https://google.com.ua" target="_blank">Google</a>
+      </ng-template>
+    </checkbox-control>
 
     <div class="col-sm-4">
       <file-control class="d-inline-block mr-3 p-0"
                     [field]="editor.image"
                     [showPreview]="true">
         <ng-template let-handler>
-          <button mat-raised-button color="primary" (click)="handler()">
+          <button mat-raised-button
+                  color="primary"
+                  (click)="handler()">
             Upload file
           </button>
         </ng-template>

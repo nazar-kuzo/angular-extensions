@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ContentChild, TemplateRef } from "@angular/core";
 import { matFormFieldAnimations } from "@angular/material/form-field";
 import { ControlBase } from "angular-extensions/controls/base-control";
 
@@ -11,4 +11,7 @@ import { ControlBase } from "angular-extensions/controls/base-control";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CheckboxControlComponent extends ControlBase<boolean> {
+
+  @ContentChild("labelTemplate")
+  public labelTemplate: TemplateRef<HTMLElement>;
 }
