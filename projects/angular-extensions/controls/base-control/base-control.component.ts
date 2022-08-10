@@ -96,6 +96,7 @@ export class BaseControlComponent<TValue, TOption = any, TOptionGroup = any, TFo
           field.element = this.elementRef?.nativeElement?.parentElement;
 
           this.initializeFieldNativeValidation(field);
+          this.updateFieldLabel(this.control.field);
 
           return merge(field.control.statusChanges, field.control.root.valueChanges)
             .pipe(debounceTime(0), tap(() => {
