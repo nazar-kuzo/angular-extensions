@@ -2,8 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
-import { Field, ModalPromptComponent, ModalPromptSettings, parseDates } from "angular-extensions";
-import { DashboardApiService } from "app/dashboard/services";
+import { ApiService, Field, ModalPromptComponent, ModalPromptSettings, parseDates } from "angular-extensions";
 import { Country, DashboardEditor } from "./dashboard.editor";
 
 @Component({
@@ -17,7 +16,7 @@ export class DashboardLayoutComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private dashboardApiService: DashboardApiService,
+    private api: ApiService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     public editor: DashboardEditor,
@@ -59,5 +58,9 @@ export class DashboardLayoutComponent implements OnInit {
 
   public submit() {
     this.editor.form.validate();
+  }
+
+  public recreateEditor() {
+    this.editor = new DashboardEditor(this.api);
   }
 }

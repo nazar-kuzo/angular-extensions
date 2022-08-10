@@ -1,5 +1,5 @@
-import { merge, Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { merge, Subject, BehaviorSubject } from "rxjs";
+import { debounceTime, switchMap, takeUntil, tap } from "rxjs/operators";
 import { MatFormField, MatFormFieldAppearance } from "@angular/material/form-field";
 import {
   Component, Input, ViewChild, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef,
@@ -28,10 +28,16 @@ export class ControlBase<TValue, TOption = any, TOptionGroup = any, TFormattedVa
   @HostBinding("class.d-none")
   public get visible() {
     return !this.field?.visible;
-  };
+  }
+
+  public get field() {
+    return this.field$.value;
+  }
 
   @Input()
-  public field: Field<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>;
+  public set field(value: Field<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>) {
+    this.field$.next(value);
+  }
 
   @Input()
   public fieldClass: string;
@@ -44,6 +50,8 @@ export class ControlBase<TValue, TOption = any, TOptionGroup = any, TFormattedVa
 
   @Input()
   public focused = false;
+
+  public field$ = new BehaviorSubject<Field<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>>(null);
 }
 
 @Component({
@@ -82,40 +90,34 @@ export class BaseControlComponent<TValue, TOption = any, TOptionGroup = any, TFo
   }
 
   public ngOnInit() {
-    this.control.field.element = this.elementRef?.nativeElement?.parentElement;
+    this.control.field$
+      .pipe(
+        switchMap(field => {
+          field.element = this.elementRef?.nativeElement?.parentElement;
 
-    // update control when status changes
-    merge(this.control.field.control.statusChanges, this.control.field.control.root.valueChanges)
-      .pipe(takeUntil(this.destroy))
-      .subscribe(() => {
-        this.control.field.element
-          ?.querySelector("mat-label")
-          ?.classList
-          ?.toggle("required", !!this.control.field.validation.required?.getValue(this.control.field.value));
+          this.initializeFieldNativeValidation(field);
 
-        this.changeDetectorRef.markForCheck();
-      });
+          return merge(field.control.statusChanges, field.control.root.valueChanges)
+            .pipe(debounceTime(0), tap(() => {
+              this.updateFieldLabel(field);
+
+              this.changeDetectorRef.markForCheck();
+            }));
+        }),
+        takeUntil(this.destroy))
+      .subscribe();
   }
 
   public ngAfterViewInit() {
-    if (this.control.field.validation.required || this.control.field.validation.requiredTrue) {
-      this.control.field.element
-        ?.querySelector("mat-label")
-        ?.classList
-        ?.toggle("required", !!this.control.field.validation.required?.getValue(this.control.field.value));
-    }
-
-    if (this.control.focused) {
-      setTimeout(() => (this.formElement?.querySelector("input,[matInput],mat-select,button") as HTMLElement)?.focus());
-    }
-
-    if (this.control.field.validation.native &&
-      !this.control.field.validation.native.value) {
-      this.control.field.validation.native.value = () => this.formElement?.querySelector("input,[matInput]");
-    }
+    this.initializeFieldNativeValidation(this.control.field);
+    this.updateFieldLabel(this.control.field);
 
     setTimeout(() => {
       this.initialized = true;
+
+      if (this.control.focused) {
+        (this.formElement?.querySelector("input,[matInput],mat-select,button") as HTMLElement)?.focus();
+      }
 
       this.changeDetectorRef.markForCheck();
     });
@@ -124,5 +126,21 @@ export class BaseControlComponent<TValue, TOption = any, TOptionGroup = any, TFo
   public ngOnDestroy() {
     this.destroy.next();
     this.destroy.complete();
+  }
+
+  private initializeFieldNativeValidation(field: Field<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>) {
+    if (field.validation.native && !field.validation.native.value) {
+      field.validation.native.value = () => this.formElement?.querySelector("input,[matInput]");
+    }
+  }
+
+  private updateFieldLabel(field: Field<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>) {
+    let required = !!field.validation.required?.getValue(field.value) ||
+      !!field.validation.requiredTrue?.getValue(field.value);
+
+    field.element
+      ?.querySelector("mat-label")
+      ?.classList
+      ?.toggle("required", required);
   }
 }

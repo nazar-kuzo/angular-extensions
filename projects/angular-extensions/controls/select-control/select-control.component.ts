@@ -143,41 +143,37 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   }
 
   public ngAfterViewInit() {
-    if (this.field.optionDisplayLabel) {
-      let optionViewLabel = this.field.optionDisplayLabel;
+    this.select.options.changes
+      .pipe(
+        filter(() => !!this.field.optionDisplayLabel),
+        takeUntil(this.destroy))
+      .subscribe((options: MatOption[]) => {
+        options.forEach(option => {
+          Object.defineProperty(option, nameOf(() => option.viewValue), {
+            get: () => this.field.optionDisplayLabel(option.value as TOption),
+            configurable: true,
+          });
+        });
+      });
 
-      this.select.options.changes
-        .pipe(takeUntil(this.destroy))
-        .subscribe((options: MatOption[]) => {
-          options.forEach(option => {
-            Object.defineProperty(option, nameOf(() => option.viewValue), {
-              get: () => optionViewLabel(option.value as TOption),
-              configurable: true,
+    if (this.searchable) {
+      if (this.multiple) {
+        // fixing issue with select control not propagating
+        // changes to model when options filtering is applied
+        overrideFunction(
+          this.select,
+          select => (select as any)._initializeSelection,
+          (_, select) => {
+            Promise.resolve().then(() => {
+              (select as any)._setSelectionByValue([...(select.ngControl.value || []), ...((select as any)._value || [])]);
+              select.stateChanges.next();
             });
           });
-        });
-    }
-
-    if (this.searchable && this.multiple && this.select) {
-      // fixing issue with select control not propagating
-      // changes to model when options filtering is applied
-      overrideFunction(
-        this.select,
-        select => (select as any)._initializeSelection,
-        (_, select) => {
-          Promise.resolve().then(() => {
-            (select as any)._setSelectionByValue([...(select.ngControl.value || []), ...((select as any)._value || [])]);
-            select.stateChanges.next();
-          });
-        });
-    }
-
-    if (this.searchable && this.field.optionsProvider) {
-      let optionsProvider = this.field.optionsProvider;
+      }
 
       this.filterControl.valueChanges
         .pipe(
-          filter((query: string) => query != ""),
+          filter((query: string) => query != "" && !!this.field.optionsProvider),
           tap(() => {
             this.field.options = [];
             this.field.isQuerying = true;
@@ -186,7 +182,7 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
           }),
           debounceTime(300),
           switchMap((query: string) => !!query
-            ? optionsProvider(query).pipe(catchError(() => of([] as TOption[])))
+            ? this.field.optionsProvider(query).pipe(catchError(() => of([] as TOption[])))
             : of([])),
           takeUntil(this.destroy))
         .subscribe(options => {
