@@ -53,6 +53,10 @@
     {{ control.field.validation.custom?.text || error.message }}
   </mat-error>
 
+  <mat-error *ngIf="control.field.control.errors?.async as error">
+    {{ control.field.validation.async?.text || error.message }}
+  </mat-error>
+
   <mat-error *ngIf="control.field.control.errors?.native as error">
     {{ control.field.validation.native?.text || error.message }}
   </mat-error>

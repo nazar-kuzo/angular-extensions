@@ -1,4 +1,6 @@
-import { ValidatorFn, ValidationErrors, AbstractControl as AbstractControlBase, Validators } from "@angular/forms";
+import { Observable } from "rxjs";
+import { map, tap } from "rxjs/operators";
+import { ValidatorFn, ValidationErrors, AbstractControl as AbstractControlBase, Validators, AsyncValidatorFn } from "@angular/forms";
 
 export type ValueProvider<TValue, TResult> = (value?: TValue) => TResult;
 
@@ -99,6 +101,12 @@ export const CustomValidators = {
     };
   },
 
+  async(valid: Observable<boolean>): AsyncValidatorFn {
+    return (control: AbstractControl<any>): Observable<ValidationErrors | null> => {
+      return valid.pipe(map(result => result ? null : { async: { value: control.value } }));
+    };
+  },
+
   native(input?: HTMLInputElement): ValidatorFn {
     return (control: AbstractControl<any>): ValidationErrors | null => {
       return !input || input.checkValidity()
@@ -155,7 +163,7 @@ export class ValidationItem<TValue, TResult> implements ValidationItemConstructo
   public validate(
     validator: (value: TResult) => ValidatorFn,
     onValidationComplete?: (control: AbstractControl<TValue>, validationErrors: ValidationErrors | null) => void
-  ): (control: AbstractControl<TValue>) => ValidationErrors | null {
+  ): ValidatorFn {
     return control => {
       let value = this.getValue(control.value);
 
@@ -167,6 +175,35 @@ export class ValidationItem<TValue, TResult> implements ValidationItemConstructo
         }
 
         return validationErrors;
+      }
+      else {
+        return null;
+      }
+    };
+  }
+
+  /**
+   * Returns AbstractControl async validation function based on provided validator and validation data
+   *
+   * @param validator AbstractControl validator
+   * @param onValidationComplete Validation completed hook
+   * @returns AbstractControl validation function
+   */
+  public validateAsync(
+    validator: (value: TResult) => AsyncValidatorFn,
+    onValidationComplete?: (control: AbstractControl<TValue>, validationErrors: ValidationErrors | null) => void
+  ): AsyncValidatorFn {
+    return control => {
+      let value = this.getValue(control.value);
+
+      if (value != null) {
+        let validationErrors$ = validator(value)(control);
+
+        if (onValidationComplete && validationErrors$ instanceof Observable) {
+          validationErrors$ = validationErrors$.pipe(tap(validationErrors => onValidationComplete(control, validationErrors)));
+        }
+
+        return validationErrors$;
       }
       else {
         return null;
@@ -208,6 +245,8 @@ export class Validation<TValue> {
   public pattern?: ValidationItem<TValue, string | RegExp>;
 
   public custom?: ValidationItem<TValue, boolean>;
+
+  public async?: ValidationItem<TValue, Observable<boolean>>;
 
   public native?: ValidationItem<TValue, HTMLInputElement>;
 
@@ -313,6 +352,24 @@ export class Validation<TValue> {
 
       if (validation.native) {
         validators.push(validation.native.validate(CustomValidators.native));
+      }
+    }
+
+    return validators;
+  }
+
+  /**
+   * Builds AbstractControl async validators based on Validation object
+   *
+   * @param validation
+   * @returns
+   */
+  public static getAsyncValidators(validation: Validation<any>): AsyncValidatorFn[] {
+    let validators: AsyncValidatorFn[] = [];
+
+    if (validation) {
+      if (validation.async) {
+        validators.push(validation.async.validateAsync(CustomValidators.async));
       }
     }
 

@@ -1,6 +1,7 @@
+import { of } from "rxjs";
+import { delay } from "rxjs/operators";
 import { Injectable } from "@angular/core";
 import { ApiService, BaseEditor, DayOfWeek, Field, Formatters, Option } from "angular-extensions";
-import { map } from "rxjs/operators";
 
 export interface Country {
 
@@ -164,7 +165,15 @@ export class DashboardEditor extends BaseEditor {
       info: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
         "Ut lacus metus, molestie sed mi non, accumsan molestie elit.",
       validation: {
-        required: { value: true }
+        required: { value: true },
+        async: {
+          value: country => {
+            console.error(`Triggered async validation`);
+
+            return of(country?.name.common != "Russia").pipe(delay(1000));
+          },
+          text: "Invalid async error",
+        }
       },
       optionId: country => country.cca3,
       optionLabel: country => country.name.common,

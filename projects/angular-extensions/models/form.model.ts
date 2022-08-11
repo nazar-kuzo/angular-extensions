@@ -1,5 +1,7 @@
 import { remove } from "lodash-es";
-import { FormGroup, AbstractControl, FormArray } from "@angular/forms";
+import { forkJoin, Observable } from "rxjs";
+import { first, tap } from "rxjs/operators";
+import { FormGroup, AbstractControl, FormArray, ValidationErrors } from "@angular/forms";
 
 import { Field } from "./field.model";
 
@@ -155,9 +157,38 @@ export class Form {
   }
 
   /**
+   * Shows validation errors for all descendants
+   */
+  public async validateAsync() {
+    this.validate();
+
+    let errors$ = this.getDescendants()
+      .filter(control => control.errors == null && control.asyncValidator)
+      .map(control => {
+        let result = control.asyncValidator(control) as Observable<ValidationErrors>;
+
+        return result.pipe(tap(errors => {
+          control.setErrors(errors);
+        }));
+      });
+
+    return !errors$.length ? Promise.resolve() : forkJoin(errors$)
+      .pipe(first())
+      .toPromise()
+      .then(_ => {});
+  }
+
+  /**
    * Iterates through descendants
    */
   public applyAction(action: (control: AbstractControl) => void) {
+    this.getDescendants().forEach(control => action(control));
+  }
+
+  /**
+   * Iterates through descendants
+   */
+  public getDescendants() {
     let controls = Object.values(this.formGroup.controls)
       .flatMap(control => {
         if (control instanceof FormGroup) {
@@ -171,7 +202,7 @@ export class Form {
         }
       });
 
-    [...controls, this.formGroup].forEach(control => action(control));
+    return [...controls, this.formGroup];
   }
 
   /**

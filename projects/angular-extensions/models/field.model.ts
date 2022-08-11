@@ -365,6 +365,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
       },
       {
         validators: Validation.getValidators(this.validation),
+        asyncValidators: Validation.getAsyncValidators(this.validation),
         updateOn: props.updateOn,
       });
 
@@ -509,6 +510,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
     Object.assign(this.validation, new Validation(validation));
 
     this.control.setValidators(Validation.getValidators(this.validation));
+    this.control.setAsyncValidators(Validation.getAsyncValidators(this.validation));
   }
 
   /**
