@@ -13,7 +13,9 @@ import { NGX_DATE_FORMATS } from "./date-formats.model";
  */
 type FieldConstructor<TValue, TOption = any, TOptionGroup = any, TConvertedValue = any> =
   Partial<Omit<Field<TValue, TOption, TOptionGroup, TConvertedValue>,
-    "control" | "element" | "options" | "onValueChange" | "onOptionsChange" | "validation"> & {
+    "control" | "element" | "options" | "onValueChange" | "onOptionsChange" | "validation" |
+    "customOptionFilterPredicate" | "_initialStatus" | "destroy" | "setOptions" | "setFromOptions" |
+    "updateValidation" | "visible" | "formattedValue" | "formGroup" | "optionChanges"> & {
       options: TOption[] | Observable<TOption[]>;
 
       onValueChange: (value: TValue, previous: TValue) => void;
@@ -305,6 +307,8 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
     return this.optionChanges$.asObservable().pipe(takeUntil(this.destroy$));
   }
 
+  public readonly customOptionFilterPredicate: boolean;
+
   /**
    * Options filter predicate that is used by select-control, by default filters by option label
    */
@@ -368,6 +372,8 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
         asyncValidators: Validation.getAsyncValidators(this.validation),
         updateOn: props.updateOn,
       });
+
+    this.customOptionFilterPredicate = !!props.optionsFilterPredicate;
 
     // do not filter option if search provider is used
     this.optionsFilterPredicate = props.optionsProvider

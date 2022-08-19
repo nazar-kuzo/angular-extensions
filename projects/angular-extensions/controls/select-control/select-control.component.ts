@@ -120,6 +120,20 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   public ngOnInit() {
     this.filterControl.setValue(this.filter);
 
+    // trigger "filter" pipe to refresh options since custom predicate might not be pure
+    if (this.field.customOptionFilterPredicate) {
+      overrideFunction(
+        this.select,
+        select => select.open,
+        (open, select) => {
+          if ((select as any)._canOpen()) {
+            this.field.options = [...this.field.options];
+          }
+
+          open();
+        });
+    }
+
     if (this.multiple && this.showSelectAll) {
       this.select.optionSelectionChanges
         .pipe(
