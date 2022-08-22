@@ -282,7 +282,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
   public set options(value: TOption[]) {
     this._options = value;
 
-    if (this.value != null) {
+    if (this.value != null && this.updateValueWhenOptionsChanged) {
       this.setFromOptions(option => {
         if (this.value instanceof Array) {
           return this.value.map(this.optionId).contains(this.optionId(option));
@@ -308,6 +308,11 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
   }
 
   public readonly customOptionFilterPredicate: boolean;
+
+  /**
+   * Indicates whether field values should be updated when options changed.
+   */
+  public updateValueWhenOptionsChanged = true;
 
   /**
    * Options filter predicate that is used by select-control, by default filters by option label

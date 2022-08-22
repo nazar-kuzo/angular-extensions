@@ -85,7 +85,7 @@
       <mat-icon>close</mat-icon>
     </a>
 
-    <a *ngIf="actionButtonVisible && actionButtonIcon && actionButton.observers.length"
+    <a *ngIf="!field.isQuerying && actionButtonVisible && actionButtonIcon && actionButton.observers.length"
        mat-icon-button
        matSuffix
        [matTooltip]="actionButtonTooltip"
