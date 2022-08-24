@@ -486,7 +486,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
           }
         }
         else {
-          let value = this.optionValue(this.options.find(optionPredicate)) || config.defaultValue;
+          let value = this.optionValue(this.options.find(optionPredicate)) ?? config.defaultValue;
 
           if (value != null && this.control.value != null &&
             this.optionId(value as any)?.valueOf() !== this.optionId(this.control.value as any)?.valueOf()
