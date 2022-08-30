@@ -63,11 +63,12 @@ export function extendRouteConfigWithNavigationExtras(router: Router) {
 
 /**
  * Binds route config title to website title.
+ * Set "suppressTitleUpdate" to true if you want to avoid title change during navigation.
  *
  * @example Route config:
  * {
       path: "..",
-      data: { title: string | (route: ActivatedRouteSnapshot) => string }
+      data: { title: string | (route: ActivatedRouteSnapshot, navigation: Navigation) => string }
    }
  * @param router Angular Router
  * @param title Angular Title
@@ -77,11 +78,13 @@ export function bindRouteConfigTitle(router: Router, title: Title, prefix: strin
   router.events.subscribe(event => {
     // set website title
     if (event instanceof ActivationEnd) {
-      if (event.snapshot.children.length == 0) {
+      let navigation = router.getCurrentNavigation();
+
+      if (event.snapshot.children.length == 0 && !navigation.extras.state?.suppressTitleUpdate) {
         let routeTitle = event.snapshot.data?.title;
 
         if (typeof routeTitle == "function") {
-          routeTitle = (routeTitle as RouteTitleProvider)(event.snapshot, router.getCurrentNavigation());
+          routeTitle = (routeTitle as RouteTitleProvider)(event.snapshot, navigation);
         }
 
         title.setTitle(routeTitle ? `${prefix} - ${routeTitle}` : prefix);
