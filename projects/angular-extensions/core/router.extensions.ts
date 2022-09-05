@@ -40,7 +40,7 @@ declare module "@angular/router" {
   }
 }
 
-export type RouteTitleProvider = (route: ActivatedRouteSnapshot, navigation: Navigation) => string;
+export type RouteTitleProvider = (route: ActivatedRouteSnapshot, navigation?: Navigation) => string;
 
 /**
  * Extends route config with navigation extras.
@@ -80,7 +80,7 @@ export function bindRouteConfigTitle(router: Router, title: Title, prefix: strin
     if (event instanceof ActivationEnd) {
       let navigation = router.getCurrentNavigation();
 
-      if (event.snapshot.children.length == 0 && !navigation.extras.state?.suppressTitleUpdate) {
+      if (event.snapshot.children.length == 0 && !navigation?.extras?.state?.suppressTitleUpdate) {
         let routeTitle = event.snapshot.data?.title;
 
         if (typeof routeTitle == "function") {
