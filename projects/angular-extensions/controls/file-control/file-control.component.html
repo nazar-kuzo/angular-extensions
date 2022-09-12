@@ -13,6 +13,7 @@
                           [itemTemplate]="fileItemTemplate"
                           [enableAutoUpload]="autoUpload"
                           [fileExtensions]="allowedFileExtensions"
+                          [fileMaxCount]="maxFilesCount"
                           (validationError)="onValidationError($event)"
                           (fileAdded)="onFileAdded($event)">
 
@@ -31,11 +32,10 @@
 
   <mat-error *ngIf="baseControl.initialized && field.control.touched">
     <ng-container *ngTemplateOutlet="baseControl.errorsTemplate"></ng-container>
-    <ng-container *ngIf="validationErrors">
-      <mat-error *ngFor="let error of validationErrors">
-        {{ error.error }}
-      </mat-error>
-    </ng-container>
+
+    <mat-error *ngFor="let error of validationErrors">
+      {{ error.file.name }}: {{ error.error }}
+    </mat-error>
   </mat-error>
 </base-control>
 

@@ -4,8 +4,7 @@
       "entryFile": "public-api.ts",
       "cssUrl": "inline",
       "umdModuleIds": {
-        "ngx-awesome-uploader": "ngx-awesome-uploader",
-        "ngx-filesize": "ngx-filesize"
+        "ngx-awesome-uploader": "ngx-awesome-uploader"
       }
     }
   }

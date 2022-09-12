@@ -15,6 +15,10 @@ declare global {
     items: TValue[];
   }
 
+  interface FormData {
+    fromObject(data: { [key: string]: File | File[] | any }): FormData;
+  }
+
   interface Date {
 
     /**
@@ -254,6 +258,22 @@ export function handleError(action: () => any) {
   }
 }
 
+export function formDataFromObject(this: FormData, data: { [key: string]: File | File[] | any }) {
+  Object.entries(data).forEach(([key, value]) => {
+    if (value instanceof File) {
+      this.append(key, value);
+    }
+    else if (Array.isArray(value) && value.first() instanceof File) {
+      value.forEach(file => this.append(key, file));
+    }
+    else {
+      this.append(key, JSON.stringify(value));
+    }
+  });
+
+  return this;
+}
+
 
 Date.prototype.getDayOfWeek = getDayOfWeek;
 Date.prototype.withoutTimezone = withoutTimezone;
@@ -261,6 +281,7 @@ Date.prototype.asUtcDate = asUtcDate;
 Date.prototype.toUtcDate = toUtcDate;
 Date.prototype.asLocalDate = asLocalDate;
 String.prototype.trimEnd = trimEnd;
+FormData.prototype.fromObject = formDataFromObject;
 
 window.nameOf = nameOf;
 window.nameOfFull = nameOfFull;

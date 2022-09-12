@@ -90,22 +90,16 @@
     <checkbox-control class="col-sm-4 d-block"
                       [field]="editor.isOfficial">
       <ng-template #labelTemplate>
-        Is official <a href="https://google.com.ua" target="_blank">Google</a>
+        Is official <a href="https://google.com.ua"
+           target="_blank">Google</a>
       </ng-template>
     </checkbox-control>
 
     <div class="col-sm-4">
-      <file-control class="d-inline-block mr-3 p-0"
-                    [field]="editor.image"
-                    [showPreview]="true">
-        <ng-template let-handler>
-          <button mat-raised-button
-                  color="primary"
-                  (click)="handler()">
-            Upload file
-          </button>
-        </ng-template>
-      </file-control>
+      <button class="mr-3"
+              mat-raised-button
+              color="secondary"
+              (click)="recreateEditor()">Re-create Editor</button>
 
       <button class="mr-3"
               mat-raised-button
@@ -123,10 +117,18 @@
 
       <hr>
 
-      <button class="mr-3"
-              mat-raised-button
-              color="secondary"
-              (click)="recreateEditor()">Re-create Editor</button>
+      <file-control class="d-inline-block mr-3 p-0"
+                    [field]="editor.image"
+                    [showPreview]="true"
+                    [maxFileSize]="4">
+        <ng-template let-handler>
+          <button mat-raised-button
+                  color="primary"
+                  (click)="handler()">
+            Upload file
+          </button>
+        </ng-template>
+      </file-control>
     </div>
   </div>
 </div>

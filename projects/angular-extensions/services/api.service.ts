@@ -45,7 +45,6 @@ export class ApiService {
 
     this.httpOptions = {
       headers: {
-        "Content-Type": "application/json",
         "X-Requested-With": "XMLHttpRequest"
       },
       observe: "response",
@@ -59,21 +58,21 @@ export class ApiService {
       .pipe(map(response => response.body as T));
   }
 
-  public post<T>(url: string, body?: any, params?: HttpParams, httpOptions?: HttpClientOptions) {
+  public post<T>(url: string, body?: FormData | any, params?: HttpParams, httpOptions?: HttpClientOptions) {
     return this.http
-      .post<T>(this.getUrl(url), JSON.stringify(body), this.getHttpOptions(params, httpOptions))
+      .post<T>(this.getUrl(url), this.getRequestBody(body), this.getHttpOptions(params, httpOptions, body))
       .pipe(map(response => response.body as T));
   }
 
-  public put<T>(url: string, body?: any, params?: HttpParams, httpOptions?: HttpClientOptions) {
+  public put<T>(url: string, body?: FormData | any, params?: HttpParams, httpOptions?: HttpClientOptions) {
     return this.http
-      .put<T>(this.getUrl(url), JSON.stringify(body), this.getHttpOptions(params, httpOptions))
+      .put<T>(this.getUrl(url), this.getRequestBody(body), this.getHttpOptions(params, httpOptions, body))
       .pipe(map(response => response.body as T));
   }
 
-  public patch<T>(url: string, body?: any, params?: HttpParams, httpOptions?: HttpClientOptions) {
+  public patch<T>(url: string, body?: FormData | any, params?: HttpParams, httpOptions?: HttpClientOptions) {
     return this.http
-      .patch<T>(this.getUrl(url), JSON.stringify(body), this.getHttpOptions(params, httpOptions))
+      .patch<T>(this.getUrl(url), this.getRequestBody(body), this.getHttpOptions(params, httpOptions, body))
       .pipe(map(response => response.body as T));
   }
 
@@ -116,15 +115,27 @@ export class ApiService {
     return params;
   }
 
-  private getHttpOptions(queryParams?: HttpParams, httpOptions?: HttpClientOptions): DefaultHttpClientOptions {
+  private getHttpOptions(queryParams?: HttpParams, httpOptions?: HttpClientOptions, body?: FormData | any): DefaultHttpClientOptions {
     if (!httpOptions) {
       httpOptions = {} as DefaultHttpClientOptions;
     }
 
     httpOptions.params = this.sanitizeQueryParams(queryParams);
 
-    let result = merge({}, this.httpOptions, httpOptions);
+    let result = merge(
+      {},
+      this.httpOptions,
+      {
+        headers: { "Content-Type": body instanceof FormData ? "multipart/form-data" : "application/json" },
+      } as Partial<DefaultHttpClientOptions>,
+      httpOptions);
 
     return result;
+  }
+
+  private getRequestBody(body: FormData | any) {
+    return body instanceof FormData
+      ? body
+      : JSON.stringify(body);
   }
 }

@@ -216,6 +216,15 @@ export class DashboardEditor extends BaseEditor {
   }
 
   public reloadControls() {
+    let formData = new FormData().fromObject({
+      file: this.image.value[0],
+      files: this.image.value,
+      ticket: {
+        country: this.country.value,
+      },
+      allies: this.allies.value,
+    });
+
     this.dayOfBirth.options = [...this.dayOfBirth.options];
 
     this.country.setOptions(this.loadAllCountries());
