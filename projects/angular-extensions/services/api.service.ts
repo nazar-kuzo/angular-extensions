@@ -124,9 +124,10 @@ export class ApiService {
 
     let result = merge(
       {},
-      this.httpOptions,
-      {
-        headers: { "Content-Type": body instanceof FormData ? undefined : "application/json" },
+      this.httpOptions, {
+        headers: {
+          ...(body instanceof FormData ? {} : { "Content-Type": "application/json" }),
+        },
       } as Partial<DefaultHttpClientOptions>,
       httpOptions);
 
