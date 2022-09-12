@@ -126,7 +126,7 @@ export class ApiService {
       {},
       this.httpOptions,
       {
-        headers: { "Content-Type": body instanceof FormData ? "multipart/form-data" : "application/json" },
+        headers: { "Content-Type": body instanceof FormData ? undefined : "application/json" },
       } as Partial<DefaultHttpClientOptions>,
       httpOptions);
 
