@@ -13,9 +13,18 @@ interface DefaultHttpClientOptions {
   observe: "response";
   params?: HttpParams;
   reportProgress?: boolean;
-  responseType?: "json";
+  responseType: "json" | "blob";
   withCredentials?: boolean;
 }
+
+interface JsonHttpClientOptions extends DefaultHttpClientOptions {
+  responseType: "json";
+}
+
+interface BlobHttpClientOptions extends DefaultHttpClientOptions {
+  responseType: "blob";
+}
+
 
 export interface ApiConfig {
   apiUrl: string;
@@ -23,7 +32,7 @@ export interface ApiConfig {
 
 export const API_CONFIG = new InjectionToken<ApiConfig>("ApiConfig");
 
-export type HttpClientOptions = Partial<DefaultHttpClientOptions>;
+export type HttpClientOptions = Partial<JsonHttpClientOptions>;
 
 patchAngularHttpParams();
 
@@ -56,6 +65,14 @@ export class ApiService {
     return this.http
       .get<T>(this.getUrl(url), this.getHttpOptions(params, httpOptions))
       .pipe(map(response => response.body as T));
+  }
+
+  public getBlob(url: string, params?: HttpParams, httpOptions?: BlobHttpClientOptions) {
+    httpOptions = Object.assign({}, { observe: "response", responseType: "blob" }, httpOptions);
+
+    return this.http
+      .get(this.getUrl(url), this.getHttpOptions(params, httpOptions))
+      .pipe(map(response => response.body));
   }
 
   public post<T>(url: string, body?: FormData | any, params?: HttpParams, httpOptions?: HttpClientOptions) {
@@ -115,9 +132,12 @@ export class ApiService {
     return params;
   }
 
-  private getHttpOptions(queryParams?: HttpParams, httpOptions?: HttpClientOptions, body?: FormData | any): DefaultHttpClientOptions {
+  private getHttpOptions<TOptions extends DefaultHttpClientOptions>(
+    queryParams?: HttpParams,
+    httpOptions?: Partial<TOptions>,
+    body?: FormData | any): TOptions {
     if (!httpOptions) {
-      httpOptions = {} as DefaultHttpClientOptions;
+      httpOptions = {};
     }
 
     httpOptions.params = this.sanitizeQueryParams(queryParams);
@@ -129,7 +149,7 @@ export class ApiService {
           ...(body instanceof FormData ? {} : { "Content-Type": "application/json" }),
         },
       } as Partial<DefaultHttpClientOptions>,
-      httpOptions);
+      httpOptions) as TOptions;
 
     return result;
   }
