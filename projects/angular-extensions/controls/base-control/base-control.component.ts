@@ -1,12 +1,18 @@
 import { merge, Subject, BehaviorSubject } from "rxjs";
+import { FormControl } from "@angular/forms";
 import { debounceTime, switchMap, takeUntil, tap } from "rxjs/operators";
 import { MatFormField, MatFormFieldAppearance } from "@angular/material/form-field";
+
 import {
   Component, Input, ViewChild, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef,
   OnInit, OnDestroy, ViewEncapsulation, AfterViewInit, Directive, HostBinding, ContentChild, ElementRef, EventEmitter,
 } from "@angular/core";
 
 import { Field } from "angular-extensions/models";
+
+export interface CustomFormControl extends FormControl {
+  _onDisabledChange: ((disabled: boolean) => any)[];
+}
 
 export interface ActionableControl {
 
@@ -97,6 +103,12 @@ export class BaseControlComponent<TValue, TOption = any, TOptionGroup = any, TFo
 
           this.initializeFieldNativeValidation(field);
           this.updateFieldLabel(this.control.field);
+
+          // refresh control state based on data from the new field
+          setTimeout(() => {
+            (field.control as CustomFormControl)._onDisabledChange
+              .forEach(changeFn => changeFn(field.control.disabled));
+          });
 
           return merge(field.control.statusChanges, field.control.root.valueChanges)
             .pipe(debounceTime(0), tap(() => {
