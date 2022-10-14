@@ -159,16 +159,26 @@ export function isValidDateString(date: string) {
   return ISO8601Regex.test(date);
 }
 
-export function parseDates(model: any) {
+export function parseDates(model: any, excludePaths?: RegExp[]) {
+  parseDatesInternal(model, excludePaths, "");
+}
+
+function parseDatesInternal(model: any, excludePaths?: RegExp[], path?: string) {
   for (let prop in model) {
     if (!model[prop]) {
+      continue;
+    }
+
+    let propertyPath = [path, prop].join("/");
+
+    if (excludePaths?.some(regExp => regExp.test(propertyPath))) {
       continue;
     }
 
     if (typeof (model[prop]) == "string") {
       parseDateProperty(model, prop);
     } else if (typeof (model[prop]) == "object") {
-      parseDates(model[prop]);
+      parseDatesInternal(model[prop], excludePaths, propertyPath);
     }
   }
 }

@@ -28,6 +28,8 @@ interface BlobHttpClientOptions extends DefaultHttpClientOptions {
 
 export interface ApiConfig {
   apiUrl: string;
+
+  dateConversionExcludePaths: RegExp[];
 }
 
 export const API_CONFIG = new InjectionToken<ApiConfig>("ApiConfig");

@@ -7,6 +7,11 @@ import "angular-extensions/core";
 import { ApiConfig, ApiService, API_CONFIG } from "./api.service";
 import { DateConversionInterceptor } from "./date-conversion.interceptor";
 
+const apiConfigDefaults: ApiConfig = {
+  apiUrl: null,
+  dateConversionExcludePaths: [],
+};
+
 @NgModule({
   imports: [
     CommonModule,
@@ -15,11 +20,22 @@ import { DateConversionInterceptor } from "./date-conversion.interceptor";
   ],
   providers: [
     ApiService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: DateConversionInterceptor,
+      multi: true,
+    },
+    {
+      provide: API_CONFIG,
+      useValue: apiConfigDefaults,
+    },
   ]
 })
 export class NgxServicesModule {
 
-  public static configure(config: ApiConfig): ModuleWithProviders<NgxServicesModule> {
+  public static configure(config: Partial<ApiConfig>): ModuleWithProviders<NgxServicesModule> {
+    let apiConfig = Object.assign<ApiConfig, Partial<ApiConfig>>(apiConfigDefaults, config);
+
     return {
       ngModule: NgxServicesModule,
       providers: [
@@ -30,7 +46,7 @@ export class NgxServicesModule {
         },
         {
           provide: API_CONFIG,
-          useValue: config,
+          useValue: apiConfig,
         },
       ]
     };
