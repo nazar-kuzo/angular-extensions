@@ -1,17 +1,18 @@
+import { castArray, intersectionWith } from "lodash-es";
 import { of, Subject } from "rxjs";
-import { catchError, debounceTime, filter, switchMap, takeUntil, tap } from "rxjs/operators";
+import { catchError, debounceTime, filter, first, switchMap, takeUntil, tap } from "rxjs/operators";
 import {
   Component, OnInit, Input, Optional, ElementRef, ChangeDetectorRef,
-  ViewChild, OnDestroy, AfterViewInit, ContentChild, TemplateRef, ChangeDetectionStrategy, Output, EventEmitter,
+  ViewChild, OnDestroy, AfterViewInit, ContentChild, TemplateRef, ChangeDetectionStrategy, Output, EventEmitter, NgZone,
 } from "@angular/core";
 import { MatOption } from "@angular/material/core";
 import { MatSelect } from "@angular/material/select";
 import { FormControl } from "@angular/forms";
 import { MatMenuTrigger } from "@angular/material/menu";
+import { CdkVirtualScrollViewport } from "@angular/cdk/scrolling";
 
 import { Field } from "angular-extensions/models";
 import { overrideFunction } from "angular-extensions/core";
-import { MatOptionWithContext } from "./option-context/option-context.directive";
 import { ActionableControl, ControlBase } from "angular-extensions/controls/base-control";
 
 @Component({
@@ -37,6 +38,9 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   public clearable: boolean;
 
   @Input()
+  public virtualization = false;
+
+  @Input()
   public showSelectAll = false;
 
   @Input()
@@ -54,11 +58,20 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   @Input()
   public actionButtonTooltip?: string;
 
+  @Input()
+  public optionHeight = 42;
+
+  @Input()
+  public visibleOptionsCount = 6;
+
   @Output()
   public actionButton = new EventEmitter<Field<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>>();
 
   @ViewChild("select", { static: true })
   public select: MatSelect;
+
+  @ViewChild(CdkVirtualScrollViewport)
+  public scrollViewport?: CdkVirtualScrollViewport;
 
   @ViewChild("selectAllOption")
   public selectAllOption?: MatOption;
@@ -69,15 +82,25 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   @ContentChild("triggerTemplate", { static: true })
   public triggerTemplate: TemplateRef<{ $implicit: string; option: TOption | TOption[] }>;
 
+  /**
+   * Gets selected options based on option comparer,
+   * see {@link Field.optionId} for details
+   */
   public get selectedOption() {
-    if (Array.isArray(this.select?.selected)) {
-      return (this.select.selected as MatOptionWithContext<TOption>[]).map(option => option.context);
-    }
-    else {
-      return (this.select.selected as MatOptionWithContext<TOption>)?.context;
-    }
+    let selectedOptions = intersectionWith(
+      this.field.options,
+      castArray(this.field.value as any as TOption),
+      this.optionComparer);
+
+    return this.multiple
+      ? selectedOptions
+      : selectedOptions.first();
   }
 
+  /**
+   * Gets trigger label (text shown when option(s) selected),
+   * based on option label, see {@link Field.optionLabel} for details
+   */
   public get triggerLabel() {
     let selectedOption = this.selectedOption;
 
@@ -92,13 +115,18 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
     }
   }
 
-  private destroy = new Subject();
+  public get dropdownHeight() {
+    return this.visibleOptionsCount * this.optionHeight;
+  }
 
   public filterControl = new FormControl();
+
+  private destroy = new Subject();
 
   constructor(
     elementRef: ElementRef<HTMLElement>,
     private changeDetectorRef: ChangeDetectorRef,
+    private ngZone: NgZone,
     @Optional() matMenuTrigger: MatMenuTrigger,
   ) {
     super();
@@ -121,13 +149,19 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
     this.filterControl.setValue(this.filter);
 
     // trigger "filter" pipe to refresh options since custom predicate might not be pure
-    if (this.field.customOptionFilterPredicate) {
+    if (this.virtualization || this.field.customOptionFilterPredicate) {
       overrideFunction(
         this.select,
         select => select.open,
         (open, select) => {
           if ((select as any)._canOpen()) {
-            this.field.options = [...this.field.options];
+            if (this.field.customOptionFilterPredicate) {
+              this.field.options = [...this.field.options];
+            }
+
+            if (this.virtualization) {
+              this.ngZone.onStable.pipe(first()).subscribe(() => this.updateViewport());
+            }
           }
 
           open();
@@ -139,20 +173,7 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
         .pipe(
           debounceTime(0),
           takeUntil(this.destroy))
-        .subscribe(() => this.setSelectAllState(this.getSelectAllState()));
-
-      overrideFunction(
-        MatOption.prototype,
-        option => option._selectViaInteraction,
-        (select, option) => {
-          if (option == this.selectAllOption) {
-            this.toggleSelectAll();
-            this.setSelectAllState(this.getSelectAllState());
-          }
-          else {
-            select();
-          }
-        });
+        .subscribe(() => this.updateSelectAllState());
     }
   }
 
@@ -206,6 +227,16 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
           this.changeDetectorRef.markForCheck();
         });
     }
+
+    // improved selection model that relies on custom option selection
+    if (this.virtualization) {
+      overrideFunction(
+        this.select._selectionModel,
+        selectionModel => selectionModel.isEmpty,
+        () => this.selectedOption instanceof Array
+          ? this.selectedOption.length == 0
+          : !this.selectedOption);
+    }
   }
 
   public ngOnDestroy() {
@@ -238,7 +269,13 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
       this.field.optionsProvider;
   }
 
-  private toggleSelectAll() {
+  public clear() {
+    this.field.control.setValue(this.multiple ? [] : null);
+
+    this.select._selectionModel.deselect(...this.select._selectionModel.selected);
+  }
+
+  public toggleSelectAll() {
     let shouldSelect = !this.getSelectAllState();
 
     let options = this.select.options
@@ -265,6 +302,8 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
 
     (this.select as any)._propagateChanges();
     this.changeDetectorRef.markForCheck();
+
+    this.updateSelectAllState();
   }
 
   private getSelectAllState() {
@@ -276,7 +315,9 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
         ? true : null;
   }
 
-  private setSelectAllState(selected: boolean | null) {
+  private updateSelectAllState() {
+    let selected = this.getSelectAllState();
+
     if (this.selectAllOption) {
       let matCheckbox = ((this.selectAllOption as any)._element.nativeElement as HTMLElement)
         .querySelector("mat-pseudo-checkbox");
@@ -290,6 +331,23 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
         matCheckbox?.classList.remove("mat-pseudo-checkbox-indeterminate");
 
         matCheckbox?.classList.toggle("mat-pseudo-checkbox-checked", selected);
+      }
+    }
+  }
+
+  private updateViewport() {
+    if (this.scrollViewport) {
+      (this.select.panel.nativeElement as HTMLElement).style.height = `${this.dropdownHeight}px`;
+      (this.select.panel.nativeElement as HTMLElement).style.maxHeight = `${this.dropdownHeight}px`;
+
+      this.scrollViewport.checkViewportSize();
+
+      let selectedOption = this.selectedOption instanceof Array
+        ? this.selectedOption.first()
+        : this.selectedOption;
+
+      if (selectedOption) {
+        this.scrollViewport.scrollToIndex(this.field.options.indexOf(selectedOption) - Math.floor((this.visibleOptionsCount / 2)));
       }
     }
   }

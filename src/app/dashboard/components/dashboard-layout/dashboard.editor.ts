@@ -49,6 +49,8 @@ export class DashboardEditor extends BaseEditor {
 
   public isOfficial: Field<boolean>;
 
+  public customOptions: Field<Option<number, number>>;
+
   constructor(
     private api: ApiService,
   ) {
@@ -210,6 +212,16 @@ export class DashboardEditor extends BaseEditor {
       validation: {
         requiredTrue: { value: true, text: "Please check this box" },
       },
+    });
+
+    this.customOptions = new Field<Option<number, number>>({
+      label: "Option",
+      options: Array.from({ length: 15_000 }).map((_, index) => new Option<number, number>({
+        id: index + 1,
+        label: `Option ${index + 1}`,
+        name: `Option ${index + 1}`,
+        value: index + 1,
+      })),
     });
 
     super.initialize();

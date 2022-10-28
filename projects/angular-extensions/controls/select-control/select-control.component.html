@@ -14,14 +14,14 @@
                 [panelClass]="'custom-scroll ' + dropdownClass"
                 [ngClass]="{ loading: field.isQuerying }"
                 [matTooltipDisabled]="tooltipDisabled"
-                [matTooltip]="select.triggerValue"
+                [matTooltip]="triggerLabel"
                 [formControl]="field.control"
                 [disableOptionCentering]="searchable"
                 [compareWith]="optionComparer"
                 [multiple]="multiple">
-
-      <mat-select-trigger *ngIf="triggerTemplate">
-        <ng-container *ngTemplateOutlet="triggerTemplate; context: { $implicit: select.triggerValue, label: triggerLabel, option: selectedOption }"></ng-container>
+      <mat-select-trigger>
+        <ng-container *ngTemplateOutlet="triggerTemplate || defaultTriggerTemplate;
+                      context: { $implicit: triggerLabel, label: triggerLabel, option: selectedOption }"></ng-container>
       </mat-select-trigger>
 
       <mat-option *ngIf="searchable">
@@ -34,7 +34,8 @@
       </mat-option>
 
       <ng-container *ngIf="multiple && showSelectAll && !filterControl.value && field.options?.length">
-        <mat-option #selectAllOption>
+        <mat-option #selectAllOption
+                    (selectViaInteraction)="toggleSelectAll()">
           All
         </mat-option>
 
@@ -48,24 +49,37 @@
                           [label]="group.key | map : field.optionGroupLabel">
               <mat-option *ngFor="let option of group.items; trackBy : optionTracker"
                           [matTooltip]="option | map : field.optionLabel"
-                          [context]="option"
                           [value]="option | map : field.optionValue"
                           [disabled]="option | map : field.optionDisabled">
                 <ng-container *ngTemplateOutlet="optionTemplate || defaultOptionTempalte;
-                  context: { $implicit: option | map : field.optionLabel, option: option }"></ng-container>
+                              context: { $implicit: option | map : field.optionLabel, option: option }"></ng-container>
               </mat-option>
             </mat-optgroup>
           </ng-container>
 
           <ng-container *ngIf="!field.optionsGroupProvider">
-            <mat-option *ngFor="let option of options; trackBy : optionTracker"
-                        [matTooltip]="option | map : field.optionLabel"
-                        [context]="option"
-                        [value]="option | map : field.optionValue"
-                        [disabled]="option | map : field.optionDisabled">
-              <ng-container *ngTemplateOutlet="optionTemplate || defaultOptionTempalte;
-                context: { $implicit: option | map : field.optionLabel, option: option }"></ng-container>
-            </mat-option>
+            <ng-container *ngIf="virtualization">
+              <cdk-virtual-scroll-viewport [itemSize]="optionHeight"
+                                           [style.height.px]="this.searchable ? this.dropdownHeight - this.optionHeight : this.dropdownHeight">
+                <mat-option *cdkVirtualFor="let option of options; trackBy : optionTracker"
+                            [style.height.px]="optionHeight"
+                            [value]="option | map : field.optionValue"
+                            [disabled]="option | map : field.optionDisabled">
+                  <ng-container *ngTemplateOutlet="optionTemplate || defaultOptionTempalte;
+                              context: { $implicit: option | map : field.optionLabel, option: option }"></ng-container>
+                </mat-option>
+              </cdk-virtual-scroll-viewport>
+            </ng-container>
+
+            <ng-container *ngIf="!virtualization">
+              <mat-option *ngFor="let option of options; trackBy : optionTracker"
+                          [matTooltip]="option | map : field.optionLabel"
+                          [value]="option | map : field.optionValue"
+                          [disabled]="option | map : field.optionDisabled">
+                <ng-container *ngTemplateOutlet="optionTemplate || defaultOptionTempalte;
+                            context: { $implicit: option | map : field.optionLabel, option: option }"></ng-container>
+              </mat-option>
+            </ng-container>
           </ng-container>
         </ng-container>
       </ng-container>
@@ -81,7 +95,7 @@
        mat-icon-button
        matSuffix
        matTooltip="Clear"
-       (click)="field.control.setValue(multiple ? [] : null); $event.stopPropagation()">
+       (click)="clear(); $event.stopPropagation()">
       <mat-icon>close</mat-icon>
     </a>
 
@@ -115,4 +129,9 @@
              let-label
              let-option="option">
   {{ label }}
+</ng-template>
+
+<ng-template #defaultTriggerTemplate
+             let-triggerValue>
+  {{ triggerValue }}
 </ng-template>

@@ -7,7 +7,7 @@ export * from "./date-control/date-control.component";
 export * from "./time-control/time-control.component";
 export * from "./datetime-control/datetime-control.component";
 export * from "./select-control/select-control.component";
-export * from "./select-control/option-context/option-context.directive";
+export * from "./select-control/custom-mat-option.directive";
 export * from "./checkbox-control/checkbox-control.component";
 export * from "./spinner/spinner.component";
 export * from "./ngx-controls.module";

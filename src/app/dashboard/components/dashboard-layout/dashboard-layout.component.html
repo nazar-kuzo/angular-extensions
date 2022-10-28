@@ -95,6 +95,12 @@
       </ng-template>
     </checkbox-control>
 
+    <select-control class="col-sm-4 d-block"
+                    [field]="editor.customOptions"
+                    [searchable]="true"
+                    [clearable]="true"
+                    [virtualization]="true"></select-control>
+
     <div class="col-sm-4">
       <button class="mr-3"
               mat-raised-button

@@ -17,6 +17,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
+import { ScrollingModule } from "@angular/cdk/scrolling";
 import { Platform } from "@angular/cdk/platform";
 import { FormControl } from "@angular/forms";
 
@@ -31,7 +32,7 @@ import { NgxModalsModule } from "angular-extensions/modals";
 
 import { CheckboxControlComponent } from "./checkbox-control/checkbox-control.component";
 import { SelectControlComponent } from "./select-control/select-control.component";
-import { OptionContextDirective } from "./select-control/option-context/option-context.directive";
+import { CustomMatOptionDirective } from "./select-control/custom-mat-option.directive";
 import { DateControlComponent } from "./date-control/date-control.component";
 import { DateTimeControlComponent } from "./datetime-control/datetime-control.component";
 import { TimeControlComponent } from "./time-control/time-control.component";
@@ -85,6 +86,7 @@ const moduleConfigDefaults: NgxControlsConfig = {
 @NgModule({
   imports: [
     CommonModule,
+    ScrollingModule,
     NgxDirectivesModule,
     NgxBaseControlModule,
     NgxTextControlModule,
@@ -104,7 +106,7 @@ const moduleConfigDefaults: NgxControlsConfig = {
   declarations: [
     CheckboxControlComponent,
     SelectControlComponent,
-    OptionContextDirective,
+    CustomMatOptionDirective,
     DateControlComponent,
     DateTimeControlComponent,
     TimeControlComponent,
@@ -155,7 +157,7 @@ const moduleConfigDefaults: NgxControlsConfig = {
 
     CheckboxControlComponent,
     SelectControlComponent,
-    OptionContextDirective,
+    CustomMatOptionDirective,
     DateControlComponent,
     DateTimeControlComponent,
     TimeControlComponent,
