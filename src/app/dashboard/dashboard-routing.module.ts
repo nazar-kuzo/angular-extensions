@@ -17,7 +17,8 @@ const routes: Routes = [
             path: "details",
             data: {
               modalComponent: DashboardDetailsModalComponent
-            }
+            },
+            children: [],
           },
         ]
       },
