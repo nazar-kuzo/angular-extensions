@@ -528,7 +528,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
    * Destroys field and its subscriptions
    */
   public destroy() {
-    this.destroy$.next();
+    this.destroy$.next(null);
     this.destroy$.complete();
   }
 }

@@ -28,12 +28,13 @@
     </mat-datepicker-toggle>
 
     <mat-datepicker #datePicker
+                    [restoreFocus]="false"
                     [startView]="startView"
                     (viewChanged)="viewChanged($event, datePicker)"
                     (yearSelected)="dateSelected($event, datePicker, targetView == 'year')"
                     (monthSelected)="dateSelected($event, datePicker, targetView == 'month')"
-                    (closed)="blur()"
-                    (closed)="field.control.markAllAsTouched()"></mat-datepicker>
+                    (opened)="datePickerOpened()"
+                    (closed)="blur(); field.control.markAllAsTouched()"></mat-datepicker>
 
     <mat-error *ngIf="baseControl.initialized">
       <ng-container *ngTemplateOutlet="baseControl.errorsTemplate"></ng-container>

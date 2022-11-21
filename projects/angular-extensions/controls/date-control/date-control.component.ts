@@ -2,10 +2,14 @@ import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component,
   ComponentRef, ElementRef, Inject, Input, OnChanges, ViewChild,
 } from "@angular/core";
-import { MatCalendarView, MatDatepicker, MatDatepickerContent, MatSingleDateSelectionModel } from "@angular/material/datepicker";
+import {
+  MatCalendarHeader, MatCalendarView, MatDatepicker,
+  MatDatepickerContent, MatSingleDateSelectionModel,
+} from "@angular/material/datepicker";
 import { MatDateFormats, MAT_DATE_FORMATS } from "@angular/material/core";
+import type { CdkPortalOutlet } from "@angular/cdk/portal";
 
-import { SimpleChanges } from "angular-extensions/core";
+import { overrideFunction, SimpleChanges } from "angular-extensions/core";
 import { ControlBase } from "angular-extensions/controls/base-control";
 
 interface AppMatDatepicker<T> {
@@ -124,11 +128,42 @@ export class DateControlComponent<TOption, TOptionGroup, TFormattedValue, TContr
     (document.activeElement as HTMLElement).blur();
   }
 
+  public datePickerOpened() {
+    let datePickerContent = this.getDatepickerContent(this.datePicker as any);
+
+    setTimeout(() => {
+      this.tryPatchPeriodButton(datePickerContent);
+    });
+  }
+
   public blur() {
     (this.datePicker.datepickerInput as any)._formField._control.focused = false;
   }
 
   private getDatepickerContent(datePicker: AppMatDatepicker<Date>): MatDatepickerContent<Date> | null {
     return (datePicker._componentRef || datePicker._popupComponentRef)?.instance;
+  }
+
+  private tryPatchPeriodButton(datePickerContent: MatDatepickerContent<Date, Date>) {
+    let calendarHeader = (((datePickerContent
+      ._calendar
+      ._calendarHeaderPortal as any)
+      ._attachedHost as CdkPortalOutlet)
+      .attachedRef as ComponentRef<MatCalendarHeader<Date>>)
+      .instance;
+
+    overrideFunction(
+      calendarHeader,
+      header => header.currentPeriodClicked,
+      currentPeriodClicked => {
+        if (this.targetView == "year") {
+        }
+        else if (this.targetView == "month") {
+          calendarHeader.calendar.currentView = calendarHeader.calendar.currentView == "year" ? "multi-year" : "year";
+        }
+        else {
+          currentPeriodClicked();
+        }
+      });
   }
 }

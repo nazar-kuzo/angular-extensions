@@ -16,6 +16,10 @@ const routeMatchOptions: IsActiveMatchOptions = {
   fragment: "ignored"
 };
 
+interface ModalNavigationExtras {
+  shouldOpenModal?: boolean;
+}
+
 /**
  * Extends router config with stateful modals support.
  *
@@ -33,12 +37,14 @@ export function extendRouterConfigWithStatefulModals(router: Router, injector: I
   }
 
   router.events.subscribe(event => {
-    if (event instanceof ActivationEnd && event.snapshot.data?.modalComponent) {
-
+    if (event instanceof GuardsCheckEnd) {
       let shouldOpenModal = router.getLastSuccessfulNavigation() == null ||
         !router.isActive(router.getCurrentNavigation().initialUrl, routeMatchOptions);
 
-      if (!shouldOpenModal) {
+      (router.getCurrentNavigation().extras as ModalNavigationExtras).shouldOpenModal = shouldOpenModal;
+    }
+    else if (event instanceof ActivationEnd && event.snapshot.data?.modalComponent) {
+      if ((router.getCurrentNavigation().extras as ModalNavigationExtras).shouldOpenModal === false) {
         return;
       }
 

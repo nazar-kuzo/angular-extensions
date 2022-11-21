@@ -137,7 +137,7 @@ export class BaseControlComponent<TValue, TOption = any, TOptionGroup = any, TFo
   }
 
   public ngOnDestroy() {
-    this.destroy.next();
+    this.destroy.next(null);
     this.destroy.complete();
   }
 

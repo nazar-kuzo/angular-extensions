@@ -51,17 +51,5 @@ export class NgxMaskDirective {
           }
         });
       });
-
-    overrideFunction(
-      maskDirective,
-      context => context.onFocus,
-      (onFocus, _, event: MouseEvent) => {
-        let input = event.target as HTMLInputElement;
-
-        // preserve selected text
-        if (input.selectionStart == input.selectionEnd) {
-          onFocus(event);
-        }
-      });
   }
 }

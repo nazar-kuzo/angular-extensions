@@ -12,7 +12,7 @@ export class CustomPaginatorDirective {
   @Input()
   public set length(length: number) {
     if (length != null && this.paginator.pageIndex * this.paginator.pageSize >= length) {
-      this.paginator.pageIndex -= 1;
+      this.paginator.pageIndex = this.paginator.pageIndex - 1;
     }
   }
 

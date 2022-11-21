@@ -240,7 +240,7 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   }
 
   public ngOnDestroy() {
-    this.destroy.next();
+    this.destroy.next(null);
     this.destroy.complete();
   }
 
@@ -249,6 +249,10 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   };
 
   public optionComparer = (left?: TOption, right?: TOption) => {
+    if (typeof left != typeof right) {
+      return left != null && right != null && this.field.optionValue(left) == this.field.optionValue(right);
+    }
+
     return left != null && right != null && this.field.optionId(left) == this.field.optionId(right);
   };
 
