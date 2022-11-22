@@ -2,7 +2,6 @@
   "files.exclude": {
     "**/node_modules": true,
     "**/dist": true,
-    "**/.angular": true,
   },
   "html.format.wrapLineLength": 0,
   "html.format.wrapAttributes": "force-aligned",
