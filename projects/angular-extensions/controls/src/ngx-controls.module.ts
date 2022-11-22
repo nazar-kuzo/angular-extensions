@@ -17,9 +17,9 @@ import { FormControl } from "@angular/forms";
 
 import { overrideFunction } from "angular-extensions/core";
 import { NGX_DATE_FORMATS } from "angular-extensions/models";
-
 import { NgxModalsModule } from "angular-extensions/modals";
 import { NgxDirectivesModule } from "angular-extensions/directives";
+
 import { NgxBaseControlModule } from "angular-extensions/controls/base-control";
 import { NgxTextControlModule } from "angular-extensions/controls/text-control";
 import { NgxTextAreaControlModule } from "angular-extensions/controls/textarea-control";
