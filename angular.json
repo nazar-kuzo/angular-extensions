@@ -57,6 +57,11 @@
             "styles": [
               "src/styles.scss"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "dist/"
+              ]
+            },
             "scripts": []
           },
           "configurations": {

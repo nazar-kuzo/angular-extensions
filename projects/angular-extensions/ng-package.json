@@ -1,6 +1,7 @@
 {
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../dist/angular-extensions",
-  "lib": {
-  }
+  "assets": [
+    { "input": "src/styles", "glob": "**/*.scss", "output": "styles" }
+  ]
 }

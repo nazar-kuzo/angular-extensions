@@ -1,4 +1,6 @@
-@import "~@angular/material/theming";
+@import "angular-extensions/styles/reset";
+
+@import "@angular/material/theming";
 
 @include mat-core();
 

@@ -1,0 +1,29 @@
+$link-hover-color: currentColor;
+$link-hover-decoration: none;
+$input-btn-focus-box-shadow: none;
+$input-btn-focus-width: 0;
+$label-margin-bottom: 0;
+$grid-breakpoints: (
+  xs: 0,
+  sm: 600px,
+  md: 960px,
+  lg: 1280px,
+  xl: 1600px,
+);
+$container-max-widths: (
+  sm: 600px,
+  md: 960px,
+  lg: 1280px,
+  xl: 1600px,
+);
+
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/reboot";
+@import "bootstrap/scss/grid";
+@import "bootstrap/scss/utilities";
+
+.bootstrap {
+  @import "bootstrap/scss/type";
+}

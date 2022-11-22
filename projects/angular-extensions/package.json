@@ -10,6 +10,7 @@
     "@angular/cdk": "^14.2.7",
     "@angular/material": "^14.2.7",
     "@angular-material-components/datetime-picker": "^8.0.0",
+    "bootstrap": "^4.6.1",
     "date-fns": "^2.29.3",
     "lodash-es": "^4.17.21",
     "ngx-awesome-uploader": "^13.0.1",
