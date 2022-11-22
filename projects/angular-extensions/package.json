@@ -16,6 +16,11 @@
     "ngx-mask": "^14.2.4",
     "ngx-mat-select-search": "^5.0.0"
   },
+  "peerDependenciesMeta": {
+    "ngx-awesome-uploader": {
+      "optional": true
+    }
+  },
   "dependencies": {
     "tslib": "^2.3.1"
   }
