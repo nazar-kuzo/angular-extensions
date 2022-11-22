@@ -1,9 +1,7 @@
 import { ModuleWithProviders, NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 
-import { MatNativeDateModule } from "@angular/material/core";
 import { FormControl } from "@angular/forms";
-import { NgxMatTimepickerModule } from "@angular-material-components/datetime-picker";
 
 import { overrideFunction } from "angular-extensions/core";
 import { NgxModalsModule } from "angular-extensions/modals";
@@ -16,9 +14,11 @@ import { NgxTextAreaControlModule } from "angular-extensions/controls/textarea-c
 import { NgxCheckboxControlModule } from "angular-extensions/controls/checkbox-control";
 import { NgxSelectControlModule } from "angular-extensions/controls/select-control";
 import { NgxDateControlModule } from "angular-extensions/controls/date-control";
-import { NgxDateTimeControlModule, NgxDateTimeConfig, dateTimeConfigDefaults } from "angular-extensions/controls/datetime-control";
+import { NgxTimeControlModule } from "angular-extensions/controls/time-control";
+import {
+  NgxDateTimeControlModule, NgxDateTimeConfig, dateTimeConfigDefaults,
+} from "angular-extensions/controls/datetime-control";
 
-import { TimeControlComponent } from "./time-control/time-control.component";
 
 /**
  * Configure default behavior of NgxControlsModule like: locale, date adpater, date format, etc.
@@ -49,15 +49,10 @@ const moduleConfigDefaults: NgxControlsConfig = {
     NgxCheckboxControlModule,
     NgxSelectControlModule,
     NgxDateControlModule,
+    NgxTimeControlModule,
     NgxDateTimeControlModule,
     NgxSpinnerModule,
     NgxModalsModule,
-
-    MatNativeDateModule,
-    NgxMatTimepickerModule,
-  ],
-  declarations: [
-    TimeControlComponent,
   ],
   exports: [
     CommonModule,
@@ -68,14 +63,10 @@ const moduleConfigDefaults: NgxControlsConfig = {
     NgxCheckboxControlModule,
     NgxSelectControlModule,
     NgxDateControlModule,
+    NgxTimeControlModule,
     NgxDateTimeControlModule,
     NgxSpinnerModule,
     NgxModalsModule,
-
-    MatNativeDateModule,
-    NgxMatTimepickerModule,
-
-    TimeControlComponent,
   ]
 })
 export class NgxControlsModule {

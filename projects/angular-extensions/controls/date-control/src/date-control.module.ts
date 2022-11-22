@@ -2,18 +2,22 @@ import { format } from "date-fns";
 import { ModuleWithProviders, NgModule, Type } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Platform } from "@angular/cdk/platform";
-import { DateAdapter, MatDateFormats, MAT_DATE_FORMATS, MAT_DATE_LOCALE, NativeDateAdapter } from "@angular/material/core";
+import {
+  DateAdapter, MatDateFormats, MatNativeDateModule,
+  NativeDateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE,
+} from "@angular/material/core";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 
 import { NgxDirectivesModule } from "angular-extensions/directives";
 import { NGX_DATE_FORMATS } from "angular-extensions/models";
 import { NgxBaseControlModule } from "angular-extensions/controls/base-control";
+
 import { DateControlComponent } from "./date-control.component";
 
 /**
  * Configure default behavior of NgxControlsModule like: locale, date adpater, date format, etc.
  */
- export interface NgxDateConfig {
+export interface NgxDateConfig {
 
   /**
    * Date adapter used between AngularMaterial and NgxMatDatePicker, by default {@link NgxDateAdapter}
@@ -52,12 +56,15 @@ export const dateConfigDefaults: NgxDateConfig = {
   imports: [
     CommonModule,
     MatDatepickerModule,
+    MatNativeDateModule,
 
     NgxBaseControlModule,
     NgxDirectivesModule,
   ],
   exports: [
     MatDatepickerModule,
+    MatNativeDateModule,
+
     NgxBaseControlModule,
     NgxDirectivesModule,
 
