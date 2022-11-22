@@ -28,9 +28,9 @@ import { NgxDirectivesModule } from "angular-extensions/directives";
 import { NgxBaseControlModule } from "angular-extensions/controls/base-control";
 import { NgxTextControlModule } from "angular-extensions/controls/text-control";
 import { NgxTextAreaControlModule } from "angular-extensions/controls/textarea-control";
+import { NgxCheckboxControlModule } from "angular-extensions/controls/checkbox-control";
 import { NgxModalsModule } from "angular-extensions/modals";
 
-import { CheckboxControlComponent } from "./checkbox-control/checkbox-control.component";
 import { SelectControlComponent } from "./select-control/select-control.component";
 import { CustomMatOptionDirective } from "./select-control/custom-mat-option.directive";
 import { DateControlComponent } from "./date-control/date-control.component";
@@ -91,6 +91,7 @@ const moduleConfigDefaults: NgxControlsConfig = {
     NgxBaseControlModule,
     NgxTextControlModule,
     NgxTextAreaControlModule,
+    NgxCheckboxControlModule,
     NgxModalsModule,
 
     MatProgressBarModule,
@@ -104,7 +105,6 @@ const moduleConfigDefaults: NgxControlsConfig = {
     NgxMatSelectSearchModule,
   ],
   declarations: [
-    CheckboxControlComponent,
     SelectControlComponent,
     CustomMatOptionDirective,
     DateControlComponent,
@@ -142,6 +142,7 @@ const moduleConfigDefaults: NgxControlsConfig = {
     NgxBaseControlModule,
     NgxTextControlModule,
     NgxTextAreaControlModule,
+    NgxCheckboxControlModule,
     NgxModalsModule,
 
     MatProgressBarModule,
@@ -155,7 +156,6 @@ const moduleConfigDefaults: NgxControlsConfig = {
     NgxMatSelectSearchModule,
 
 
-    CheckboxControlComponent,
     SelectControlComponent,
     CustomMatOptionDirective,
     DateControlComponent,
