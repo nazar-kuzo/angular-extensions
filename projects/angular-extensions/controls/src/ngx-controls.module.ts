@@ -11,8 +11,6 @@ import {
 } from "@angular-material-components/datetime-picker";
 
 import { DateAdapter, MatDateFormats, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from "@angular/material/core";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { Platform } from "@angular/cdk/platform";
 import { FormControl } from "@angular/forms";
@@ -26,12 +24,12 @@ import { NgxTextControlModule } from "angular-extensions/controls/text-control";
 import { NgxTextAreaControlModule } from "angular-extensions/controls/textarea-control";
 import { NgxCheckboxControlModule } from "angular-extensions/controls/checkbox-control";
 import { NgxSelectControlModule } from "angular-extensions/controls/select-control";
+import { NgxSpinnerModule } from "angular-extensions/controls/spinner";
 import { NgxModalsModule } from "angular-extensions/modals";
 
 import { DateControlComponent } from "./date-control/date-control.component";
 import { DateTimeControlComponent } from "./datetime-control/datetime-control.component";
 import { TimeControlComponent } from "./time-control/time-control.component";
-import { SpinnerComponent } from "./spinner/spinner.component";
 
 export class NgxDateAdapter extends NgxMatNativeDateAdapter {
 
@@ -87,10 +85,9 @@ const moduleConfigDefaults: NgxControlsConfig = {
     NgxTextAreaControlModule,
     NgxCheckboxControlModule,
     NgxSelectControlModule,
+    NgxSpinnerModule,
     NgxModalsModule,
 
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
     MatDatepickerModule,
     MatNativeDateModule,
     NgxMatDatetimePickerModule,
@@ -100,7 +97,6 @@ const moduleConfigDefaults: NgxControlsConfig = {
     DateControlComponent,
     DateTimeControlComponent,
     TimeControlComponent,
-    SpinnerComponent,
   ],
   providers: [
     {
@@ -134,10 +130,9 @@ const moduleConfigDefaults: NgxControlsConfig = {
     NgxTextAreaControlModule,
     NgxCheckboxControlModule,
     NgxSelectControlModule,
+    NgxSpinnerModule,
     NgxModalsModule,
 
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
     MatDatepickerModule,
     MatNativeDateModule,
     NgxMatDatetimePickerModule,
@@ -146,7 +141,6 @@ const moduleConfigDefaults: NgxControlsConfig = {
     DateControlComponent,
     DateTimeControlComponent,
     TimeControlComponent,
-    SpinnerComponent,
   ]
 })
 export class NgxControlsModule {
