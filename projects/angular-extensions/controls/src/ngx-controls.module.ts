@@ -16,8 +16,6 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatSelectModule } from "@angular/material/select";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatDatepickerModule } from "@angular/material/datepicker";
-import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
-import { ScrollingModule } from "@angular/cdk/scrolling";
 import { Platform } from "@angular/cdk/platform";
 import { FormControl } from "@angular/forms";
 
@@ -29,10 +27,9 @@ import { NgxBaseControlModule } from "angular-extensions/controls/base-control";
 import { NgxTextControlModule } from "angular-extensions/controls/text-control";
 import { NgxTextAreaControlModule } from "angular-extensions/controls/textarea-control";
 import { NgxCheckboxControlModule } from "angular-extensions/controls/checkbox-control";
+import { NgxSelectControlModule } from "angular-extensions/controls/select-control";
 import { NgxModalsModule } from "angular-extensions/modals";
 
-import { SelectControlComponent } from "./select-control/select-control.component";
-import { CustomMatOptionDirective } from "./select-control/custom-mat-option.directive";
 import { DateControlComponent } from "./date-control/date-control.component";
 import { DateTimeControlComponent } from "./datetime-control/datetime-control.component";
 import { TimeControlComponent } from "./time-control/time-control.component";
@@ -86,12 +83,12 @@ const moduleConfigDefaults: NgxControlsConfig = {
 @NgModule({
   imports: [
     CommonModule,
-    ScrollingModule,
     NgxDirectivesModule,
     NgxBaseControlModule,
     NgxTextControlModule,
     NgxTextAreaControlModule,
     NgxCheckboxControlModule,
+    NgxSelectControlModule,
     NgxModalsModule,
 
     MatProgressBarModule,
@@ -102,11 +99,8 @@ const moduleConfigDefaults: NgxControlsConfig = {
     MatNativeDateModule,
     NgxMatDatetimePickerModule,
     NgxMatTimepickerModule,
-    NgxMatSelectSearchModule,
   ],
   declarations: [
-    SelectControlComponent,
-    CustomMatOptionDirective,
     DateControlComponent,
     DateTimeControlComponent,
     TimeControlComponent,
@@ -143,6 +137,7 @@ const moduleConfigDefaults: NgxControlsConfig = {
     NgxTextControlModule,
     NgxTextAreaControlModule,
     NgxCheckboxControlModule,
+    NgxSelectControlModule,
     NgxModalsModule,
 
     MatProgressBarModule,
@@ -153,11 +148,7 @@ const moduleConfigDefaults: NgxControlsConfig = {
     MatNativeDateModule,
     NgxMatDatetimePickerModule,
     NgxMatTimepickerModule,
-    NgxMatSelectSearchModule,
 
-
-    SelectControlComponent,
-    CustomMatOptionDirective,
     DateControlComponent,
     DateTimeControlComponent,
     TimeControlComponent,

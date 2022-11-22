@@ -87,8 +87,9 @@
 
     <span matSuffix
           *ngIf="field.isQuerying">
-      <spinner [loading]="field.isQuerying"
-               [size]="20"></spinner>
+      <mat-spinner
+        mode="indeterminate"
+        [diameter]="20"></mat-spinner>
     </span>
 
     <a *ngIf="showClearButton()"
