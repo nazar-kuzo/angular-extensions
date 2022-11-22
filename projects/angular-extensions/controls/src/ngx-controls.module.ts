@@ -1,31 +1,23 @@
 import { ModuleWithProviders, NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 
-import {
-  NgxMatDateAdapter,
-  NgxMatDatetimePickerModule,
-  NgxMatTimepickerModule,
-  NGX_MAT_DATE_FORMATS,
-} from "@angular-material-components/datetime-picker";
-
-import { MatNativeDateModule, MAT_DATE_LOCALE } from "@angular/material/core";
-import { Platform } from "@angular/cdk/platform";
+import { MatNativeDateModule } from "@angular/material/core";
 import { FormControl } from "@angular/forms";
+import { NgxMatTimepickerModule } from "@angular-material-components/datetime-picker";
 
 import { overrideFunction } from "angular-extensions/core";
-import { NgxDateTimeConfig, dateTimeConfigDefaults } from "angular-extensions/models";
 import { NgxModalsModule } from "angular-extensions/modals";
 import { NgxDirectivesModule } from "angular-extensions/directives";
 
+import { NgxSpinnerModule } from "angular-extensions/controls/spinner";
 import { NgxBaseControlModule } from "angular-extensions/controls/base-control";
 import { NgxTextControlModule } from "angular-extensions/controls/text-control";
 import { NgxTextAreaControlModule } from "angular-extensions/controls/textarea-control";
 import { NgxCheckboxControlModule } from "angular-extensions/controls/checkbox-control";
 import { NgxSelectControlModule } from "angular-extensions/controls/select-control";
 import { NgxDateControlModule } from "angular-extensions/controls/date-control";
-import { NgxSpinnerModule } from "angular-extensions/controls/spinner";
+import { NgxDateTimeControlModule, NgxDateTimeConfig, dateTimeConfigDefaults } from "angular-extensions/controls/datetime-control";
 
-import { DateTimeControlComponent } from "./datetime-control/datetime-control.component";
 import { TimeControlComponent } from "./time-control/time-control.component";
 
 /**
@@ -57,27 +49,15 @@ const moduleConfigDefaults: NgxControlsConfig = {
     NgxCheckboxControlModule,
     NgxSelectControlModule,
     NgxDateControlModule,
+    NgxDateTimeControlModule,
     NgxSpinnerModule,
     NgxModalsModule,
 
     MatNativeDateModule,
-    NgxMatDatetimePickerModule,
     NgxMatTimepickerModule,
   ],
   declarations: [
-    DateTimeControlComponent,
     TimeControlComponent,
-  ],
-  providers: [
-    {
-      provide: NgxMatDateAdapter,
-      useClass: moduleConfigDefaults.dateTimeConfig.dateAdapterType,
-      deps: [MAT_DATE_LOCALE, Platform]
-    },
-    {
-      provide: NGX_MAT_DATE_FORMATS,
-      useValue: moduleConfigDefaults.dateTimeConfig.dateFormats
-    },
   ],
   exports: [
     CommonModule,
@@ -88,14 +68,13 @@ const moduleConfigDefaults: NgxControlsConfig = {
     NgxCheckboxControlModule,
     NgxSelectControlModule,
     NgxDateControlModule,
+    NgxDateTimeControlModule,
     NgxSpinnerModule,
     NgxModalsModule,
 
     MatNativeDateModule,
-    NgxMatDatetimePickerModule,
     NgxMatTimepickerModule,
 
-    DateTimeControlComponent,
     TimeControlComponent,
   ]
 })
@@ -122,16 +101,7 @@ export class NgxControlsModule {
     return {
       ngModule: NgxControlsModule,
       providers: [
-        ...NgxDateControlModule.configure(moduleConfig.dateTimeConfig).providers,
-        {
-          provide: NgxMatDateAdapter,
-          useClass: moduleConfig.dateTimeConfig.dateAdapterType,
-          deps: [MAT_DATE_LOCALE, Platform]
-        },
-        {
-          provide: NGX_MAT_DATE_FORMATS,
-          useValue: moduleConfig.dateTimeConfig.dateFormats
-        },
+        ...NgxDateTimeControlModule.configure(moduleConfig.dateTimeConfig).providers,
       ]
     };
   }
