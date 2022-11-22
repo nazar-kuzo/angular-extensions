@@ -13,8 +13,6 @@ import {
 import { DateAdapter, MatDateFormats, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from "@angular/material/core";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { MatSelectModule } from "@angular/material/select";
-import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { Platform } from "@angular/cdk/platform";
 import { FormControl } from "@angular/forms";
@@ -93,8 +91,6 @@ const moduleConfigDefaults: NgxControlsConfig = {
 
     MatProgressBarModule,
     MatProgressSpinnerModule,
-    MatSelectModule,
-    MatCheckboxModule,
     MatDatepickerModule,
     MatNativeDateModule,
     NgxMatDatetimePickerModule,
@@ -142,8 +138,6 @@ const moduleConfigDefaults: NgxControlsConfig = {
 
     MatProgressBarModule,
     MatProgressSpinnerModule,
-    MatSelectModule,
-    MatCheckboxModule,
     MatDatepickerModule,
     MatNativeDateModule,
     NgxMatDatetimePickerModule,
