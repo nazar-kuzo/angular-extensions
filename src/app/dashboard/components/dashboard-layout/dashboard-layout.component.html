@@ -102,17 +102,17 @@
                     [virtualization]="true"></select-control>
 
     <div class="col-sm-4">
-      <button class="mr-3"
+      <button class="mr-3 mb-2"
               mat-raised-button
               color="secondary"
               (click)="recreateEditor()">Re-create Editor</button>
 
-      <button class="mr-3"
+      <button class="mr-3 mb-2"
               mat-raised-button
               color="secondary"
               (click)="editor.reloadControls()">Reload controls</button>
 
-      <button class="mr-3"
+      <button class="mr-3 mb-2"
               mat-raised-button
               color="secondary"
               [routerLink]="['details']">Details</button>
@@ -123,7 +123,7 @@
 
       <hr>
 
-      <file-control class="d-inline-block mr-3 p-0"
+      <file-control class="d-inline-block mr-3 mb-2 p-0"
                     [field]="editor.image"
                     [showPreview]="true"
                     [maxFileSize]="4">

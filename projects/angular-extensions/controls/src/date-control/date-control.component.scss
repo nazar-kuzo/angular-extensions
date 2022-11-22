@@ -1,7 +1,10 @@
 :host {
   display: inline-block;
 
-  ::ng-deep input {
-    cursor: pointer;
+  ::ng-deep {
+    .mat-form-field-flex,
+    input {
+      cursor: pointer;
+    }
   }
 }
