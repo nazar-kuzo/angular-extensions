@@ -18,6 +18,7 @@ import { FormControl } from "@angular/forms";
 import { overrideFunction } from "angular-extensions/core";
 import { NGX_DATE_FORMATS } from "angular-extensions/models";
 
+import { NgxModalsModule } from "angular-extensions/modals";
 import { NgxDirectivesModule } from "angular-extensions/directives";
 import { NgxBaseControlModule } from "angular-extensions/controls/base-control";
 import { NgxTextControlModule } from "angular-extensions/controls/text-control";
@@ -25,7 +26,6 @@ import { NgxTextAreaControlModule } from "angular-extensions/controls/textarea-c
 import { NgxCheckboxControlModule } from "angular-extensions/controls/checkbox-control";
 import { NgxSelectControlModule } from "angular-extensions/controls/select-control";
 import { NgxSpinnerModule } from "angular-extensions/controls/spinner";
-import { NgxModalsModule } from "angular-extensions/modals";
 
 import { DateControlComponent } from "./date-control/date-control.component";
 import { DateTimeControlComponent } from "./datetime-control/datetime-control.component";
