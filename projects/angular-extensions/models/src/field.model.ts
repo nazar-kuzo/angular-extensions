@@ -11,8 +11,8 @@ import { NGX_DATE_FORMATS } from "./date-formats.model";
 /**
  * Constructor object for Field class
  */
-type FieldConstructor<TValue, TOption = any, TOptionGroup = any, TConvertedValue = any> =
-  Partial<Omit<Field<TValue, TOption, TOptionGroup, TConvertedValue>,
+type FieldConstructor<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue = any, TControlValue = any> =
+  Partial<Omit<Field<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>,
     "control" | "element" | "options" | "onValueChange" | "onOptionsChange" | "validation" |
     "customOptionFilterPredicate" | "_initialStatus" | "destroy" | "setOptions" | "setFromOptions" |
     "updateValidation" | "visible" | "formattedValue" | "formGroup" | "optionChanges"> & {
@@ -148,7 +148,7 @@ export class Option<TValue, TId = string> {
 /**
  * Provides simplified api to work with Angular reactive forms and predefined control components.
  */
-export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue = TValue, TControlValue = TValue> {
+export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue = any, TControlValue = any> {
 
   private optionChanges$ = new Subject<TOption[]>();
 
@@ -359,7 +359,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
    */
   public optionGroupLabel: (optionGroup: TOptionGroup) => string;
 
-  constructor(props: FieldConstructor<TValue, TOption, TOptionGroup>) {
+  constructor(props: FieldConstructor<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>) {
     this.validation = new Validation(props.validation || {});
 
     this.control = new FormControl(
