@@ -121,13 +121,16 @@ body {
 }
 
 body {
-  &::-webkit-scrollbar {
+  &::-webkit-scrollbar,
+  *::-webkit-scrollbar  {
     height: 4px;
     width: 4px;
   }
 
-  &::-webkit-scrollbar-thumb {
+  &::-webkit-scrollbar-thumb,
+  *::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.26);
+    border-radius: 1em;
   }
 
   &.no-selection {
