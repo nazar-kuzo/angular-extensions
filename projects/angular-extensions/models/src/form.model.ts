@@ -122,10 +122,10 @@ export class Form {
    *
    * @param field Field
    */
-  public removeField(field: Field<any>) {
+  public removeField(field: Field<any>, options?: { emitEvent?: boolean }) {
     remove(this._fields, formField => formField == field);
 
-    this.formGroup.removeControl(field.name);
+    this.formGroup.removeControl(field.name, options);
   }
 
   /**
