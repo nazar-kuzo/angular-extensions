@@ -23,6 +23,8 @@ export class DashboardEditor extends BaseEditor {
 
   public website: Field<string>;
 
+  public yearsOld: Field<number>;
+
   public yearOfBirth: Field<Date>;
 
   public monthOfBirth: Field<Date>;
@@ -94,6 +96,12 @@ export class DashboardEditor extends BaseEditor {
       },
     });
 
+    this.yearsOld = new Field({
+      label: "Years old",
+      validation: {
+        required: { value: true },
+      },
+    });
 
     this.yearOfBirth = new Field<Date>({
       label: "Year of Birth",

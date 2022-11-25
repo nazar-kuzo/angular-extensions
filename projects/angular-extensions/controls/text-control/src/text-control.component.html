@@ -51,6 +51,7 @@
              matInput
              cdkFocusInitial
              [attr.inputmode]="type == 'number' ? 'decimal' : null"
+             [attr.step]="step"
              [type]="type"
              [formControl]="field.control">
     </ng-container>
