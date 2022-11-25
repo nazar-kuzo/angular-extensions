@@ -31,6 +31,9 @@ export class TextControlComponent<TValue> extends ControlBase<TValue> implements
   public type: "text" | "number" | "time" | "email" | "tel" | "url" = "text";
 
   @Input()
+  public step?: number;
+
+  @Input()
   public mask: string;
 
   @Input()
