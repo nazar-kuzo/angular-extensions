@@ -388,7 +388,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
     this.visibilityProvider = () => true;
     this.optionGroupLabel = optionGroup => optionGroup?.toString();
     this.optionId = option => option instanceof Option ? option.id : option;
-    this.optionLabel = option => option instanceof Option ? option.label : "";
+    this.optionLabel = option => option instanceof Option ? option.label : option?.toString();
     this.optionValue = option => option instanceof Option ? option.value : option;
     this.optionDisabled = _ => false;
 
