@@ -39,6 +39,9 @@ export enum DayOfWeek {
   Sunday = 0,
 }
 
+type OmitFunctions<T> =
+  Omit<T, { [K in keyof T]-?: T[K] extends Function ? K : never }[keyof T]>;
+
 /**
  * Provides simple API to work with time of a day separately from Dates
  */
@@ -50,7 +53,7 @@ export class TimeOfDay {
 
   public second?: number;
 
-  constructor(timeOfDay: Partial<TimeOfDay>) {
+  constructor(timeOfDay: Partial<OmitFunctions<TimeOfDay>>) {
     this.hour = timeOfDay?.hour || 0;
     this.minute = timeOfDay?.minute || 0;
     this.second = timeOfDay?.second || 0;
@@ -113,7 +116,7 @@ export class TimeOfDay {
 
     return new TimeOfDay({
       hour: localTime.getHours(),
-      minute: localTime.getMinutes()
+      minute: localTime.getMinutes(),
     });
   }
 
@@ -129,6 +132,17 @@ export class TimeOfDay {
       hour: utcTime.getHours(),
       minute: utcTime.getMinutes()
     });
+  }
+
+  /**
+   * Returns the stored time value in milliseconds.
+   *
+   * @returns
+   */
+  public valueOf(): number {
+    return (this.hour * 3600_000) +
+      (this.minute * 60_000) +
+      ((this.second || 0) * 1000);
   }
 }
 
