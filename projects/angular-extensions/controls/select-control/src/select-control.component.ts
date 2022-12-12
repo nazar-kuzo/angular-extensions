@@ -107,7 +107,7 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
     if (Array.isArray(selectedOption)) {
       return selectedOption.map(option => this.field.optionLabel(option)).join(", ");
     }
-    else if (selectedOption) {
+    else if (selectedOption != null) {
       return this.field.optionLabel(selectedOption);
     }
     else {
