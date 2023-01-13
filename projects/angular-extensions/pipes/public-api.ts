@@ -1,6 +1,7 @@
 export * from "./filter.pipe";
 export * from "./date.pipe";
 export * from "./dateTime.pipe";
+export * from "./trusted-style.pipe";
 export * from "./trusted-html.pipe";
 export * from "./trusted-url.pipe";
 export * from "./start-case.pipe";
