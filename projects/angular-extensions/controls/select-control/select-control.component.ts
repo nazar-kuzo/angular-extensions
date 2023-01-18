@@ -76,6 +76,9 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   @ViewChild("selectAllOption")
   public selectAllOption?: MatOption;
 
+  @ContentChild("headerTemplate", { static: true })
+  public headerTemplate: TemplateRef<any>;
+
   @ContentChild("optionTemplate", { static: true })
   public optionTemplate: TemplateRef<{ $implicit: string; option: TOption }>;
 
@@ -249,7 +252,9 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   };
 
   public optionComparer = (left?: TOption, right?: TOption) => {
-    return left != null && right != null && this.field.optionId(left) == this.field.optionId(right);
+    return left != null && right != null &&
+      (this.field.optionId(left) == this.field.optionId(right) ||
+      this.field.optionValue(left) == this.field.optionValue(right));
   };
 
   public showClearButton() {
