@@ -1,14 +1,14 @@
 <h2 class="font-weight-normal"
     mat-dialog-title
-    [innerHtml]="title | trustedHtml"></h2>
+    [innerHtml]="settings.title | trustedHtml"></h2>
 
 <mat-dialog-actions align="end">
-  <button mat-raised-button
-          mat-dialog-close
-          type="button">No</button>
-
-  <button mat-raised-button
-          color="primary"
-          type="submit"
-          [mat-dialog-close]="true">Yes</button>
+  <button *ngFor="let button of settings.buttons"
+          mat-raised-button
+          type="button"
+          cdkFocusInitial
+          [color]="button.color"
+          [mat-dialog-close]="button.value !== undefined ? button.value : button.text">
+    {{ button.text }}
+  </button>
 </mat-dialog-actions>

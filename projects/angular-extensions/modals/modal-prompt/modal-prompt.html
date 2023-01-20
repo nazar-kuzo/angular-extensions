@@ -1,6 +1,6 @@
-<h2 mat-dialog-title>
-  {{ settings.title }}
-</h2>
+<h2 class="font-weight-normal"
+    mat-dialog-title
+    [innerHtml]="settings.title | trustedHtml"></h2>
 
 <form [formGroup]="form.formGroup"
       (ngSubmit)="submit()">
