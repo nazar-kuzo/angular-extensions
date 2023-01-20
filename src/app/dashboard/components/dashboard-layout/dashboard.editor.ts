@@ -182,7 +182,6 @@ export class DashboardEditor extends BaseEditor {
       onValueChange: country => {
         console.error(`Selected country: ${country?.name.common}`);
       },
-      updateValueWhenOptionsChanged: false,
       options: this.loadAllCountries(),
       optionsProvider: query => this.api.get<Country[]>(`https://restcountries.com/v3.1/name/${query}`),
     });

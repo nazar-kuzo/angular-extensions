@@ -312,7 +312,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
   /**
    * Indicates whether field values should be updated when options changed.
    */
-  public updateValueWhenOptionsChanged = true;
+  public updateValueWhenOptionsChanged: boolean;
 
   /**
    * Options filter predicate that is used by select-control, by default filters by option label

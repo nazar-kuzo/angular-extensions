@@ -5,7 +5,8 @@
       "cssUrl": "inline",
       "umdModuleIds": {
         "date-fns": "date-fns",
-        "lodash-es": "lodash-es"
+        "lodash-es": "lodash-es",
+        "angular-extensions/pipes": "pipes"
       }
     }
   }
