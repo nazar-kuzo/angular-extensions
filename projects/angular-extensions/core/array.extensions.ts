@@ -91,12 +91,12 @@ export function groupBy<T, TKey>(this: T[], property: (item: T) => TKey): Group<
   });
 }
 
-Array.prototype.first = first;
-Array.prototype.last = last;
-Array.prototype.elementAt = elementAt;
-Array.prototype.distinct = distinct;
-Array.prototype.contains = contains;
-Array.prototype.orderBy = orderBy;
-Array.prototype.orderByDesc = orderByDesc;
-Array.prototype.move = move;
-Array.prototype.groupBy = groupBy;
+Object.defineProperty(Array.prototype, nameOf(() => first), { value: first, configurable: true, writable: true });
+Object.defineProperty(Array.prototype, nameOf(() => last), { value: last, configurable: true, writable: true });
+Object.defineProperty(Array.prototype, nameOf(() => elementAt), { value: elementAt, configurable: true, writable: true });
+Object.defineProperty(Array.prototype, nameOf(() => distinct), { value: distinct, configurable: true, writable: true });
+Object.defineProperty(Array.prototype, nameOf(() => contains), { value: contains, configurable: true, writable: true });
+Object.defineProperty(Array.prototype, nameOf(() => orderBy), { value: orderBy, configurable: true, writable: true });
+Object.defineProperty(Array.prototype, nameOf(() => orderByDesc), { value: orderByDesc, configurable: true, writable: true });
+Object.defineProperty(Array.prototype, nameOf(() => move), { value: move, configurable: true, writable: true });
+Object.defineProperty(Array.prototype, nameOf(() => groupBy), { value: groupBy, configurable: true, writable: true });

@@ -290,8 +290,9 @@ Date.prototype.withoutTimezone = withoutTimezone;
 Date.prototype.asUtcDate = asUtcDate;
 Date.prototype.toUtcDate = toUtcDate;
 Date.prototype.asLocalDate = asLocalDate;
-String.prototype.trimEnd = trimEnd;
 FormData.prototype.fromObject = formDataFromObject;
+
+Object.defineProperty(String.prototype, nameOf(() => trimEnd), { value: trimEnd, configurable: true, writable: true });
 
 window.nameOf = nameOf;
 window.nameOfFull = nameOfFull;
