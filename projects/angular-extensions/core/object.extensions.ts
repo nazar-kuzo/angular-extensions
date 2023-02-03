@@ -80,10 +80,14 @@ export function nameOf<T>(func: Func<T> | Class<T>) {
   let classNameRegex = new RegExp(/(?:function|class) ([^ ({]+)[ ({]/);
 
   if (classNameRegex.test(str)) {
-    return classNameRegex.exec(str)?.last() as string;
+    let classNameParts = classNameRegex.exec(str);
+
+    return classNameParts[classNameParts.length - 1] as string;
   }
 
-  return str.match(/\.([^.;}]+)[;}]?/g)?.last().replace(".", "") as string;
+  let parts = str.match(/\.([^.;}]+)[;}]?/g);
+
+  return parts[parts.length - 1].replace(".", "") as string;
 }
 
 export function nameOfFull<T>(func: Func<T>) {
@@ -284,6 +288,8 @@ export function formDataFromObject(this: FormData, data: { [key: string]: File |
   return this;
 }
 
+window.nameOf = nameOf;
+window.nameOfFull = nameOfFull;
 
 Date.prototype.getDayOfWeek = getDayOfWeek;
 Date.prototype.withoutTimezone = withoutTimezone;
@@ -292,7 +298,4 @@ Date.prototype.toUtcDate = toUtcDate;
 Date.prototype.asLocalDate = asLocalDate;
 FormData.prototype.fromObject = formDataFromObject;
 
-Object.defineProperty(String.prototype, nameOf(() => trimEnd), { value: trimEnd, configurable: true, writable: true });
-
-window.nameOf = nameOf;
-window.nameOfFull = nameOfFull;
+Object.defineProperty(String.prototype, nameOf(() => String.prototype.trimEnd), { value: trimEnd, configurable: true, writable: true });

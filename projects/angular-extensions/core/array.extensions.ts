@@ -91,12 +91,16 @@ export function groupBy<T, TKey>(this: T[], property: (item: T) => TKey): Group<
   });
 }
 
-Object.defineProperty(Array.prototype, nameOf(() => first), { value: first, configurable: true, writable: true });
-Object.defineProperty(Array.prototype, nameOf(() => last), { value: last, configurable: true, writable: true });
-Object.defineProperty(Array.prototype, nameOf(() => elementAt), { value: elementAt, configurable: true, writable: true });
-Object.defineProperty(Array.prototype, nameOf(() => distinct), { value: distinct, configurable: true, writable: true });
-Object.defineProperty(Array.prototype, nameOf(() => contains), { value: contains, configurable: true, writable: true });
-Object.defineProperty(Array.prototype, nameOf(() => orderBy), { value: orderBy, configurable: true, writable: true });
-Object.defineProperty(Array.prototype, nameOf(() => orderByDesc), { value: orderByDesc, configurable: true, writable: true });
-Object.defineProperty(Array.prototype, nameOf(() => move), { value: move, configurable: true, writable: true });
-Object.defineProperty(Array.prototype, nameOf(() => groupBy), { value: groupBy, configurable: true, writable: true });
+Object.defineProperty(Array.prototype, nameOf(() => Array.prototype.first), { value: first, configurable: true, writable: true });
+Object.defineProperty(Array.prototype, nameOf(() => Array.prototype.last), { value: last, configurable: true, writable: true });
+Object.defineProperty(Array.prototype, nameOf(() => Array.prototype.elementAt), { value: elementAt, configurable: true, writable: true });
+Object.defineProperty(Array.prototype, nameOf(() => Array.prototype.distinct), { value: distinct, configurable: true, writable: true });
+Object.defineProperty(Array.prototype, nameOf(() => Array.prototype.contains), { value: contains, configurable: true, writable: true });
+Object.defineProperty(Array.prototype, nameOf(() => Array.prototype.orderBy), { value: orderBy, configurable: true, writable: true });
+Object.defineProperty(Array.prototype, nameOf(() => Array.prototype.move), { value: move, configurable: true, writable: true });
+Object.defineProperty(Array.prototype, nameOf(() => Array.prototype.groupBy), { value: groupBy, configurable: true, writable: true });
+
+Object.defineProperty(
+  Array.prototype,
+  nameOf(() => Array.prototype.orderByDesc),
+  { value: orderByDesc, configurable: true, writable: true });
