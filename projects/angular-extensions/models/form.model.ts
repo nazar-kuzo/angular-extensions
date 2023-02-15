@@ -61,15 +61,19 @@ export class Form {
   public static Create<TModel>(model: TModel, ...fieldsToIgnore: string[]) {
     let form = new Form();
 
+    // initialize field name if missing
     Object
       .keys(model)
       .filter(key => !fieldsToIgnore.contains(key))
       .forEach(key => {
-        if ((model as any)[key] instanceof Field) {
-          ((model as any)[key] as Field<any>).name = key;
+        let field = (model as any)[key];
+
+        if (field instanceof Field && !field.name) {
+          field.name = key;
         }
       });
 
+    // add fields to form group
     Object
       .keys(model)
       .filter(key => !fieldsToIgnore.contains(key))
@@ -79,6 +83,7 @@ export class Form {
         form.addField(field);
       });
 
+    // add nested editors to form group
     Object
       .keys(model)
       .filter(key => !fieldsToIgnore.contains(key))
