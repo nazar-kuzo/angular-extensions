@@ -7,5 +7,9 @@
         color: transparent !important;
       }
     }
+
+    .cdk-virtual-scroll-orientation-vertical .cdk-virtual-scroll-content-wrapper {
+      width: 100%;
+    }
   }
 }
