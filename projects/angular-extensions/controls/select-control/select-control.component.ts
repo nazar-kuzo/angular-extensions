@@ -157,6 +157,11 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
           debounceTime(0),
           takeUntil(this.destroy))
         .subscribe(() => this.updateSelectAllState());
+
+      // force value refresh for the first time
+      this.select.openedChange
+        .pipe(first(), takeUntil(this.destroy))
+        .subscribe(() => this.updateSelectAllState());
     }
   }
 
@@ -230,7 +235,7 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   public optionComparer = (left?: TOption, right?: TOption) => {
     return left != null && right != null &&
       (this.field.optionId(left) == this.field.optionId(right) ||
-      this.field.optionValue(left) == this.field.optionValue(right));
+        this.field.optionValue(left) == this.field.optionValue(right));
   };
 
   public showClearButton() {
