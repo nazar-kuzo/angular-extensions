@@ -5,7 +5,8 @@
   "cli": {
     "cache": {
       "path": "node_modules/.angular"
-    }
+    },
+    "analytics": false
   },
   "projects": {
     "dashboard": {
