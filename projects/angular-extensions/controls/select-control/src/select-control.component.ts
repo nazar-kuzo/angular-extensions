@@ -1,5 +1,5 @@
 import { castArray, intersectionWith } from "lodash-es";
-import { of, Subject } from "rxjs";
+import { Subject, of, merge } from "rxjs";
 import { catchError, debounceTime, filter, first, switchMap, takeUntil, tap } from "rxjs/operators";
 import {
   Component, OnInit, Input, Optional, ElementRef, ChangeDetectorRef,
@@ -150,19 +150,6 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
           open();
         });
     }
-
-    if (this.multiple && this.showSelectAll) {
-      this.select.optionSelectionChanges
-        .pipe(
-          debounceTime(0),
-          takeUntil(this.destroy))
-        .subscribe(() => this.updateSelectAllState());
-
-      // force value refresh for the first time
-      this.select.openedChange
-        .pipe(first(), takeUntil(this.destroy))
-        .subscribe(() => this.updateSelectAllState());
-    }
   }
 
   public ngAfterViewInit() {
@@ -213,6 +200,16 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
           this.field.isQuerying = false;
 
           this.changeDetectorRef.markForCheck();
+        });
+    }
+
+    if (this.multiple && this.showSelectAll) {
+      this.updateSelectAllState();
+
+      merge(this.field.control.statusChanges, this.select.optionSelectionChanges)
+        .pipe(debounceTime(0), takeUntil(this.destroy))
+        .subscribe(() => {
+          this.updateSelectAllState();
         });
     }
   }
@@ -345,8 +342,8 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
 
     this.field.control.registerOnChange(() => this.updateTriggerLabel());
 
-    this.field.control.valueChanges
-      .pipe(takeUntil(this.destroy))
+    merge(this.field.control.valueChanges, this.field.control.statusChanges)
+      .pipe(debounceTime(0), takeUntil(this.destroy))
       .subscribe(() => this.updateTriggerLabel());
   }
 
