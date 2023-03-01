@@ -33,6 +33,10 @@
                                [searching]="field.isQuerying"></ngx-mat-select-search>
       </mat-option>
 
+      <ng-container *ngIf="headerTemplate">
+        <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+      </ng-container>
+
       <ng-container *ngIf="multiple && showSelectAll && !filterControl.value && field.options?.length">
         <mat-option #selectAllOption
                     (selectViaInteraction)="toggleSelectAll()">

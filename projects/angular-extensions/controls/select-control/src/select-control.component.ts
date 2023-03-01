@@ -3,7 +3,7 @@ import { of, Subject } from "rxjs";
 import { catchError, debounceTime, filter, first, switchMap, takeUntil, tap } from "rxjs/operators";
 import {
   Component, OnInit, Input, Optional, ElementRef, ChangeDetectorRef,
-  ViewChild, OnDestroy, AfterViewInit, ContentChild, TemplateRef, ChangeDetectionStrategy, Output, EventEmitter, NgZone,
+  ViewChild, OnDestroy, AfterViewInit, ContentChild, TemplateRef, ChangeDetectionStrategy, Output, EventEmitter, NgZone, OnChanges,
 } from "@angular/core";
 import { MatOption } from "@angular/material/core";
 import { MatSelect } from "@angular/material/select";
@@ -12,7 +12,7 @@ import { MatMenuTrigger } from "@angular/material/menu";
 import { CdkVirtualScrollViewport } from "@angular/cdk/scrolling";
 
 import { Field } from "angular-extensions/models";
-import { overrideFunction } from "angular-extensions/core";
+import { overrideFunction, SimpleChanges } from "angular-extensions/core";
 import { ActionableControl, ControlBase } from "angular-extensions/controls/base-control";
 
 @Component({
@@ -23,7 +23,7 @@ import { ActionableControl, ControlBase } from "angular-extensions/controls/base
 })
 export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>
   extends ControlBase<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>
-  implements OnInit, AfterViewInit, OnDestroy, ActionableControl {
+  implements OnInit, AfterViewInit, OnChanges, OnDestroy, ActionableControl {
 
   @Input()
   public dropdownClass = "";
@@ -76,48 +76,28 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   @ViewChild("selectAllOption")
   public selectAllOption?: MatOption;
 
+  @ContentChild("headerTemplate", { static: true })
+  public headerTemplate: TemplateRef<any>;
+
   @ContentChild("optionTemplate", { static: true })
   public optionTemplate: TemplateRef<{ $implicit: string; option: TOption }>;
 
   @ContentChild("triggerTemplate", { static: true })
   public triggerTemplate: TemplateRef<{ $implicit: string; option: TOption | TOption[] }>;
 
+  public dropdownHeight = this.optionHeight * this.visibleOptionsCount;
+
   /**
-   * Gets selected options based on option comparer,
+   * Selected option(s) based on option comparer,
    * see {@link Field.optionId} for details
    */
-  public get selectedOption() {
-    let selectedOptions = intersectionWith(
-      this.field.options,
-      castArray(this.field.value as any as TOption),
-      this.optionComparer);
-
-    return this.multiple
-      ? selectedOptions
-      : selectedOptions.first();
-  }
+  public selectedOption: TOption | TOption[];
 
   /**
-   * Gets trigger label (text shown when option(s) selected),
+   * Trigger label (text shown when option(s) selected),
    * based on option label, see {@link Field.optionLabel} for details
    */
-  public get triggerLabel() {
-    let selectedOption = this.selectedOption;
-
-    if (Array.isArray(selectedOption)) {
-      return selectedOption.map(option => this.field.optionLabel(option)).join(", ");
-    }
-    else if (selectedOption != null) {
-      return this.field.optionLabel(selectedOption);
-    }
-    else {
-      return "";
-    }
-  }
-
-  public get dropdownHeight() {
-    return this.visibleOptionsCount * this.optionHeight;
-  }
+  public triggerLabel: string;
 
   public filterControl = new FormControl();
 
@@ -148,6 +128,9 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   public ngOnInit() {
     this.filterControl.setValue(this.filter);
 
+    // patch select trigger to show value when no options
+    this.patchSelectTrigger();
+
     // trigger "filter" pipe to refresh options since custom predicate might not be pure
     if (this.virtualization || this.field.customOptionFilterPredicate) {
       overrideFunction(
@@ -173,6 +156,11 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
         .pipe(
           debounceTime(0),
           takeUntil(this.destroy))
+        .subscribe(() => this.updateSelectAllState());
+
+      // force value refresh for the first time
+      this.select.openedChange
+        .pipe(first(), takeUntil(this.destroy))
         .subscribe(() => this.updateSelectAllState());
     }
   }
@@ -227,15 +215,11 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
           this.changeDetectorRef.markForCheck();
         });
     }
+  }
 
-    // improved selection model that relies on custom option selection
-    if (this.virtualization) {
-      overrideFunction(
-        this.select._selectionModel,
-        selectionModel => selectionModel.isEmpty,
-        () => this.selectedOption instanceof Array
-          ? this.selectedOption.length == 0
-          : !this.selectedOption);
+  public ngOnChanges(changes: SimpleChanges<this>) {
+    if (changes.visibleOptionsCount || changes.optionHeight) {
+      this.dropdownHeight = this.optionHeight * this.visibleOptionsCount;
     }
   }
 
@@ -249,11 +233,9 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   };
 
   public optionComparer = (left?: TOption, right?: TOption) => {
-    if (typeof left != typeof right) {
-      return left != null && right != null && this.field.optionValue(left) == this.field.optionValue(right);
-    }
-
-    return left != null && right != null && this.field.optionId(left) == this.field.optionId(right);
+    return left != null && right != null &&
+      (this.field.optionId(left) == this.field.optionId(right) ||
+        this.field.optionValue(left) == this.field.optionValue(right));
   };
 
   public showClearButton() {
@@ -346,13 +328,43 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
 
       this.scrollViewport.checkViewportSize();
 
-      let selectedOption = this.selectedOption instanceof Array
-        ? this.selectedOption.first()
-        : this.selectedOption;
+      let selectedOption = castArray(this.selectedOption).first();
 
       if (selectedOption) {
         this.scrollViewport.scrollToIndex(this.field.options.indexOf(selectedOption) - Math.floor((this.visibleOptionsCount / 2)));
       }
+    }
+  }
+
+  private patchSelectTrigger() {
+    Object.defineProperty(this.select, "empty", {
+      get: () => (this.select as any).__proto__.empty && !this.triggerLabel
+    });
+
+    this.updateTriggerLabel();
+
+    this.field.control.registerOnChange(() => this.updateTriggerLabel());
+
+    this.field.control.valueChanges
+      .pipe(takeUntil(this.destroy))
+      .subscribe(() => this.updateTriggerLabel());
+  }
+
+  private updateTriggerLabel() {
+    let selectedOptions = intersectionWith(
+      this.field.options,
+      castArray(this.field.value as any as TOption),
+      this.optionComparer);
+
+    this.selectedOption = this.multiple
+      ? selectedOptions
+      : selectedOptions.first();
+
+    if (this.selectedOption == null) {
+      this.triggerLabel = "";
+    }
+    else {
+      this.triggerLabel = castArray(this.selectedOption).map(option => this.field.optionLabel(option)).join(", ");
     }
   }
 }

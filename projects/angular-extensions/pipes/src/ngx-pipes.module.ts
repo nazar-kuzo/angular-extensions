@@ -6,6 +6,7 @@ import "angular-extensions/core";
 import { DatePipe } from "./date.pipe";
 import { DateTimePipe } from "./dateTime.pipe";
 import { FilterPipe } from "./filter.pipe";
+import { TrustedStylePipe } from "./trusted-style.pipe";
 import { TrustedHtmlPipe } from "./trusted-html.pipe";
 import { TrustedUrlPipe } from "./trusted-url.pipe";
 import { StartCasePipe } from "./start-case.pipe";
@@ -20,6 +21,7 @@ import { MapPipe } from "./map.pipe";
     DatePipe,
     DateTimePipe,
     FilterPipe,
+    TrustedStylePipe,
     TrustedHtmlPipe,
     TrustedUrlPipe,
     StartCasePipe,
@@ -32,6 +34,7 @@ import { MapPipe } from "./map.pipe";
     DatePipe,
     DateTimePipe,
     FilterPipe,
+    TrustedStylePipe,
     TrustedHtmlPipe,
     TrustedUrlPipe,
     StartCasePipe,
