@@ -21,17 +21,18 @@
     <mat-datepicker-toggle matSuffix
                            [for]="datePicker">
       <mat-icon matDatepickerToggleIcon
-                [matTooltip]="clearable && field.value != null ? 'Clear' : ''"
+                [matTooltip]="clearable && field.control.enabled && field.value != null ? 'Clear' : ''"
                 (click)="onToggle($event)">
-        {{ clearable && field.value != null ? 'close' : 'today' }}</mat-icon>
+        {{ clearable && field.control.enabled && field.value != null ? 'close' : 'today' }}
+      </mat-icon>
     </mat-datepicker-toggle>
 
     <mat-datepicker #datePicker
                     [restoreFocus]="false"
                     [startView]="startView"
-                    (viewChanged)="viewChanged($event, datePicker)"
-                    (yearSelected)="dateSelected($event, datePicker, targetView == 'year')"
-                    (monthSelected)="dateSelected($event, datePicker, targetView == 'month')"
+                    (viewChanged)="viewChanged($event)"
+                    (yearSelected)="targetView == 'year' && dateSelected($event)"
+                    (monthSelected)="targetView == 'month' && dateSelected($event)"
                     (opened)="datePickerOpened()"
                     (closed)="blur(); field.control.markAllAsTouched()"></mat-datepicker>
 

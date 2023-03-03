@@ -1,3 +1,4 @@
+import "@angular/forms";
 import { HttpParams } from "@angular/common/http";
 
 /**
@@ -30,4 +31,10 @@ export function patchAngularHttpParams() {
       .replace(/&{2,}/g, "&")
       .replace(/^&|&$/g, "");
   };
+}
+
+declare module "@angular/forms" {
+  export interface FormControl<TValue = any> {
+    _onChange: ((newValue: any, emitModelEvent: boolean) => void)[];
+  }
 }

@@ -100,20 +100,6 @@ ngx-mat-select-search {
   }
 }
 
-ngx-mat-datetime-content {
-  .time-container {
-    padding-bottom: 5px;
-  }
-
-  ngx-mat-timepicker form {
-    min-width: auto !important;
-  }
-
-  .actions {
-    display: none !important;
-  }
-}
-
 html,
 body {
   min-height: 100%;
@@ -123,7 +109,7 @@ body {
 
 body {
   &::-webkit-scrollbar,
-  *::-webkit-scrollbar  {
+  *::-webkit-scrollbar {
     height: 4px;
     width: 4px;
   }

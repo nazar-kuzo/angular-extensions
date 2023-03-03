@@ -6,7 +6,7 @@ import { FormControl, FormGroup } from "@angular/forms";
 import { handleError } from "angular-extensions/core";
 import { DatePipe, DateTimePipe, StartCasePipe } from "angular-extensions/pipes";
 import { Validation, ValueProvider, ValidationConstructor } from "./validation.model";
-import { NGX_DATE_FORMATS } from "./date-formats.model";
+import { NGX_DATE_FORMATS } from "./datetime-configuration.model";
 
 /**
  * Constructor object for Field class

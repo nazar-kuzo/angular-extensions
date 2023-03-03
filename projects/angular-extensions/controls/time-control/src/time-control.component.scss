@@ -1,18 +1,24 @@
 time-control {
   display: inline-block;
 
-  .mat-form-field-flex {
-    &,
-    & input {
-      cursor: pointer;
-    }
+  .mat-form-field-flex,
+  input {
+    cursor: pointer;
   }
 }
 
 .time-picker-container {
   display: none !important;
 
-  & + .time-container {
+  &+.mat-datepicker-actions {
     padding: 0 2em;
+
+    ngx-mat-timepicker form {
+      min-width: auto;
+    }
+  }
+
+  &~.mat-datepicker-close-button {
+    display: none;
   }
 }

@@ -1,28 +1,23 @@
 datetime-control {
   display: inline-block;
 
-  .mat-form-field-flex {
+  .mat-form-field-flex,
+  input {
+    cursor: pointer;
+  }
+}
 
-    &,
-    & input {
-      cursor: pointer;
+.datetime-picker-container {
+  &+.mat-datepicker-actions {
+    padding-left: 0;
+    padding-right: 0;
+
+    ngx-mat-timepicker form {
+      min-width: auto;
     }
   }
-}
 
-button.mat-calendar-body-cell {
-  position: absolute;
-  height: 100%;
-}
-
-ngx-mat-datetime-content {
-  ngx-mat-calendar {
-    height: 354px; // fixes content jump during month navigation
-  }
-
-  td.mat-calendar-body-cell {
-    position: relative;
-    height: 0;
-    font-size: 13px;
+  &~.mat-datepicker-close-button {
+    display: none;
   }
 }
