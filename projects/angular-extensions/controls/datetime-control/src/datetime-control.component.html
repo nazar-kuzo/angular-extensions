@@ -26,7 +26,8 @@
       </mat-icon>
     </mat-datepicker-toggle>
 
-    <mat-datepicker [restoreFocus]="false"
+    <mat-datepicker panelClass="datetime-picker-container"
+                    [restoreFocus]="false"
                     (opened)="datePickerOpened()"
                     (closed)="blur(); field.control.markAllAsTouched()">
       <mat-datepicker-actions>

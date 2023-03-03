@@ -100,15 +100,21 @@ ngx-mat-select-search {
   }
 }
 
-.mat-datepicker-actions {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+.datetime-picker-container {
+  .mat-datepicker-actions {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 
-  ngx-mat-timepicker form {
-    min-width: auto !important;
+    ngx-mat-timepicker form {
+      min-width: auto !important;
+    }
+
+    .actions {
+      display: none !important;
+    }
   }
 
-  .actions {
+  .mat-datepicker-close-button {
     display: none !important;
   }
 }
