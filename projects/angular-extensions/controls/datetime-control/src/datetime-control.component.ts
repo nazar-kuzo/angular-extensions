@@ -128,6 +128,8 @@ export class DateTimeControlComponent extends ControlBase<Date> {
   }
 
   public datePickerOpened() {
+    this.timePicker._model = new Date();
+
     overrideFunction(
       this.datepickerContent,
       content => content._handleUserSelection,

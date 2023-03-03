@@ -5,8 +5,8 @@ import { Platform } from "@angular/cdk/platform";
 import { MAT_DATE_LOCALE } from "@angular/material/core";
 import {MatDividerModule} from "@angular/material/divider";
 import {
-  NgxMatDatetimePickerModule, NgxMatDateAdapter,
-  NgxMatNativeDateAdapter, NGX_MAT_DATE_FORMATS, NgxMatTimepickerModule,
+  NgxMatDateAdapter, NgxMatNativeDateAdapter,
+  NGX_MAT_DATE_FORMATS, NgxMatTimepickerModule,
 } from "@angular-material-components/datetime-picker";
 
 import { NgxDirectivesModule } from "angular-extensions/directives";
@@ -46,7 +46,6 @@ export const dateTimeConfigDefaults: NgxDateTimeConfig = Object.assign({
   imports: [
     CommonModule,
     MatDividerModule,
-    NgxMatDatetimePickerModule,
     NgxMatTimepickerModule,
 
     NgxBaseControlModule,
@@ -55,7 +54,6 @@ export const dateTimeConfigDefaults: NgxDateTimeConfig = Object.assign({
   ],
   exports: [
     MatDividerModule,
-    NgxMatDatetimePickerModule,
     NgxMatTimepickerModule,
 
     NgxBaseControlModule,

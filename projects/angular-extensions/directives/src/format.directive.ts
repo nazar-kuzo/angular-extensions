@@ -1,15 +1,8 @@
-import { Directive, Input, OnInit, Optional } from "@angular/core";
+import { Directive, Input, OnInit } from "@angular/core";
 import { MatDatepickerInput } from "@angular/material/datepicker";
+
 import { MatDateFormats } from "@angular/material/core";
-import { NgxMatDatetimeInput } from "@angular-material-components/datetime-picker";
-
-interface DatePickerAdapter {
-  _dateFormats: MatDateFormats;
-
-  value: Date;
-
-  _formatValue(date: Date): void;
-}
+import { AppMatDatepickerInput } from "angular-extensions/models";
 
 /**
  * Forces date/time format in text input view
@@ -22,27 +15,25 @@ export class FormatDirective implements OnInit {
   @Input()
   public format = "";
 
-  private get picker(): DatePickerAdapter {
-    return (this.datePicker || this.dateTimePicker) as any;
-  }
+  private datePicker: AppMatDatepickerInput<Date>;
 
   constructor(
-    @Optional() private datePicker: MatDatepickerInput<Date>,
-    @Optional() private dateTimePicker: NgxMatDatetimeInput<Date>,
+    datePicker: MatDatepickerInput<Date>,
   ) {
+    this.datePicker = datePicker as any as AppMatDatepickerInput<Date>;
   }
 
   public ngOnInit() {
-    this.picker._dateFormats = Object.assign(
+    this.datePicker._dateFormats = Object.assign(
       {},
-      this.picker._dateFormats,
+      this.datePicker._dateFormats,
       {
         display: { dateInput: this.format }
       } as MatDateFormats);
 
     // trigger formatting for existing value
-    if (this.picker.value) {
-      this.picker._formatValue(this.picker.value);
+    if (this.datePicker.value) {
+      this.datePicker._formatValue(this.datePicker.value);
     }
   }
 }

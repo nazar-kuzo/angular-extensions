@@ -1,6 +1,6 @@
 import type { ComponentRef } from "@angular/core";
 import type { MatDateFormats } from "@angular/material/core";
-import type { MatDatepicker, MatDatepickerContent, MatSingleDateSelectionModel } from "@angular/material/datepicker";
+import type { MatDatepicker, MatDatepickerContent, MatDatepickerInput, MatSingleDateSelectionModel } from "@angular/material/datepicker";
 import type { NgxMatTimepickerComponent } from "@angular-material-components/datetime-picker";
 
 /**
@@ -40,4 +40,12 @@ export interface AppMatDatepicker<T> extends Omit<MatDatepicker<T>, "_model"> {
   _componentRef?: ComponentRef<MatDatepickerContent<T>>;
 
   _popupComponentRef?: ComponentRef<MatDatepickerContent<T>>;
+}
+
+export interface AppMatDatepickerInput<T> extends Omit<MatDatepickerInput<T>, "_dateFormats"> {
+  _dateFormats: MatDateFormats;
+
+  value: T;
+
+  _formatValue(date: T): void;
 }
