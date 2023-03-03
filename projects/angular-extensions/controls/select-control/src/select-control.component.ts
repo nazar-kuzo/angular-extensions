@@ -99,7 +99,7 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
    */
   public triggerLabel: string;
 
-  public filterControl = new FormControl();
+  public filterControl = new FormControl<string>("");
 
   private destroy = new Subject();
 
@@ -253,7 +253,7 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   }
 
   public clear() {
-    this.field.control.setValue(this.multiple ? [] : null);
+    this.field.control.setValue(this.multiple ? [] as any as TControlValue : null);
 
     this.select._selectionModel.deselect(...this.select._selectionModel.selected);
   }

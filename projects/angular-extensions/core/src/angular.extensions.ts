@@ -36,5 +36,7 @@ export function patchAngularHttpParams() {
 declare module "@angular/forms" {
   export interface FormControl<TValue = any> {
     _onChange: ((newValue: any, emitModelEvent: boolean) => void)[];
+
+    _onDisabledChange: ((disabled: boolean) => any)[];
   }
 }
