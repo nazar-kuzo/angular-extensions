@@ -1,28 +1,10 @@
-datetime-control {
+:host {
   display: inline-block;
 
-  .mat-form-field-flex {
-
-    &,
-    & input {
+  ::ng-deep {
+    .mat-form-field-flex,
+    input {
       cursor: pointer;
     }
-  }
-}
-
-button.mat-calendar-body-cell {
-  position: absolute;
-  height: 100%;
-}
-
-ngx-mat-datetime-content {
-  ngx-mat-calendar {
-    height: 354px; // fixes content jump during month navigation
-  }
-
-  td.mat-calendar-body-cell {
-    position: relative;
-    height: 0;
-    font-size: 13px;
   }
 }

@@ -31,3 +31,9 @@ export function patchAngularHttpParams() {
       .replace(/^&|&$/g, "");
   };
 }
+
+declare module "@angular/forms" {
+  export interface FormControl<TValue = any> {
+    _onChange: ((newValue: any, emitModelEvent: boolean) => void)[];
+  }
+}

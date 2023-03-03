@@ -2,6 +2,7 @@ import { merge, Subject, BehaviorSubject } from "rxjs";
 import { FormControl } from "@angular/forms";
 import { debounceTime, switchMap, takeUntil, tap } from "rxjs/operators";
 import { MatFormField, MatFormFieldAppearance } from "@angular/material/form-field";
+import { MatInput } from "@angular/material/input";
 
 import {
   Component, Input, ViewChild, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef,
@@ -57,7 +58,20 @@ export class ControlBase<TValue, TOption = any, TOptionGroup = any, TFormattedVa
   @Input()
   public focused = false;
 
+  @ViewChild(MatInput, { static: true })
+  public input?: MatInput;
+
   public field$ = new BehaviorSubject<Field<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>>(null);
+
+  public focus() {
+    this.input?.focus();
+  }
+
+  public blur() {
+    if (this.input) {
+      this.input.focused = false;
+    }
+  }
 }
 
 @Component({
