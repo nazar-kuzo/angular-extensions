@@ -214,7 +214,7 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
     }
   }
 
-  public ngOnChanges(changes: SimpleChanges<this>) {
+  public ngOnChanges(changes: SimpleChanges<SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>>) {
     if (changes.visibleOptionsCount || changes.optionHeight) {
       this.dropdownHeight = this.optionHeight * this.visibleOptionsCount;
     }

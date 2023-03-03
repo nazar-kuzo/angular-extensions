@@ -43,6 +43,15 @@
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "strictTemplates": true
+    "strictTemplates": true,
+    "strictNullInputTypes": true,
+    "strictInputTypes": true,
+    "strictAttributeTypes": true,
+    "strictOutputEventTypes": true,
+    "strictContextGenerics": true,
+    "strictLiteralTypes": true,
+    "strictDomEventTypes": true,
+    "strictDomLocalRefTypes": true,
+    "strictSafeNavigationTypes": true,
   }
 }

@@ -1,7 +1,6 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { CustomPaginatorDirective } from "./custom-paginator.directive";
-import { DateTimePickerDirective } from "./datetime-picker.directive";
 import { FormatDirective } from "./format.directive";
 import { TooltipImprovementsDirective } from "./tooltip-improvements.directive";
 
@@ -11,7 +10,6 @@ import { TooltipImprovementsDirective } from "./tooltip-improvements.directive";
   ],
   declarations: [
     CustomPaginatorDirective,
-    DateTimePickerDirective,
     FormatDirective,
     TooltipImprovementsDirective,
   ],
@@ -19,7 +17,6 @@ import { TooltipImprovementsDirective } from "./tooltip-improvements.directive";
     CommonModule,
 
     CustomPaginatorDirective,
-    DateTimePickerDirective,
     FormatDirective,
     TooltipImprovementsDirective,
   ]

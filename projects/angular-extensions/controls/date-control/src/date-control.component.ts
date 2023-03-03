@@ -2,24 +2,13 @@ import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component,
   ComponentRef, ElementRef, Inject, Input, OnChanges, ViewChild,
 } from "@angular/core";
-import {
-  MatCalendarHeader, MatCalendarView, MatDatepicker,
-  MatDatepickerContent, MatSingleDateSelectionModel,
-} from "@angular/material/datepicker";
+import { MatCalendarHeader, MatCalendarView, MatDatepicker, MatDatepickerContent } from "@angular/material/datepicker";
 import { MatDateFormats, MAT_DATE_FORMATS } from "@angular/material/core";
 import type { CdkPortalOutlet } from "@angular/cdk/portal";
 
 import { overrideFunction, SimpleChanges } from "angular-extensions/core";
 import { ControlBase } from "angular-extensions/controls/base-control";
-
-interface AppMatDatepicker<T> {
-
-  _model: MatSingleDateSelectionModel<T>;
-
-  _componentRef?: ComponentRef<MatDatepickerContent<T>>;
-
-  _popupComponentRef?: ComponentRef<MatDatepickerContent<T>>;
-}
+import { AppMatDatepicker } from "angular-extensions/models";
 
 @Component({
   selector: "date-control",
@@ -44,7 +33,11 @@ export class DateControlComponent<TOption, TOptionGroup, TFormattedValue, TContr
   public clearable: boolean;
 
   @ViewChild(MatDatepicker, { static: true })
-  public datePicker: MatDatepicker<any>;
+  public datePicker: AppMatDatepicker<Date>;
+
+  private get datepickerContent(): MatDatepickerContent<Date> | null {
+    return (this.datePicker._componentRef || this.datePicker._popupComponentRef)?.instance;
+  }
 
   constructor(
     private elementRef: ElementRef<HTMLElement>,
@@ -55,9 +48,10 @@ export class DateControlComponent<TOption, TOptionGroup, TFormattedValue, TContr
 
     this.format = dateFormats.display.dateInput;
 
+    // avoid datepicker input blur while popup is open
     elementRef
       .nativeElement
-      .addEventListener("blur", event => event.stopPropagation(), { capture: true });
+      .addEventListener("blur", event => this.datepickerContent && event.stopPropagation(), { capture: true });
   }
 
   public ngOnChanges(changes: SimpleChanges<DateControlComponent<TOption, TOptionGroup, TFormattedValue, TControlValue>>) {
@@ -87,26 +81,24 @@ export class DateControlComponent<TOption, TOptionGroup, TFormattedValue, TContr
     event.preventDefault();
   }
 
-  public dateSelected(date: Date, datePicker: MatDatepicker<Date>, isTargetView = false) {
-    if (isTargetView) {
-      (this.datePicker as any as AppMatDatepicker<Date>)._model.add(date.withoutTimezone());
+  public dateSelected(date: Date) {
+    this.datePicker._model.add(date.withoutTimezone());
 
-      datePicker.close();
+    this.datePicker.close();
 
-      // hide content since we cannot prevent currentView showing next view
-      if (this.getDatepickerContent(datePicker as any)) {
-        (this.getDatepickerContent(datePicker as any)._elementRef.nativeElement as HTMLElement).style.display = "none";
-      }
-
-      this.changeDetectorRef.markForCheck();
+    // hide content since we cannot prevent currentView showing next view
+    if (this.datepickerContent) {
+      (this.datepickerContent._elementRef.nativeElement as HTMLElement).style.display = "none";
     }
+
+    this.changeDetectorRef.markForCheck();
   }
 
-  public viewChanged(view: MatCalendarView, datePicker: MatDatepicker<Date>) {
+  public viewChanged(view: MatCalendarView) {
     // fix issue when clicking on year selector it shows "month" view which is not correct
     if (this.targetView == "month" && view == "month") {
-      if (this.getDatepickerContent(datePicker as any)) {
-        this.getDatepickerContent(datePicker as any)._calendar.currentView = "multi-year";
+      if (this.datepickerContent) {
+        this.datepickerContent._calendar.currentView = "multi-year";
       }
 
       this.changeDetectorRef.markForCheck();
@@ -114,34 +106,23 @@ export class DateControlComponent<TOption, TOptionGroup, TFormattedValue, TContr
   }
 
   public onToggle(event: MouseEvent) {
-    if (this.clearable && this.field.value != null) {
+    if (this.clearable && this.field.control.enabled && this.field.value != null) {
       this.field.control.setValue(null);
 
-      this.blur();
+      this.field.control.markAsTouched({ onlySelf: true });
 
       event.preventDefault();
       event.stopImmediatePropagation();
 
       this.changeDetectorRef.markForCheck();
     }
-
-    (document.activeElement as HTMLElement).blur();
+    else {
+      this.focus();
+    }
   }
 
   public datePickerOpened() {
-    let datePickerContent = this.getDatepickerContent(this.datePicker as any);
-
-    setTimeout(() => {
-      this.tryPatchPeriodButton(datePickerContent);
-    });
-  }
-
-  public blur() {
-    (this.datePicker.datepickerInput as any)._formField._control.focused = false;
-  }
-
-  private getDatepickerContent(datePicker: AppMatDatepicker<Date>): MatDatepickerContent<Date> | null {
-    return (datePicker._componentRef || datePicker._popupComponentRef)?.instance;
+    setTimeout(() => this.tryPatchPeriodButton(this.datepickerContent));
   }
 
   private tryPatchPeriodButton(datePickerContent: MatDatepickerContent<Date, Date>) {
