@@ -9,19 +9,15 @@ datetime-control {
 
 .datetime-picker-container {
   &+.mat-datepicker-actions {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+    padding-left: 0;
+    padding-right: 0;
 
     ngx-mat-timepicker form {
-      min-width: auto !important;
-    }
-
-    .actions {
-      display: none !important;
+      min-width: auto;
     }
   }
 
   &~.mat-datepicker-close-button {
-    display: none !important;
+    display: none;
   }
 }

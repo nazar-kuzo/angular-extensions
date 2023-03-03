@@ -12,28 +12,38 @@
     </mat-hint>
 
     <input matInput
-           #input
            readonly
-           [format]="'HH:mm'"
+           [format]="format"
            [formControl]="field.control"
-           [ngxMatDatetimePicker]="timePicker">
+           [matDatepicker]="datePicker">
 
     <mat-datepicker-toggle matSuffix
-                           [for]="$any(timePicker)">
+                           [for]="datePicker">
       <mat-icon matDatepickerToggleIcon
-                [matTooltip]="clearable && field.value != null ? 'Clear' : ''"
+                [matTooltip]="clearable && field.control.enabled && field.value != null ? 'Clear' : ''"
                 (click)="onToggle($event)">
-        {{ clearable && field.value != null ? 'close' : 'schedule' }}
+        {{ clearable && field.control.enabled && field.value != null ? 'close' : 'today' }}
       </mat-icon>
     </mat-datepicker-toggle>
 
-    <ngx-mat-datetime-picker #timePicker
-                             panelClass="time-picker-container"
-                             [color]="'primary'"
-                             [stepMinute]="15"
-                             [defaultTime]="initialTime"
-                             (closed)="field.control.markAllAsTouched()">
-    </ngx-mat-datetime-picker>
+    <mat-datepicker panelClass="time-picker-container"
+                    [restoreFocus]="false"
+                    (opened)="datePickerOpened()"
+                    (closed)="blur(); field.control.markAllAsTouched()">
+      <mat-datepicker-actions>
+        <div class="w-100 d-flex flex-column align-items-center">
+          <mat-divider class="w-100 mb-2"></mat-divider>
+
+          <ngx-mat-timepicker [formControl]="field.control"
+                              [color]="'primary'"
+                              [stepMinute]="15"
+                              [disableMinute]="disableMinute"
+                              [defaultTime]="initialTime"
+                              [showSeconds]="showSeconds"
+                              (ngModelChange)="datePicker._model.add($event)"></ngx-mat-timepicker>
+        </div>
+      </mat-datepicker-actions>
+    </mat-datepicker>
 
     <mat-error *ngIf="baseControl.initialized">
       <ng-container *ngTemplateOutlet="baseControl.errorsTemplate"></ng-container>
