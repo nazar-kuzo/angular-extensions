@@ -100,25 +100,6 @@ ngx-mat-select-search {
   }
 }
 
-.datetime-picker-container {
-  .mat-datepicker-actions {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-
-    ngx-mat-timepicker form {
-      min-width: auto !important;
-    }
-
-    .actions {
-      display: none !important;
-    }
-  }
-
-  .mat-datepicker-close-button {
-    display: none !important;
-  }
-}
-
 html,
 body {
   min-height: 100%;
@@ -128,7 +109,7 @@ body {
 
 body {
   &::-webkit-scrollbar,
-  *::-webkit-scrollbar  {
+  *::-webkit-scrollbar {
     height: 4px;
     width: 4px;
   }

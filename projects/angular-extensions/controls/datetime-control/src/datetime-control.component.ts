@@ -1,6 +1,6 @@
 import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component,
-  ElementRef, Inject, Input, ViewChild,
+  ElementRef, Inject, Input, ViewChild, ViewEncapsulation,
 } from "@angular/core";
 import { MatDateFormats, MAT_DATE_FORMATS } from "@angular/material/core";
 import { MatCalendarUserEvent, MatDatepicker, MatDatepickerContent } from "@angular/material/datepicker";
@@ -58,6 +58,7 @@ addTimepickerNullableModelSupport();
   selector: "datetime-control",
   templateUrl: "./datetime-control.component.html",
   styleUrls: ["./datetime-control.component.scss"],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DateTimeControlComponent extends ControlBase<Date> {

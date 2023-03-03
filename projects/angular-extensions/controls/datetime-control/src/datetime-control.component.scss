@@ -1,10 +1,27 @@
-:host {
+datetime-control {
   display: inline-block;
 
-  ::ng-deep {
-    .mat-form-field-flex,
-    input {
-      cursor: pointer;
+  .mat-form-field-flex,
+  input {
+    cursor: pointer;
+  }
+}
+
+.datetime-picker-container {
+  &+.mat-datepicker-actions {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+
+    ngx-mat-timepicker form {
+      min-width: auto !important;
     }
+
+    .actions {
+      display: none !important;
+    }
+  }
+
+  &~.mat-datepicker-close-button {
+    display: none !important;
   }
 }
