@@ -1,5 +1,5 @@
 import { remove } from "lodash-es";
-import { forkJoin, Observable } from "rxjs";
+import { forkJoin, Observable, Subject } from "rxjs";
 import { first, tap } from "rxjs/operators";
 import { FormGroup, AbstractControl, FormArray, ValidationErrors } from "@angular/forms";
 
@@ -11,6 +11,8 @@ import { Field } from "./field.model";
 export class Form {
 
   private _fields: Field<any>[] = [];
+
+  public readonly destroy$ = new Subject();
 
   /**
    * Provides all registered fields for this form
@@ -215,6 +217,9 @@ export class Form {
    */
   public destroy() {
     this._fields.forEach(field => field.destroy());
+
+    this.destroy$.next(null);
+    this.destroy$.complete();
   }
 }
 
@@ -222,6 +227,10 @@ export class Form {
  * Base editor model that dedicated page editors should derive from. Used by {@link Form}
  */
 export abstract class BaseEditor {
+
+  public get destroy$() {
+    return this.form.destroy$;
+  }
 
   public form: Form;
 

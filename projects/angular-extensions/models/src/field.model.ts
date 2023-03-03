@@ -1,6 +1,6 @@
 import { xorBy } from "lodash-es";
 import { Observable, of, Subject } from "rxjs";
-import { catchError, filter as filterPredicate, first, pairwise, startWith, takeUntil } from "rxjs/operators";
+import { catchError, filter as filterPredicate, first, map, pairwise, startWith, takeUntil } from "rxjs/operators";
 import { FormControl, FormGroup } from "@angular/forms";
 
 import { handleError } from "angular-extensions/core";
@@ -148,15 +148,15 @@ export class Option<TValue, TId = string> {
 /**
  * Provides simplified api to work with Angular reactive forms and predefined control components.
  */
-export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue = any, TControlValue = any> {
+export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue = any, TControlValue = TValue> {
 
   private optionChanges$ = new Subject<TOption[]>();
-
-  private destroy$ = new Subject();
 
   private _options: TOption[] = [];
 
   public _initialStatus: { disabled: boolean };
+
+  public readonly destroy$ = new Subject();
 
   /**
    * Angular FormControl of field. Control components communicates via this control between Field and UI
@@ -201,7 +201,10 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
   /**
    * Field's Control value converter, conversion is done whenever value is being read from/written to a {@link control}.
    */
-  public controlConverter: FieldControlValueConverter<TValue, TControlValue>;
+  public controlConverter: FieldControlValueConverter<TValue, TControlValue> = {
+    fromControlValue: controlValue => controlValue as any as TValue,
+    toControlValue: value => value as any as TControlValue,
+  };
 
   /**
    * Configures when field should be visible, by default is always visible.
@@ -241,9 +244,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
    * Gets field's value. Applies conversion if specified at {@link controlConverter}.
    */
   public get value() {
-    return this.controlConverter
-      ? this.controlConverter.fromControlValue(this.control.value)
-      : this.control.value as TValue;
+    return this.controlConverter.fromControlValue(this.control.value);
   }
 
   /**
@@ -251,9 +252,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
    * If previous value is the same as current value, {@link onValueChange} wont emit changes
    */
   public set value(value: TValue) {
-    let convertedValue = this.controlConverter
-      ? this.controlConverter.toControlValue(value)
-      : value;
+    let convertedValue = this.controlConverter.toControlValue(value);
 
     if (convertedValue != this.control.value) {
       this.control.setValue(convertedValue, { onlySelf: true });
@@ -337,7 +336,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
   /**
    * Custom option value provider that is used by select-control
    */
-  public optionValue: (option: TOption) => TValue;
+  public optionValue: (option: TOption) => TControlValue;
 
   /**
    * Custom option availability provider that is used by select-control
@@ -364,7 +363,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
 
     this.control = new FormControl(
       {
-        value: props.value,
+        value: this.controlConverter.toControlValue(props.value),
 
         // suppresses validation that might have dependencies
         // on other fields that are not currently instantiated
@@ -406,6 +405,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
         .valueChanges
         .pipe(
           filterPredicate(() => this.control.enabled),
+          map(this.controlConverter.fromControlValue),
           startWith(props.value),
           pairwise(),
           takeUntil(this.destroy$),
@@ -478,15 +478,15 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
   ) {
     return new Promise<void>(resolve => {
       let optionsProvider = () => {
-        if (this.value instanceof Array) {
+        if (this.control.value instanceof Array) {
           let value = this.options.filter(optionPredicate).map(this.optionValue);
 
           if (xorBy(this.control.value, value, this.optionId as any).length > 0) {
-            this.control.setValue(value, { emitEvent: config.emitEvent });
+            this.control.setValue(value as any as TControlValue, { emitEvent: config.emitEvent });
           }
         }
         else {
-          let value = this.optionValue(this.options.find(optionPredicate)) ?? config.defaultValue;
+          let value = this.optionValue(this.options.find(optionPredicate)) ?? this.controlConverter.toControlValue(config.defaultValue);
 
           if (value != null && this.control.value != null &&
             this.optionId(value as any)?.valueOf() !== this.optionId(this.control.value as any)?.valueOf()
