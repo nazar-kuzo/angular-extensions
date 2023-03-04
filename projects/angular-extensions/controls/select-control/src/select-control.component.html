@@ -64,7 +64,7 @@
           <ng-container *ngIf="!field.optionsGroupProvider">
             <ng-container *ngIf="virtualization">
               <cdk-virtual-scroll-viewport [itemSize]="optionHeight"
-                                           [style.height.px]="this.searchable ? this.dropdownHeight - this.optionHeight : this.dropdownHeight">
+                                           [style.height.px]="viewportHeight">
                 <mat-option *cdkVirtualFor="let option of options; trackBy : optionTracker"
                             [style.height.px]="optionHeight"
                             [value]="option | map : field.optionValue"
