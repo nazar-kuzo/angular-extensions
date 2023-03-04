@@ -87,6 +87,11 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
 
   public dropdownHeight = this.optionHeight * this.visibleOptionsCount;
 
+  public get viewportHeight() {
+    return this.dropdownHeight -
+      (this.searchable ? this.optionHeight : 0) -
+      (this.selectAllOption ? this.optionHeight + 15 : 0);
+  }
   /**
    * Selected option(s) based on option comparer,
    * see {@link Field.optionId} for details
