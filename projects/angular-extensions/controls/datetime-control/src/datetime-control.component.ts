@@ -19,7 +19,7 @@ function addTimepickerNullableModelSupport() {
   overrideFunction(
     NgxMatTimepickerComponent.prototype as any as AppNgxMatTimepickerComponent<any>,
     timePicker => timePicker.writeValue,
-    (writeValue, timePicker, value: Date) => {
+    (writeValue, timePicker, value) => {
       if (!value) {
         timePicker._model = value;
 
@@ -37,7 +37,7 @@ function improveTimepickerStepper() {
   overrideFunction(
     NgxMatTimepickerComponent.prototype as any as AppNgxMatTimepickerComponent<any>,
     timePicker => timePicker._getNextValueByProp,
-    (getNextValueByProp, timePicker, property: string, up?: boolean) => {
+    (getNextValueByProp, timePicker, property, up) => {
       let keyProp = property[0].toUpperCase() + property.slice(1);
 
       let result = getNextValueByProp(property, up);
@@ -133,7 +133,7 @@ export class DateTimeControlComponent extends ControlBase<Date> {
     overrideFunction(
       this.datepickerContent,
       content => content._handleUserSelection,
-      (handleUserSelection, _, event: MatCalendarUserEvent<Date>) => {
+      (handleUserSelection, _, event) => {
         handleUserSelection(event);
 
         let timeValues = [this.timePicker.hour, this.timePicker.minute, this.timePicker.second];

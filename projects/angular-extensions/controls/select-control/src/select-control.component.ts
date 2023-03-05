@@ -1,15 +1,16 @@
-import { castArray, intersectionWith } from "lodash-es";
-import { Subject, of, merge } from "rxjs";
-import { catchError, debounceTime, filter, first, switchMap, takeUntil, tap } from "rxjs/operators";
+import { castArray } from "lodash-es";
+import { Subject, of } from "rxjs";
+import { catchError, debounceTime, filter, first, startWith, switchMap, takeUntil, tap } from "rxjs/operators";
 import {
   Component, OnInit, Input, Optional, ElementRef, ChangeDetectorRef,
-  ViewChild, OnDestroy, AfterViewInit, ContentChild, TemplateRef, ChangeDetectionStrategy, Output, EventEmitter, NgZone, OnChanges,
+  ViewChild, OnDestroy, ContentChild, TemplateRef, ChangeDetectionStrategy, Output, EventEmitter, NgZone, OnChanges,
 } from "@angular/core";
-import { MatOption } from "@angular/material/core";
-import { MatSelect } from "@angular/material/select";
+import { AppMatOption, MatOption } from "@angular/material/core";
+import { AppMatSelect, MatSelect } from "@angular/material/select";
 import { FormControl } from "@angular/forms";
 import { MatMenuTrigger } from "@angular/material/menu";
 import { CdkVirtualScrollViewport } from "@angular/cdk/scrolling";
+import { SelectionModel } from "@angular/cdk/collections";
 
 import { Field } from "angular-extensions/models";
 import { overrideFunction, SimpleChanges } from "angular-extensions/core";
@@ -23,7 +24,7 @@ import { ActionableControl, ControlBase } from "angular-extensions/controls/base
 })
 export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>
   extends ControlBase<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>
-  implements OnInit, AfterViewInit, OnChanges, OnDestroy, ActionableControl {
+  implements OnInit, OnChanges, OnDestroy, ActionableControl {
 
   @Input()
   public dropdownClass = "";
@@ -67,14 +68,14 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   @Output()
   public actionButton = new EventEmitter<Field<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>>();
 
-  @ViewChild("select", { static: true })
-  public select: MatSelect;
+  @ViewChild(MatSelect, { static: true })
+  public select: AppMatSelect;
 
   @ViewChild(CdkVirtualScrollViewport)
   public scrollViewport?: CdkVirtualScrollViewport;
 
   @ViewChild("selectAllOption")
-  public selectAllOption?: MatOption;
+  public selectAllOption?: AppMatOption;
 
   @ContentChild("headerTemplate", { static: true })
   public headerTemplate: TemplateRef<any>;
@@ -106,6 +107,8 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
 
   public filterControl = new FormControl<string>("");
 
+  private selection: SelectionModel<TOption>;
+
   private destroy = new Subject();
 
   constructor(
@@ -133,89 +136,15 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   public ngOnInit() {
     this.filterControl.setValue(this.filter);
 
-    // patch select trigger to show value when no options
+    this.selection = new SelectionModel<TOption>(this.multiple, [], true);
+
     this.patchSelectTrigger();
-
-    // trigger "filter" pipe to refresh options since custom predicate might not be pure
-    if (this.virtualization || this.field.customOptionFilterPredicate) {
-      overrideFunction(
-        this.select,
-        select => select.open,
-        (open, select) => {
-          if ((select as any)._canOpen()) {
-            if (this.field.customOptionFilterPredicate) {
-              this.field.options = [...this.field.options];
-            }
-
-            if (this.virtualization) {
-              this.ngZone.onStable.pipe(first()).subscribe(() => this.updateViewport());
-            }
-          }
-
-          open();
-        });
-    }
-  }
-
-  public ngAfterViewInit() {
-    this.select.options.changes
-      .pipe(
-        filter(() => !!this.field.optionDisplayLabel),
-        takeUntil(this.destroy))
-      .subscribe((options: MatOption[]) => {
-        options.forEach(option => {
-          Object.defineProperty(option, nameOf(() => option.viewValue), {
-            get: () => this.field.optionDisplayLabel(option.value as TOption),
-            configurable: true,
-          });
-        });
-      });
-
-    if (this.searchable) {
-      if (this.multiple) {
-        // fixing issue with select control not propagating
-        // changes to model when options filtering is applied
-        overrideFunction(
-          this.select,
-          select => (select as any)._initializeSelection,
-          (_, select) => {
-            Promise.resolve().then(() => {
-              (select as any)._setSelectionByValue([...(select.ngControl.value || []), ...((select as any)._value || [])]);
-              select.stateChanges.next();
-            });
-          });
-      }
-
-      this.filterControl.valueChanges
-        .pipe(
-          filter((query: string) => query != "" && !!this.field.optionsProvider),
-          tap(() => {
-            this.field.options = [];
-            this.field.isQuerying = true;
-
-            this.changeDetectorRef.markForCheck();
-          }),
-          debounceTime(300),
-          switchMap((query: string) => !!query
-            ? this.field.optionsProvider(query).pipe(catchError(() => of([] as TOption[])))
-            : of([])),
-          takeUntil(this.destroy))
-        .subscribe(options => {
-          this.field.options = options;
-          this.field.isQuerying = false;
-
-          this.changeDetectorRef.markForCheck();
-        });
-    }
+    this.addCustomSelectionModel();
+    this.addOptionsFilteringSupport();
+    this.updateOptionsAndViewportOnMenuOpen();
 
     if (this.multiple && this.showSelectAll) {
-      this.updateSelectAllState();
-
-      merge(this.field.control.statusChanges, this.select.optionSelectionChanges)
-        .pipe(debounceTime(0), takeUntil(this.destroy))
-        .subscribe(() => {
-          this.updateSelectAllState();
-        });
+      this.updateSelectAllStateOnSelectionChanges();
     }
   }
 
@@ -235,20 +164,11 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   };
 
   public optionComparer = (left?: TOption, right?: TOption) => {
-    return left != null && right != null &&
-      (this.field.optionId(left) == this.field.optionId(right) ||
-        this.field.optionValue(left) == this.field.optionValue(right));
+    return left != null && right != null && this.field.optionId(left) == this.field.optionId(right);
   };
 
   public showClearButton() {
-    let isVisible = this.clearable && !this.field.isQuerying;
-
-    if (this.multiple && Array.isArray(this.field.value)) {
-      return isVisible && this.field.value.length > 0;
-    }
-    else {
-      return isVisible && this.field.value != null;
-    }
+    return this.clearable && !this.field.isQuerying && this.selection.hasValue();
   }
 
   public isSearchAvailable() {
@@ -259,114 +179,213 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
 
   public clear() {
     this.field.control.setValue(this.multiple ? [] as any as TControlValue : null);
+    this.field.control.markAsTouched({ onlySelf: true });
 
-    this.select._selectionModel.deselect(...this.select._selectionModel.selected);
+    this.select._selectionModel.clear(false);
+
+    this.changeDetectorRef.markForCheck();
   }
 
   public toggleSelectAll() {
-    let shouldSelect = !this.getSelectAllState();
+    let shouldSelect = this.selection.selected.length != this.field.options.length;
 
-    let options = this.select.options
+    let options = this.field.options
+      .filter(option => !this.field.optionDisabled(option));
+
+    let matOptions = this.select.options
       .filter(option => !option.disabled && option.id != this.selectAllOption?.id);
 
-    options
+    (matOptions as any as AppMatOption<any>[])
       .forEach(option => {
-        if (shouldSelect) {
-          (option as any)._selected = true;
-        }
-        else {
-          (option as any)._selected = false;
-        }
-
-        (option as any)._changeDetectorRef.markForCheck();
+        option._selected = shouldSelect;
+        option._changeDetectorRef.markForCheck();
       });
 
     if (shouldSelect) {
-      this.select._selectionModel.select(...options);
+      this.selection.select(...options);
+      this.select._selectionModel.select(...matOptions);
     }
     else {
-      this.select._selectionModel.deselect(...options);
+      this.selection.deselect(...options);
+      this.select._selectionModel.deselect(...matOptions);
     }
 
-    (this.select as any)._propagateChanges();
+    this.select._propagateChanges();
+
     this.changeDetectorRef.markForCheck();
-
-    this.updateSelectAllState();
   }
 
-  private getSelectAllState() {
-    let selectedOptions = this.select.selected as MatOption[];
+  /**
+   * Store selected values in separate model to avoid mutations when virtualization applies.
+   * Extend changes propagation with values stored in custom selection model.
+   * Listens to control value changes in order to update selection.
+   */
+  private addCustomSelectionModel() {
+    overrideFunction(
+      this.select,
+      select => select._onSelect,
+      (onSelect, _, matOption, isUserInput) => {
+        if (isUserInput) {
+          let fieldOption = this.field.options.find(option => this.field.optionValue(option).valueOf() == matOption.value.valueOf());
 
-    return !selectedOptions?.length
-      ? false
-      : selectedOptions.length === this.field.options?.length
-        ? true : null;
+          if (matOption.selected) {
+            this.selection.select(fieldOption);
+          }
+          else {
+            this.selection.deselect(fieldOption);
+          }
+        }
+
+        onSelect(matOption, isUserInput);
+      });
+
+    overrideFunction(
+      this.select,
+      select => select._propagateChanges,
+      (_, select, fallbackValue) => {
+        let valueToEmit = this.selection.hasValue
+          ? this.multiple
+            ? this.selection.selected.map(this.field.optionValue)
+            : this.field.optionValue(this.selection.selected.first())
+          : fallbackValue;
+
+        select._value = valueToEmit;
+        select.valueChange.emit(valueToEmit);
+        select._onChange(valueToEmit);
+        select.selectionChange.emit(select._getChangeEvent(valueToEmit));
+        select._changeDetectorRef.markForCheck();
+      });
+
+    this.field$
+      .pipe(switchMap(field => field.control.valueChanges), startWith(this.field.control.value), takeUntil(this.destroy))
+      .subscribe(value => {
+        let values = castArray(value);
+        let matchedOptions = this.field.options.filter(option => values.contains(this.field.optionValue(option)));
+
+        this.selection.clear(matchedOptions.length == 0);
+
+        if (matchedOptions.length > 0) {
+          this.selection.select(...matchedOptions);
+        }
+      });
   }
 
-  private updateSelectAllState() {
-    let selected = this.getSelectAllState();
-
-    if (this.selectAllOption) {
-      let matCheckbox = ((this.selectAllOption as any)._element.nativeElement as HTMLElement)
-        .querySelector("mat-pseudo-checkbox");
-
-      if (selected == null) {
-        matCheckbox?.classList.remove("mat-pseudo-checkbox-checked");
-
-        matCheckbox?.classList.add("mat-pseudo-checkbox-indeterminate");
-      }
-      else {
-        matCheckbox?.classList.remove("mat-pseudo-checkbox-indeterminate");
-
-        matCheckbox?.classList.toggle("mat-pseudo-checkbox-checked", selected);
-      }
-    }
-  }
-
-  private updateViewport() {
-    if (this.scrollViewport) {
-      (this.select.panel.nativeElement as HTMLElement).style.height = `${this.dropdownHeight}px`;
-      (this.select.panel.nativeElement as HTMLElement).style.maxHeight = `${this.dropdownHeight}px`;
-
-      this.scrollViewport.checkViewportSize();
-
-      let selectedOption = castArray(this.selectedOption).first();
-
-      if (selectedOption) {
-        this.scrollViewport.scrollToIndex(this.field.options.indexOf(selectedOption) - Math.floor((this.visibleOptionsCount / 2)));
-      }
-    }
-  }
-
+  /**
+   * Delegates "empty" state detection to custom selection model.
+   * Updates select trigger label based on custom selection model.
+   */
   private patchSelectTrigger() {
     Object.defineProperty(this.select, "empty", {
-      get: () => (this.select as any).__proto__.empty && !this.triggerLabel
+      get: () => !this.selection.hasValue()
     });
 
-    this.updateTriggerLabel();
+    this.selection.changed
+      .pipe(startWith(this.selection.selected), debounceTime(0), takeUntil(this.destroy))
+      .subscribe(() => {
+        this.selectedOption = this.multiple
+          ? this.selection.selected
+          : this.selection.selected.first();
 
-    this.field.control.registerOnChange(() => this.updateTriggerLabel());
+        this.triggerLabel = this.selection.hasValue()
+          ? this.selection.selected.map(this.field.optionDisplayLabel || this.field.optionLabel).join(", ")
+          : null;
 
-    merge(this.field.control.valueChanges, this.field.control.statusChanges)
-      .pipe(debounceTime(0), takeUntil(this.destroy))
-      .subscribe(() => this.updateTriggerLabel());
+        this.select.stateChanges.next();
+
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
-  private updateTriggerLabel() {
-    let selectedOptions = intersectionWith(
-      this.field.options,
-      castArray(this.field.value as any as TOption),
-      this.optionComparer);
+  /**
+   * Trigger "filter" pipe to refresh options since custom predicate might not be pure.
+   * Recalculates virtualization viewport size.
+   */
+  private updateOptionsAndViewportOnMenuOpen() {
+    overrideFunction(
+      this.select,
+      select => select.open,
+      (open, select) => {
+        if (select._canOpen()) {
+          if (this.field.customOptionFilterPredicate) {
+            this.field.options = [...this.field.options];
+          }
 
-    this.selectedOption = this.multiple
-      ? selectedOptions
-      : selectedOptions.first();
+          if (this.virtualization) {
+            this.ngZone.onStable.pipe(first()).subscribe(() => {
+              if (this.scrollViewport) {
+                this.select.panel.nativeElement.style.height = `${this.dropdownHeight}px`;
+                this.select.panel.nativeElement.style.maxHeight = `${this.dropdownHeight}px`;
 
-    if (this.selectedOption == null) {
-      this.triggerLabel = "";
-    }
-    else {
-      this.triggerLabel = castArray(this.selectedOption).map(option => this.field.optionLabel(option)).join(", ");
-    }
+                this.scrollViewport.checkViewportSize();
+
+                if (this.selection.hasValue()) {
+                  let selectedOptionIndex = this.field.options.indexOf(this.selection.selected.first()) -
+                    Math.floor((this.visibleOptionsCount / 2));
+
+                  this.scrollViewport.scrollToIndex(selectedOptionIndex);
+                }
+              }
+            });
+          }
+        }
+
+        open();
+      });
+  }
+
+  /**
+   * Updates select all state on selection changes.
+   */
+  private updateSelectAllStateOnSelectionChanges() {
+    this.selection.changed
+      .pipe(startWith(this.selection.selected), debounceTime(0), takeUntil(this.destroy))
+      .subscribe(() => {
+        let selected = !this.selection.selected.length
+          ? false
+          : this.selection.selected.length === this.field.options?.length
+            ? true : null;
+
+        if (this.selectAllOption) {
+          let matCheckbox = this.selectAllOption._element.nativeElement
+            .querySelector("mat-pseudo-checkbox");
+
+          if (selected == null) {
+            matCheckbox.classList.remove("mat-pseudo-checkbox-checked");
+
+            matCheckbox.classList.add("mat-pseudo-checkbox-indeterminate");
+          }
+          else {
+            matCheckbox.classList.remove("mat-pseudo-checkbox-indeterminate");
+
+            matCheckbox.classList.toggle("mat-pseudo-checkbox-checked", selected);
+          }
+        }
+      });
+  }
+
+  /**
+   * Hooks up the <ngx-mat-select-search> MatOption and provides filtered field option
+   */
+  private addOptionsFilteringSupport() {
+    this.filterControl.valueChanges
+      .pipe(
+        filter((query: string) => query != "" && !!this.field.optionsProvider),
+        tap(() => {
+          this.field.options = [];
+          this.field.isQuerying = true;
+
+          this.changeDetectorRef.markForCheck();
+        }),
+        debounceTime(300),
+        switchMap((query: string) => !!query
+          ? this.field.optionsProvider(query).pipe(catchError(() => of<TOption[]>([])))
+          : of([])),
+        takeUntil(this.destroy))
+      .subscribe(options => {
+        this.field.options = options;
+        this.field.isQuerying = false;
+
+        this.changeDetectorRef.markForCheck();
+      });
   }
 }

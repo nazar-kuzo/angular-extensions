@@ -1,5 +1,7 @@
-import "@angular/forms";
 import { HttpParams } from "@angular/common/http";
+import type { ChangeDetectorRef, ElementRef } from "@angular/core";
+import type { MatOption } from "@angular/material/core";
+import type { MatSelect as MatSelectBase, MatSelectChange as MatSelectChangeEvent } from "@angular/material/select";
 
 /**
  * Generic representation of Angular SimpleChange
@@ -38,5 +40,33 @@ declare module "@angular/forms" {
     _onChange: ((newValue: any, emitModelEvent: boolean) => void)[];
 
     _onDisabledChange: ((disabled: boolean) => any)[];
+  }
+}
+
+declare module "@angular/material/core" {
+  export interface AppMatOption<T = any> extends Omit<MatOption<T>, "_element" | "_selected" | "_changeDetectorRef"> {
+    _element: ElementRef<HTMLElement>;
+
+    _selected: boolean;
+
+    _changeDetectorRef: ChangeDetectorRef;
+  }
+}
+
+declare module "@angular/material/select" {
+  export interface AppMatSelect extends Omit<MatSelectBase, "_propagateChanges" | "_changeDetectorRef"> {
+    _value: any;
+
+    _changeDetectorRef: ChangeDetectorRef;
+
+    panel: ElementRef<HTMLElement>;
+
+    _canOpen(): boolean;
+
+    _propagateChanges(fallbackValue?: any): void;
+
+    _onSelect(matOption: MatOption<any>, isUserInput: boolean): void;
+
+    _getChangeEvent(value: any): MatSelectChangeEvent;
   }
 }

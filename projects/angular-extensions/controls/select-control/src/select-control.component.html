@@ -10,8 +10,7 @@
       <ng-container *ngTemplateOutlet="baseControl.hintTemplate"></ng-container>
     </mat-hint>
 
-    <mat-select #select
-                [panelClass]="'custom-scroll ' + dropdownClass"
+    <mat-select [panelClass]="'custom-scroll ' + dropdownClass"
                 [ngClass]="{ loading: field.isQuerying }"
                 [matTooltipDisabled]="tooltipDisabled"
                 [matTooltip]="triggerLabel"
