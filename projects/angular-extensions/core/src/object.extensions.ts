@@ -94,16 +94,18 @@ export function nameOfFull<T>(func: Func<T>) {
   return /\.([^;}]+)[;}]?/.exec(func.toString())?.[1] as string;
 }
 
-export function overrideFunction<TIntance extends { [prop: string]: TFunc | any }, TFunc extends Function>(
+type FunctionLike = (...args: any) => any;
+
+export function overrideFunction<TIntance extends { [prop: string]: TFunc | any }, TFunc extends FunctionLike>(
   context: TIntance,
   funcProvider: (instance: TIntance) => TFunc,
-  newFunc: (originalFunc: TFunc, functionContext: TIntance, ...args: any[]) => void
+  newFunc: (originalFunc: TFunc, functionContext: TIntance, ...args: Parameters<TFunc>) => void
 ) {
   let functionName = nameOf<TIntance>(funcProvider);
   let originalFunction = context[functionName] as TFunc;
 
-  (context[functionName] as any) = function (this: any, ...args: any[]) {
-    let originalFuncInstance = (...newArgs: any[]) => originalFunction.call(this, ...(newArgs.length ? newArgs : args));
+  (context[functionName] as any) = function (this: any, ...args: Parameters<TFunc>) {
+    let originalFuncInstance = (...newArgs: Parameters<TFunc>) => originalFunction.call(this, ...newArgs);
 
     return newFunc(originalFuncInstance as any, this, ...args);
   };

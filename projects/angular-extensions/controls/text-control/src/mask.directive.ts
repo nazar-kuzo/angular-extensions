@@ -18,7 +18,7 @@ export class NgxMaskDirective {
     overrideFunction(
       maskDirective,
       context => context.onKeyDown,
-      (onKeyDown, _, event: KeyboardEvent) => {
+      (onKeyDown, _, event) => {
         let input = event.target as HTMLInputElement;
 
         let invalidSelection = maskDirective.prefix.length > 0 &&

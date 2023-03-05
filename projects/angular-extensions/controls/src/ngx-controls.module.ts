@@ -80,7 +80,7 @@ export class NgxControlsModule {
       overrideFunction(
         FormControl.prototype,
         control => control.setValue,
-        (setValue, _, ...[value, options]) => {
+        (setValue, _, value, options) => {
           if (options?.emitModelToViewChange === false) {
             options.onlySelf = true;
           }

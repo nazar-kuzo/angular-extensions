@@ -51,7 +51,7 @@ export class DashboardEditor extends BaseEditor {
 
   public isOfficial: Field<boolean>;
 
-  public customOptions: Field<Option<number, number>>;
+  public customOptions: Field<number[], Option<number, number>>;
 
   constructor(
     private api: ApiService,
@@ -222,14 +222,20 @@ export class DashboardEditor extends BaseEditor {
       },
     });
 
-    this.customOptions = new Field<Option<number, number>>({
+    let numbers = Array.from({ length: 15_000 }).map((_, index) => new Option<number, number>({
+      id: index + 1,
+      label: `Option ${index + 1}`,
+      name: `Option ${index + 1}`,
+      value: index + 1,
+    }));
+
+    this.customOptions = new Field<number[], Option<number, number>>({
       label: "Option",
-      options: Array.from({ length: 15_000 }).map((_, index) => new Option<number, number>({
-        id: index + 1,
-        label: `Option ${index + 1}`,
-        name: `Option ${index + 1}`,
-        value: index + 1,
-      })),
+      value: [numbers[0].value],
+      options: numbers,
+      onValueChange: options => {
+        console.error(`Selected options: ${options.join(", ")}`);
+      },
     });
 
     super.initialize();
