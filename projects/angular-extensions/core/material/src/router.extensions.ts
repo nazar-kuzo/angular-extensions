@@ -37,14 +37,11 @@ export function extendRouterConfigWithStatefulModals(router: Router, injector: I
   }
 
   router.events.subscribe(event => {
-    if (event instanceof GuardsCheckEnd) {
+    if (event instanceof ActivationEnd && event.snapshot.data?.modalComponent) {
       let shouldOpenModal = router.getLastSuccessfulNavigation() == null ||
         !router.isActive(router.getCurrentNavigation().initialUrl, routeMatchOptions);
 
-      (router.getCurrentNavigation().extras as ModalNavigationExtras).shouldOpenModal = shouldOpenModal;
-    }
-    else if (event instanceof ActivationEnd && event.snapshot.data?.modalComponent) {
-      if ((router.getCurrentNavigation().extras as ModalNavigationExtras).shouldOpenModal === false) {
+      if (!shouldOpenModal) {
         return;
       }
 
