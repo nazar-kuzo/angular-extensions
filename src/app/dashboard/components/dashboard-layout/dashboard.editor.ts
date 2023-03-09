@@ -232,7 +232,7 @@ export class DashboardEditor extends BaseEditor {
     this.customOptions = new Field<number[], Option<number, number>>({
       label: "Option",
       value: [numbers[0].value],
-      options: numbers,
+      options: of(numbers).pipe(delay(2000)),
       onValueChange: options => {
         console.error(`Selected options: ${options.join(", ")}`);
       },

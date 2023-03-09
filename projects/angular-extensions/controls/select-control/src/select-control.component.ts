@@ -1,6 +1,6 @@
 import { castArray } from "lodash-es";
-import { Subject, of } from "rxjs";
-import { catchError, debounceTime, filter, first, startWith, switchMap, takeUntil, tap } from "rxjs/operators";
+import { Subject, of, merge } from "rxjs";
+import { catchError, debounceTime, filter, first, map, startWith, switchMap, takeUntil, tap } from "rxjs/operators";
 import {
   Component, OnInit, Input, Optional, ElementRef, ChangeDetectorRef,
   ViewChild, OnDestroy, ContentChild, TemplateRef, ChangeDetectionStrategy, Output, EventEmitter, NgZone, OnChanges,
@@ -257,7 +257,11 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
       });
 
     this.field$
-      .pipe(switchMap(field => field.control.valueChanges), startWith(this.field.control.value), takeUntil(this.destroy))
+      .pipe(
+        switchMap(field => merge(field.control.valueChanges, this.field.optionChanges.pipe(map(() => this.field.control.value)))),
+        debounceTime(0),
+        startWith(this.field.control.value),
+        takeUntil(this.destroy))
       .subscribe(value => {
         let values = castArray(value);
         let matchedOptions = this.field.options.filter(option => values.contains(this.field.optionValue(option)));
@@ -280,7 +284,7 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
     });
 
     this.selection.changed
-      .pipe(startWith(this.selection.selected), debounceTime(0), takeUntil(this.destroy))
+      .pipe(startWith(this.selection.selected), takeUntil(this.destroy))
       .subscribe(() => {
         this.selectedOption = this.multiple
           ? this.selection.selected
@@ -338,7 +342,7 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
    */
   private updateSelectAllStateOnSelectionChanges() {
     this.selection.changed
-      .pipe(startWith(this.selection.selected), debounceTime(0), takeUntil(this.destroy))
+      .pipe(startWith(this.selection.selected), takeUntil(this.destroy))
       .subscribe(() => {
         let selected = !this.selection.selected.length
           ? false
