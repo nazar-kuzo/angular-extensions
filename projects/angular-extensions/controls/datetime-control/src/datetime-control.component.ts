@@ -1,9 +1,10 @@
+import { switchMap } from "rxjs/operators";
 import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component,
-  ElementRef, Inject, Input, ViewChild, ViewEncapsulation,
+  ElementRef, Inject, Input, OnInit, ViewChild, ViewEncapsulation,
 } from "@angular/core";
 import { MatDateFormats, MAT_DATE_FORMATS } from "@angular/material/core";
-import { MatCalendarUserEvent, MatDatepicker, MatDatepickerContent } from "@angular/material/datepicker";
+import { MatDatepicker, MatDatepickerContent } from "@angular/material/datepicker";
 import { NgxMatTimepickerComponent } from "@angular-material-components/datetime-picker";
 
 import { overrideFunction } from "angular-extensions/core";
@@ -11,6 +12,12 @@ import { AppMatDatepicker, AppNgxMatTimepickerComponent } from "angular-extensio
 import { ControlBase } from "angular-extensions/controls/base-control";
 
 function addTimepickerNullableModelSupport() {
+  // disable dead-loop of model => view and view <= model change events
+  overrideFunction(
+    NgxMatTimepickerComponent.prototype,
+    timePicker => timePicker.ngOnInit,
+    () => { });
+
   overrideFunction(
     NgxMatTimepickerComponent.prototype as any as AppNgxMatTimepickerComponent<any>,
     timePicker => timePicker._updateModel,
@@ -61,7 +68,7 @@ addTimepickerNullableModelSupport();
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DateTimeControlComponent extends ControlBase<Date> {
+export class DateTimeControlComponent extends ControlBase<Date> implements OnInit {
 
   @Input()
   public initialTime: number[];
@@ -101,6 +108,17 @@ export class DateTimeControlComponent extends ControlBase<Date> {
     elementRef
       .nativeElement
       .addEventListener("blur", event => this.datepickerContent && event.stopPropagation(), { capture: true });
+  }
+
+  public ngOnInit() {
+    // NgxMatTimepickerComponent updates value without "emitModelToViewChange", so this listener propagate those events instead
+    this.field$
+      .pipe(switchMap(field => field.control.valueChanges))
+      .subscribe(value => {
+        for (let callback of this.field.control._onChange) {
+          callback(value, false);
+        }
+      });
   }
 
   public onFieldClick(event: MouseEvent) {

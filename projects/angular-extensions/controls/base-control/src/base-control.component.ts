@@ -22,7 +22,7 @@ export interface ActionableControl {
 }
 
 @Directive()
-export class ControlBase<TValue, TOption = any, TOptionGroup = any, TFormattedValue = any, TControlValue = any> {
+export class ControlBase<TValue, TOption = any, TOptionGroup = any, TFormattedValue = any, TControlValue = TValue> implements OnDestroy {
 
   @HostBinding("class")
   public class = "control";
@@ -33,12 +33,12 @@ export class ControlBase<TValue, TOption = any, TOptionGroup = any, TFormattedVa
   }
 
   public get field() {
-    return this.field$.value;
+    return this.fieldSubject.value;
   }
 
   @Input()
   public set field(value: Field<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>) {
-    this.field$.next(value);
+    this.fieldSubject.next(value);
   }
 
   @Input()
@@ -56,7 +56,11 @@ export class ControlBase<TValue, TOption = any, TOptionGroup = any, TFormattedVa
   @ViewChild(MatInput, { static: true })
   public input?: MatInput;
 
-  public field$ = new BehaviorSubject<Field<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>>(null);
+  private fieldSubject = new BehaviorSubject<Field<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>>(null);
+
+  protected destroy = new Subject();
+
+  public field$ = this.fieldSubject.asObservable().pipe(takeUntil(this.destroy));
 
   public focus() {
     this.input?.focus();
@@ -66,6 +70,11 @@ export class ControlBase<TValue, TOption = any, TOptionGroup = any, TFormattedVa
     if (this.input) {
       this.input.focused = false;
     }
+  }
+
+  public ngOnDestroy() {
+    this.destroy.next(null);
+    this.destroy.complete();
   }
 }
 
@@ -77,7 +86,7 @@ export class ControlBase<TValue, TOption = any, TOptionGroup = any, TFormattedVa
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BaseControlComponent<TValue, TOption = any, TOptionGroup = any, TFormattedValue = any, TControlValue = any>
-  implements OnInit, AfterViewInit, OnDestroy {
+  implements OnInit, AfterViewInit {
 
   @Input()
   public control: ControlBase<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>;
@@ -92,7 +101,6 @@ export class BaseControlComponent<TValue, TOption = any, TOptionGroup = any, TFo
   public formField?: MatFormField;
 
   public initialized: boolean;
-  public destroy = new Subject();
 
   public get formElement(): HTMLElement {
     return (this.formField?._elementRef || this.elementRef)?.nativeElement as HTMLElement;
@@ -124,8 +132,7 @@ export class BaseControlComponent<TValue, TOption = any, TOptionGroup = any, TFo
 
               this.changeDetectorRef.markForCheck();
             }));
-        }),
-        takeUntil(this.destroy))
+        }))
       .subscribe();
   }
 
@@ -142,11 +149,6 @@ export class BaseControlComponent<TValue, TOption = any, TOptionGroup = any, TFo
 
       this.changeDetectorRef.markForCheck();
     });
-  }
-
-  public ngOnDestroy() {
-    this.destroy.next(null);
-    this.destroy.complete();
   }
 
   private initializeFieldNativeValidation(field: Field<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>) {
