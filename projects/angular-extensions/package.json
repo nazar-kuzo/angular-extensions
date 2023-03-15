@@ -4,6 +4,9 @@
   "repository": "https://github.com/nazar-kuzo/angular-extensions.git",
   "author": "Nazar Kuzo",
   "license": "MIT",
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
   "peerDependencies": {
     "@angular/cdk": "^12.0.5",
     "@angular/common": "^12.0.5",
@@ -15,13 +18,5 @@
     "ngx-awesome-uploader": "^12.0.2",
     "ngx-mask": "^12.0.0",
     "ngx-mat-select-search": "^3.3.0"
-  },
-  "peerDependenciesMeta": {
-    "ngx-awesome-uploader": {
-      "optional": true
-    }
-  },
-  "dependencies": {
-    "tslib": "^2.3.0"
   }
 }
