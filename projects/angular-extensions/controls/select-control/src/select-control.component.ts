@@ -1,11 +1,10 @@
-import { castArray } from "lodash-es";
-import { Subject, of, merge } from "rxjs";
-import { catchError, debounceTime, filter, first, map, startWith, switchMap, takeUntil, tap } from "rxjs/operators";
+import { Subject, Observable, of, merge } from "rxjs";
+import { catchError, debounceTime, filter, first, startWith, switchMap, takeUntil, tap } from "rxjs/operators";
 import {
   Component, OnInit, Input, Optional, ElementRef, ChangeDetectorRef,
   ViewChild, OnDestroy, ContentChild, TemplateRef, ChangeDetectionStrategy, Output, EventEmitter, NgZone, OnChanges,
 } from "@angular/core";
-import { AppMatOption, MatOption } from "@angular/material/core";
+import { AppMatOption } from "@angular/material/core";
 import { AppMatSelect, MatSelect } from "@angular/material/select";
 import { FormControl } from "@angular/forms";
 import { MatMenuTrigger } from "@angular/material/menu";
@@ -258,13 +257,24 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
 
     this.field$
       .pipe(
-        switchMap(field => merge(field.control.valueChanges, this.field.optionChanges.pipe(map(() => this.field.control.value)))),
+        switchMap(field => merge(
+          field.optionChanges,
+          new Observable(subscriber => field.control.registerOnChange(() => subscriber.next(null))),
+        )),
         debounceTime(0),
-        startWith(this.field.control.value),
+        startWith(),
         takeUntil(this.destroy))
-      .subscribe(value => {
-        let values = castArray(value);
-        let matchedOptions = this.field.options.filter(option => values.contains(this.field.optionValue(option)));
+      .subscribe(() => {
+        let matchedOptions: TOption[];
+
+        if (this.field.control.value instanceof Array) {
+          let values = this.field.control.value;
+
+          matchedOptions = this.field.options.filter(option => values.contains(this.field.optionValue(option)));
+        }
+        else {
+          matchedOptions = this.field.options.filter(option => this.field.control.value == this.field.optionValue(option));
+        }
 
         this.selection.clear(matchedOptions.length == 0);
 

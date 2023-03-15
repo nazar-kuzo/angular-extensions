@@ -13,6 +13,10 @@
   white-space: nowrap;
 }
 
+.h-1em {
+  height: 1em !important;
+}
+
 .h-100 {
   height: 100% !important;
 }
@@ -25,19 +29,16 @@
   max-height: 100% !important;
 }
 
-.custom-scroll {
-  &::-webkit-scrollbar {
-    height: 4px;
-    width: 4px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.26);
-  }
+.mt--1 {
+  margin-top: -0.25em;
 }
 
 .cursor-pointer {
   cursor: pointer !important;
+}
+
+.text-small {
+  font-size: 0.9em !important;
 }
 
 .text-smaller {
@@ -50,4 +51,8 @@
 
 .white-space-pre-line {
   white-space: pre-line;
+}
+
+.line-height-1em {
+  line-height: 1em;
 }

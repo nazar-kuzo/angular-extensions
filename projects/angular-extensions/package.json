@@ -1,28 +1,42 @@
 {
   "name": "angular-extensions",
-  "version": "14.0.15",
+  "version": "14.0.18",
   "repository": "https://github.com/nazar-kuzo/angular-extensions.git",
   "author": "Nazar Kuzo",
   "license": "MIT",
   "peerDependencies": {
+    "@angular/animations": "^14.2.11",
+    "@angular/cdk": "^14.2.7",
     "@angular/common": "^14.2.11",
     "@angular/core": "^14.2.11",
-    "@angular/cdk": "^14.2.7",
+    "@angular/forms": "^14.2.11",
     "@angular/material": "^14.2.7",
+    "@angular/router": "^14.2.11",
     "@angular-material-components/datetime-picker": "^8.0.0",
     "bootstrap": "^4.6.1",
     "date-fns": "^2.29.3",
+    "date-fns-tz": "^2.0.0",
     "lodash-es": "^4.17.21",
     "ngx-awesome-uploader": "^14.0.1",
     "ngx-mask": "^14.2.4",
     "ngx-mat-select-search": "^5.0.0"
   },
-  "peerDependenciesMeta": {
-    "ngx-awesome-uploader": {
-      "optional": true
-    }
-  },
   "dependencies": {
     "tslib": "^2.3.1"
+  },
+  "devDependencies": {
+    "@angular-eslint/builder": "^14.4.0",
+    "@angular-eslint/eslint-plugin": "^14.4.0",
+    "@angular-eslint/eslint-plugin-template": "^14.4.0",
+    "@angular-eslint/schematics": "^14.4.0",
+    "@angular-eslint/template-parser": "^14.4.0",
+    "@types/lodash-es": "^4.17.4",
+    "@typescript-eslint/eslint-plugin": "^4.28.0",
+    "@typescript-eslint/parser": "^4.28.0",
+    "codelyzer": "^6.0.2",
+    "eslint": "^7.29.0",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-jsdoc": "^35.4.0",
+    "eslint-plugin-prefer-arrow": "^1.2.3"
   }
 }

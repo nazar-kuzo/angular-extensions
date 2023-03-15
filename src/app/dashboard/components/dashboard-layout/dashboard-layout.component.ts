@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
-import { ApiService, Field, ModalPromptComponent, ModalPromptSettings, parseDates } from "angular-extensions";
+import { ApiService, Field, ModalPromptComponent, ModalPromptSettings, overrideFunction, parseDates } from "angular-extensions";
 import { Country, DashboardEditor } from "./dashboard.editor";
 
 @Component({
@@ -41,6 +41,26 @@ export class DashboardLayoutComponent implements OnInit {
 
     parseDates(dates);
 
+    overrideFunction(
+      this,
+      component => component.getDate,
+      () => new Date());
+
+    overrideFunction(
+      this,
+      component => component.getDayForDate,
+      (_, __, date) => date.getDay());
+
+    overrideFunction(
+      this,
+      component => component.updateCurrentDate,
+      (_, __) => { });
+
+    overrideFunction(
+      this,
+      component => component.updateDate,
+      (_, __, date) => { });
+
     console.log(`Last Successful Navigation: ${navigation.finalUrl}`);
   }
 
@@ -62,5 +82,19 @@ export class DashboardLayoutComponent implements OnInit {
 
   public recreateEditor() {
     this.editor = new DashboardEditor(this.api);
+  }
+
+  public getDate() {
+    return new Date();
+  }
+
+  public getDayForDate(date: Date) {
+    return date.getDay();
+  }
+
+  public updateCurrentDate() {
+  }
+
+  public updateDate(date: Date) {
   }
 }

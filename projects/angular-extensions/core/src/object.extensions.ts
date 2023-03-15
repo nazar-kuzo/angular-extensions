@@ -99,7 +99,7 @@ type FunctionLike = (...args: any) => any;
 export function overrideFunction<TIntance extends { [prop: string]: TFunc | any }, TFunc extends FunctionLike>(
   context: TIntance,
   funcProvider: (instance: TIntance) => TFunc,
-  newFunc: (originalFunc: TFunc, functionContext: TIntance, ...args: Parameters<TFunc>) => void
+  newFunc: (originalFunc: TFunc, functionContext: TIntance, ...args: Parameters<TFunc>) => ReturnType<TFunc>
 ) {
   let functionName = nameOf<TIntance>(funcProvider);
   let originalFunction = context[functionName] as TFunc;
