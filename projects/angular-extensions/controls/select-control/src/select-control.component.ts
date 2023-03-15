@@ -1,8 +1,8 @@
-import { Subject, Observable, of, merge } from "rxjs";
+import { Observable, of, merge } from "rxjs";
 import { catchError, debounceTime, filter, first, startWith, switchMap, takeUntil, tap } from "rxjs/operators";
 import {
   Component, OnInit, Input, Optional, ElementRef, ChangeDetectorRef,
-  ViewChild, OnDestroy, ContentChild, TemplateRef, ChangeDetectionStrategy, Output, EventEmitter, NgZone, OnChanges,
+  ViewChild, ContentChild, TemplateRef, ChangeDetectionStrategy, Output, EventEmitter, NgZone, OnChanges,
 } from "@angular/core";
 import { AppMatOption } from "@angular/material/core";
 import { AppMatSelect, MatSelect } from "@angular/material/select";
@@ -23,7 +23,7 @@ import { ActionableControl, ControlBase } from "angular-extensions/controls/base
 })
 export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>
   extends ControlBase<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>
-  implements OnInit, OnChanges, OnDestroy, ActionableControl {
+  implements OnInit, OnChanges, ActionableControl {
 
   @Input()
   public dropdownClass = "";
@@ -108,8 +108,6 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
 
   private selection: SelectionModel<TOption>;
 
-  private destroy = new Subject();
-
   constructor(
     elementRef: ElementRef<HTMLElement>,
     private changeDetectorRef: ChangeDetectorRef,
@@ -151,11 +149,6 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
     if (changes.visibleOptionsCount || changes.optionHeight) {
       this.dropdownHeight = this.optionHeight * this.visibleOptionsCount;
     }
-  }
-
-  public ngOnDestroy() {
-    this.destroy.next(null);
-    this.destroy.complete();
   }
 
   public optionTracker = (index: number, option: TOption) => {
