@@ -255,7 +255,7 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
           new Observable(subscriber => field.control.registerOnChange(() => subscriber.next(null))),
         )),
         debounceTime(0),
-        startWith(),
+        startWith(null),
         takeUntil(this.destroy))
       .subscribe(() => {
         let matchedOptions: TOption[];
