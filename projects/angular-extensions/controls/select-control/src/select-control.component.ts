@@ -173,7 +173,7 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
     this.field.control.setValue(this.multiple ? [] as any as TControlValue : null);
     this.field.control.markAsTouched({ onlySelf: true });
 
-    this.select._selectionModel.clear(false);
+    this.select._selectionModel.clear();
 
     this.changeDetectorRef.markForCheck();
   }
@@ -269,7 +269,7 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
           matchedOptions = this.field.options.filter(option => this.field.control.value == this.field.optionValue(option));
         }
 
-        this.selection.clear(matchedOptions.length == 0);
+        this.selection.clear();
 
         if (matchedOptions.length > 0) {
           this.selection.select(...matchedOptions);

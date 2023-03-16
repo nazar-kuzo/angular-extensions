@@ -1,6 +1,6 @@
 import { HttpParams } from "@angular/common/http";
 import type { ChangeDetectorRef, ElementRef } from "@angular/core";
-import type { MatOption } from "@angular/material/core";
+import type { AppMatOption, MatOption } from "@angular/material/core";
 import type { MatSelect as MatSelectBase, MatSelectChange as MatSelectChangeEvent } from "@angular/material/select";
 
 /**
@@ -44,8 +44,10 @@ declare module "@angular/forms" {
 }
 
 declare module "@angular/material/core" {
-  export interface AppMatOption<T = any> extends Omit<MatOption<T>, "_element" | "_selected" | "_changeDetectorRef"> {
+  export interface AppMatOption<T = any> extends Omit<MatOption, "value" | "_element" | "_selected" | "_changeDetectorRef"> {
     _element: ElementRef<HTMLElement>;
+
+    value: T;
 
     _selected: boolean;
 
@@ -65,7 +67,7 @@ declare module "@angular/material/select" {
 
     _propagateChanges(fallbackValue?: any): void;
 
-    _onSelect(matOption: MatOption<any>, isUserInput: boolean): void;
+    _onSelect(matOption: AppMatOption<any>, isUserInput: boolean): void;
 
     _getChangeEvent(value: any): MatSelectChangeEvent;
   }
