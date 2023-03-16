@@ -6,7 +6,7 @@
     "start": "ng serve dashboard --open",
     "build": "ng build angular-extensions --configuration production",
     "pack": "npm pack ./dist/angular-extensions",
-    "publish": "npm publish ./dist/angular-extensions",
+    "publish": "npm publish ./dist/angular-extensions --tag angular-v12",
     "analyze": "ng build dashboard --configuration production --stats-json && webpack-bundle-analyzer dist/dashboard/stats.json",
     "watch": "ng build --watch --configuration development"
   },
