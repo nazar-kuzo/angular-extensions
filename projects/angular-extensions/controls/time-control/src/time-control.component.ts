@@ -12,7 +12,7 @@ import { AppMatDatepicker, AppNgxMatTimepickerComponent } from "angular-extensio
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimeControlComponent<TValue> extends ControlBase<TValue> {
+export class TimeControlComponent<TValue> extends ControlBase<TValue, any, any, any, Date> {
 
   @Input()
   public initialTime: number[];

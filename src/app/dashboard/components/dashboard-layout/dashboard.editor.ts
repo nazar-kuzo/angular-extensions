@@ -1,7 +1,7 @@
 import { of } from "rxjs";
 import { delay } from "rxjs/operators";
 import { Injectable } from "@angular/core";
-import { ApiService, BaseEditor, DayOfWeek, Field, Formatters, Option } from "angular-extensions";
+import { ApiService, BaseEditor, DayOfWeek, Field, Formatters, Option, TimeOfDay } from "angular-extensions";
 
 export interface Country {
 
@@ -33,7 +33,7 @@ export class DashboardEditor extends BaseEditor {
 
   public dateTimeOfBirth: Field<Date>;
 
-  public timeOfBirth: Field<Date>;
+  public timeOfBirth: Field<TimeOfDay, any, any, string, Date>;
 
   public vacationFrom: Field<Date>;
 
@@ -132,10 +132,14 @@ export class DashboardEditor extends BaseEditor {
       },
     });
 
-    this.timeOfBirth = new Field<Date>({
+    this.timeOfBirth = new Field<TimeOfDay, any, any, string, Date>({
       label: "Time of Birth",
       validation: {
         required: { value: true }
+      },
+      controlConverter: {
+        toControlValue: TimeOfDay.toLocalDate,
+        fromControlValue: TimeOfDay.parse,
       },
     });
 
