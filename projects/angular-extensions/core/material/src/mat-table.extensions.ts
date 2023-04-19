@@ -7,7 +7,7 @@ import { overrideFunction } from "angular-extensions/core";
 export type CustomFilterPredicate<T> = (
   data: T,
   filter: string,
-  defaultFilterPredicate?: ((_data: T, _filter: string) => boolean)
+  defaultFilterPredicate: ((_data: T, _filter: string) => boolean)
 ) => boolean;
 
 /**

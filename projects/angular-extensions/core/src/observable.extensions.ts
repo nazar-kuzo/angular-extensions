@@ -1,6 +1,6 @@
 
 import { Observable, of, Subject, timer } from "rxjs";
-import { catchError, map, startWith, delay, mergeMap, retryWhen, shareReplay, switchMap, tap } from "rxjs/operators";
+import { catchError, map, startWith, retry, shareReplay, switchMap, tap } from "rxjs/operators";
 
 /**
  * Provides additional information about Observable request. Used by {@link trackStatus}
@@ -43,11 +43,11 @@ export function trackStatus<T>(observable: Observable<T>): Observable<RequestSta
 /**
  * Adds support of executing request retries on refresh interval with initial execution delay
  */
- export class AsyncWrapper<TValue, TError = any> {
+export class AsyncWrapper<TValue, TError = any> {
 
   private isValueLoading = false;
 
-  public readonly error: Observable<TError>;
+  public readonly error: Observable<TError | null>;
   public readonly value: Observable<TValue>;
 
   public get isLoading() {
@@ -55,7 +55,7 @@ export function trackStatus<T>(observable: Observable<T>): Observable<RequestSta
   }
 
   constructor(provider: () => Observable<TValue>, settings: { refreshInterval: number; initialDelay?: number }) {
-    let errorSubject = new Subject<TError>();
+    let errorSubject = new Subject<TError | null>();
 
     this.error = errorSubject.pipe(shareReplay(1));
 
@@ -66,18 +66,19 @@ export function trackStatus<T>(observable: Observable<T>): Observable<RequestSta
 
           return provider();
         }),
-        retryWhen(errors => errors.pipe(mergeMap(error => {
-          console.error(error);
-          this.isValueLoading = false;
+        retry({
+          delay: error => {
+            console.error(error);
 
-          errorSubject.next(error);
+            errorSubject.next(error);
 
-          return of(error).pipe(delay(settings.refreshInterval));
-        }))),
+            return timer(settings.refreshInterval);
+          }
+        }),
         tap(() => {
           this.isValueLoading = false;
 
-          errorSubject.next(undefined);
+          errorSubject.next(null);
         }),
         shareReplay({ refCount: true, bufferSize: 1 }));
   }
