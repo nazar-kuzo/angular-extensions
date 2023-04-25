@@ -1,4 +1,4 @@
-import { Injector, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Router, RouterModule } from "@angular/router";
 import { MatSnackBarConfig, MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS } from "@angular/material/snack-bar";
@@ -39,8 +39,7 @@ export class SharedModule {
 
   constructor(
     router: Router,
-    injector: Injector,
   ) {
-    extendRouterConfigWithStatefulModals(router, injector);
+    extendRouterConfigWithStatefulModals(router);
   }
 }

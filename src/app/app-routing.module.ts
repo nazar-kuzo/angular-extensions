@@ -26,6 +26,16 @@ const routes: Routes = [
       canActivateChildSequence: [FirstGuard, SecondGuard],
     } as SequentialRouteData
   },
+  {
+    path: "other-dashboard",
+    canActivate: [SequentialGuard],
+    canActivateChild: [SequentialGuard],
+    loadChildren: () => import("./other-dashboard/other-dashboard.module").then(m => m.OtherDashboardModule),
+    data: {
+      canActivateSequence: [FirstGuard, SecondGuard],
+      canActivateChildSequence: [FirstGuard, SecondGuard],
+    } as SequentialRouteData
+  },
 ];
 
 @NgModule({
