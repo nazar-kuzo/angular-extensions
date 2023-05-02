@@ -1,19 +1,19 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { DashboardApiService } from "app/dashboard/services";
+import { OtherDashboardApiService } from "../../services";
 
 @Component({
-  selector: "dashboard-details-modal",
-  templateUrl: "./dashboard-details-modal.component.html",
-  styleUrls: ["./dashboard-details-modal.component.scss"],
+  selector: "other-dashboard-details-modal",
+  templateUrl: "./other-dashboard-details-modal.component.html",
+  styleUrls: ["./other-dashboard-details-modal.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardDetailsModalComponent implements OnInit {
+export class OtherDashboardDetailsModalComponent implements OnInit {
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private api: DashboardApiService,
+    private api: OtherDashboardApiService,
   ) {
   }
 

@@ -43,11 +43,11 @@ export function trackStatus<T>(observable: Observable<T>): Observable<RequestSta
 /**
  * Adds support of executing request retries on refresh interval with initial execution delay
  */
- export class AsyncWrapper<TValue, TError = any> {
+export class AsyncWrapper<TValue, TError = any> {
 
   private isValueLoading = false;
 
-  public readonly error: Observable<TError>;
+  public readonly error: Observable<TError | null>;
   public readonly value: Observable<TValue>;
 
   public get isLoading() {
@@ -55,7 +55,7 @@ export function trackStatus<T>(observable: Observable<T>): Observable<RequestSta
   }
 
   constructor(provider: () => Observable<TValue>, settings: { refreshInterval: number; initialDelay?: number }) {
-    let errorSubject = new Subject<TError>();
+    let errorSubject = new Subject<TError | null>();
 
     this.error = errorSubject.pipe(shareReplay(1));
 
@@ -77,7 +77,7 @@ export function trackStatus<T>(observable: Observable<T>): Observable<RequestSta
         tap(() => {
           this.isValueLoading = false;
 
-          errorSubject.next(undefined);
+          errorSubject.next(null);
         }),
         shareReplay({ refCount: true, bufferSize: 1 }));
   }

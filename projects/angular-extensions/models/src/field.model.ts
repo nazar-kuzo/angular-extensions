@@ -95,6 +95,11 @@ interface FieldControlValueConverter<TFieldValue, TControlValue> {
   toControlValue: (value: TFieldValue) => TControlValue;
 }
 
+interface FormatterOptions {
+  insertSpaceBeforeDigits?: boolean;
+  insertSpaceBeforeAbbreviations?: boolean;
+}
+
 /**
  * Field option that can be used in select-control, etc.
  */
@@ -129,7 +134,9 @@ export class Option<TValue, TId = string> {
    * @param insertSpaceBeforeDigits Should insert a space before digit present in string. E.g. "every10Month" => "Every 10 Month"
    * @returns Collection of options
    */
-  public static ForEnum<TEnum extends number | string>(enumType: any, insertSpaceBeforeDigits = false): Option<TEnum>[] {
+  public static ForEnum<TEnum extends number | string>(
+    enumType: any,
+    options: FormatterOptions = { insertSpaceBeforeDigits: false, insertSpaceBeforeAbbreviations: false }): Option<TEnum>[] {
     let entries = Object.entries(enumType) as [string, string | number][];;
 
     let numberEntries = entries.filter(([, value]) => typeof value == "number") as [string, number][];
@@ -137,7 +144,7 @@ export class Option<TValue, TId = string> {
     return (numberEntries.length > 0 ? numberEntries : entries)
       .map(([key, value]: [string, string | number]) => {
         return Object.assign(new Option<TEnum>({
-          label: this.startCasePipe.transform(key, insertSpaceBeforeDigits),
+          label: this.startCasePipe.transform(key, options.insertSpaceBeforeDigits, options.insertSpaceBeforeAbbreviations),
           name: key,
           value: value as TEnum,
         }));

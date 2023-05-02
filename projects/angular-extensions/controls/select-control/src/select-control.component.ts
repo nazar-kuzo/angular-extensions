@@ -262,17 +262,27 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
 
         if (this.field.control.value instanceof Array) {
           let values = this.field.control.value;
+          let ids = this.field.control.value.map(value => this.field.optionId(value));
 
-          matchedOptions = this.field.options.filter(option => values.contains(this.field.optionValue(option)));
+          matchedOptions = this.field.options.filter(option =>
+            ids.contains(this.field.optionId(option)) ||
+            values.contains(this.field.optionValue(option)));
         }
         else {
-          matchedOptions = this.field.options.filter(option => this.field.control.value == this.field.optionValue(option));
+          let value = this.field.control.value as any;
+
+          matchedOptions = this.field.options.filter(option =>
+            (value != null && this.field.optionId(value) == this.field.optionId(option)) ||
+            this.field.control.value == this.field.optionValue(option));
         }
 
         this.selection.clear();
 
         if (matchedOptions.length > 0) {
           this.selection.select(...matchedOptions);
+
+          // synchronize with select model
+          this.select._initializeSelection();
         }
       });
   }
@@ -374,25 +384,52 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
    * Hooks up the <ngx-mat-select-search> MatOption and provides filtered field option
    */
   private addOptionsFilteringSupport() {
-    this.filterControl.valueChanges
-      .pipe(
-        filter((query: string) => query != "" && !!this.field.optionsProvider),
-        tap(() => {
-          this.field.options = [];
-          this.field.isQuerying = true;
+    if (this.field.optionsProvider) {
+      this.filterControl.valueChanges
+        .pipe(
+          filter((query: string) => query != ""),
+          tap(() => {
+            this.field.options = [];
+            this.field.isQuerying = true;
+
+            this.changeDetectorRef.markForCheck();
+          }),
+          debounceTime(300),
+          switchMap((query: string) => !!query
+            ? this.field.optionsProvider(query).pipe(catchError(() => of<TOption[]>([])))
+            : of([])),
+          takeUntil(this.destroy))
+        .subscribe(options => {
+          this.field.options = options;
+          this.field.isQuerying = false;
 
           this.changeDetectorRef.markForCheck();
-        }),
-        debounceTime(300),
-        switchMap((query: string) => !!query
-          ? this.field.optionsProvider(query).pipe(catchError(() => of<TOption[]>([])))
-          : of([])),
-        takeUntil(this.destroy))
-      .subscribe(options => {
-        this.field.options = options;
-        this.field.isQuerying = false;
+        });
+    }
 
-        this.changeDetectorRef.markForCheck();
-      });
+    // ensure that filtered options are initialized with pending selection
+    if (this.field.control.updateOn == "blur") {
+      overrideFunction(
+        this.select,
+        select => select._initializeSelection,
+        (_, select) => {
+          Promise.resolve().then(() => {
+            if (select.ngControl) {
+              select._value = select.ngControl.value;
+            }
+
+            let selectedIds = this.selection.selected.map(value => this.field.optionId(value));
+
+            let matchedOptions = this.select.options.filter(option =>
+              (option.value && selectedIds.includes(this.field.optionId(option.value))) ||
+              this.selection.selected.includes(option.value));
+
+            select._selectionModel.clear();
+            select._selectionModel.select(...matchedOptions);
+
+            select.stateChanges.next();
+          });
+        });
+    }
   }
 }

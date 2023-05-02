@@ -11,7 +11,7 @@ export interface Country {
 }
 
 @Injectable()
-export class DashboardEditor extends BaseEditor {
+export class OtherDashboardEditor extends BaseEditor {
 
   public firstName: Field<string>;
 

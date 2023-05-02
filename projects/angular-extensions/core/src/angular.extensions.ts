@@ -70,5 +70,7 @@ declare module "@angular/material/select" {
     _onSelect(matOption: AppMatOption<any>, isUserInput: boolean): void;
 
     _getChangeEvent(value: any): MatSelectChangeEvent;
+
+    _initializeSelection(): void;
   }
 }
