@@ -120,12 +120,12 @@ export class ApiService {
       Object.entries(params)
         .filter(([_, value]) => value !== null && value !== "")
         .forEach(([key, value]) => {
-          let values = Array.isArray(value)
+          let items = Array.isArray(value)
             ? value.map(this.serializeHttpParam)
             : [this.serializeHttpParam(value)];
 
-            if (values.length > 0) {
-              httpParams = httpParams.set(key, values as any);
+            for (let item of items) {
+              httpParams = httpParams.append(key, item);
             }
         });
 
