@@ -111,27 +111,37 @@ export class ApiService {
 
   private sanitizeQueryParams(params?: HttpParams) {
     if (params instanceof AngularHttpParams) {
-      let httpParams = params;
-
-      params = httpParams.keys().reduce((result: any, key: string) => {
-        result[key] = httpParams.getAll(key);
-
-        return result;
-      }, {});
+      return params;
     }
     else if (params != undefined) {
-      let objectParams = params;
+      let httpParams = new AngularHttpParams();
 
-      Object.keys(objectParams)
-        .filter(key => objectParams[key] == null || objectParams[key] === "")
-        .forEach(key => {
-          delete objectParams[key];
+      // uses custom formatter to have flexibility in Date serialization
+      Object.entries(params)
+        .filter(([_, value]) => value !== null && value !== "")
+        .forEach(([key, value]) => {
+          let values = Array.isArray(value)
+            ? value.map(this.serializeHttpParam)
+            : [this.serializeHttpParam(value)];
+
+            if (values.length > 0) {
+              httpParams = httpParams.set(key, values as any);
+            }
         });
 
-      params = objectParams;
+      params = httpParams;
     }
 
     return params;
+  }
+
+  private serializeHttpParam(value: any): string | number | boolean {
+    if (value instanceof Date) {
+      return value.toJSON();
+    }
+    else {
+      return `${value}`;
+    }
   }
 
   private getHttpOptions<TOptions extends DefaultHttpClientOptions>(
