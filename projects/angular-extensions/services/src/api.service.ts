@@ -1,4 +1,4 @@
-import { merge } from "lodash-es";
+import { castArray, merge } from "lodash-es";
 import { map } from "rxjs/operators";
 import { Inject, Injectable, InjectionToken, Optional } from "@angular/core";
 import { HttpClient, HttpHeaders as AngularHttpHeaders, HttpParams as AngularHttpParams } from "@angular/common/http";
@@ -118,11 +118,9 @@ export class ApiService {
 
       // uses custom formatter to have flexibility in Date serialization
       Object.entries(params)
-        .filter(([_, value]) => value !== null && value !== "")
+        .filter(([_, value]) => value !== undefined && value !== null && value !== "")
         .forEach(([key, value]) => {
-          let items = Array.isArray(value)
-            ? value.map(this.serializeHttpParam)
-            : [this.serializeHttpParam(value)];
+          let items = castArray(value).map(this.serializeHttpParam);
 
             for (let item of items) {
               httpParams = httpParams.append(key, item);
