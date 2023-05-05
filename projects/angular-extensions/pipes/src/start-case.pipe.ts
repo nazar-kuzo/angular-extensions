@@ -1,5 +1,7 @@
-import { startCase } from "lodash-es";
+import { reduce, words, upperFirst } from "lodash-es";
 import { Pipe, PipeTransform } from "@angular/core";
+
+const ApostropheRegex = RegExp("['\u2019]", "g");
 
 @Pipe({
   name: "startCase",
@@ -16,7 +18,7 @@ export class StartCasePipe implements PipeTransform {
    * @returns Formatted string
    */
   public transform(value?: string, insertSpaceBeforeDigits = false, insertSpaceBeforeAbbreviations = false) {
-    let label = startCase(value || "");
+    let label = this.startCase(value || "");
 
     if (!insertSpaceBeforeDigits) {
       label = label.replace(/\s(\d)/g, "$1");
@@ -27,5 +29,11 @@ export class StartCasePipe implements PipeTransform {
     }
 
     return label;
+  }
+
+  private startCase(value: string) {
+    return reduce(
+      words(value.replace(ApostropheRegex, "")),
+      (result, word, index) => result + (index ? " " : "") + upperFirst(word), "");
   }
 }
