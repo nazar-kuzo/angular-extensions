@@ -1,8 +1,8 @@
 import { Observable, of, merge } from "rxjs";
 import { catchError, debounceTime, filter, first, startWith, switchMap, takeUntil, tap } from "rxjs/operators";
 import {
-  Component, OnInit, Input, Optional, ElementRef, ChangeDetectorRef,
-  ViewChild, ContentChild, TemplateRef, ChangeDetectionStrategy, Output, EventEmitter, NgZone, OnChanges,
+  Component, OnInit, AfterViewInit, OnChanges, Input, Optional, ElementRef, ChangeDetectorRef,
+  ViewChild, ContentChild, TemplateRef, ChangeDetectionStrategy, Output, EventEmitter, NgZone,
 } from "@angular/core";
 import { AppMatOption } from "@angular/material/core";
 import { AppMatSelect, MatSelect } from "@angular/material/select";
@@ -23,7 +23,7 @@ import { ActionableControl, ControlBase } from "angular-extensions/controls/base
 })
 export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>
   extends ControlBase<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>
-  implements OnInit, OnChanges, ActionableControl {
+  implements OnInit, AfterViewInit, OnChanges, ActionableControl {
 
   @Input()
   public dropdownClass = "";
@@ -143,6 +143,10 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
     if (this.multiple && this.showSelectAll) {
       this.updateSelectAllStateOnSelectionChanges();
     }
+  }
+
+  public ngAfterViewInit() {
+    this.updateSelectAllState();
   }
 
   public ngOnChanges(changes: SimpleChanges<SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>>) {
@@ -356,28 +360,30 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   private updateSelectAllStateOnSelectionChanges() {
     this.selection.changed
       .pipe(startWith(this.selection.selected), takeUntil(this.destroy))
-      .subscribe(() => {
-        let selected = !this.selection.selected.length
-          ? false
-          : this.selection.selected.length === this.field.options?.length
-            ? true : null;
+      .subscribe(() => this.updateSelectAllState());
+  }
 
-        if (this.selectAllOption) {
-          let matCheckbox = this.selectAllOption._element.nativeElement
-            .querySelector("mat-pseudo-checkbox");
+  private updateSelectAllState() {
+    let selected = !this.selection.selected.length
+      ? false
+      : this.selection.selected.length === this.field.options?.length
+        ? true : null;
 
-          if (selected == null) {
-            matCheckbox.classList.remove("mat-pseudo-checkbox-checked");
+    if (this.selectAllOption) {
+      let matCheckbox = this.selectAllOption._element.nativeElement
+        .querySelector("mat-pseudo-checkbox");
 
-            matCheckbox.classList.add("mat-pseudo-checkbox-indeterminate");
-          }
-          else {
-            matCheckbox.classList.remove("mat-pseudo-checkbox-indeterminate");
+      if (selected == null) {
+        matCheckbox.classList.remove("mat-pseudo-checkbox-checked");
 
-            matCheckbox.classList.toggle("mat-pseudo-checkbox-checked", selected);
-          }
-        }
-      });
+        matCheckbox.classList.add("mat-pseudo-checkbox-indeterminate");
+      }
+      else {
+        matCheckbox.classList.remove("mat-pseudo-checkbox-indeterminate");
+
+        matCheckbox.classList.toggle("mat-pseudo-checkbox-checked", selected);
+      }
+    }
   }
 
   /**
