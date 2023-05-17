@@ -32,7 +32,11 @@ export function enableEnhancedTooltipDisplay(defaultShowDelay = 150) {
         switchMap(() => merge(...Array
           .from(pendingTootlips)
           .map(([tooltip, showDelay]) => of(tooltip).pipe(delay(showDelay))))))
-      .subscribe(tooltip => tooltip.show(0));
+      .subscribe(tooltip => {
+        if (pendingTootlips.has(tooltip)) {
+          tooltip.show(0);
+        }
+      });
 
     overrideFunction(
       MatTooltip.prototype as any as AppMatTooltip,
