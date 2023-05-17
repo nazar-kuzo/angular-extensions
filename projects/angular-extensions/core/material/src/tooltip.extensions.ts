@@ -59,5 +59,14 @@ export function enableEnhancedTooltipDisplay(defaultShowDelay = 150) {
 
         hide(delayTime);
       });
+
+    overrideFunction(
+      MatTooltip.prototype as any as AppMatTooltip,
+      tooltip => tooltip.ngOnDestroy,
+      (ngOnDestroy, tooltip) => {
+        ngOnDestroy();
+
+        pendingTootlips.delete(tooltip);
+      });
   }
 }
