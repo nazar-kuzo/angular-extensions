@@ -1,8 +1,9 @@
+import { castArray } from "lodash-es";
 import { Observable, of, merge } from "rxjs";
 import { catchError, debounceTime, filter, first, startWith, switchMap, takeUntil, tap } from "rxjs/operators";
 import {
   Component, OnInit, AfterViewInit, OnChanges, Input, Optional, ElementRef, ChangeDetectorRef,
-  ViewChild, ContentChild, TemplateRef, ChangeDetectionStrategy, Output, EventEmitter, NgZone
+  ViewChild, ContentChild, TemplateRef, ChangeDetectionStrategy, Output, EventEmitter, NgZone,
 } from "@angular/core";
 import { AppMatOption } from "@angular/material/core";
 import { AppMatSelect, MatSelect } from "@angular/material/select";
@@ -133,7 +134,7 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   public ngOnInit() {
     this.filterControl.setValue(this.filter);
 
-    this.selection = new SelectionModel<TOption>(this.multiple, [], true);
+    this.selection = new SelectionModel<TOption>(this.multiple, [], true, this.optionComparer);
 
     this.patchSelectTrigger();
     this.addCustomSelectionModel();
@@ -160,7 +161,9 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   };
 
   public optionComparer = (left?: TOption, right?: TOption) => {
-    return left != null && right != null && this.field.optionId(left) == this.field.optionId(right);
+    return left != null && right != null &&
+      (this.field.optionId(left) == this.field.optionId(right) ||
+      this.field.optionValue(left) == this.field.optionValue(right));
   };
 
   public showClearButton() {
@@ -176,8 +179,6 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   public clear() {
     this.field.control.setValue(this.multiple ? [] as any as TControlValue : null);
     this.field.control.markAsTouched({ onlySelf: true });
-
-    this.select._selectionModel.clear(false);
 
     this.changeDetectorRef.markForCheck();
   }
@@ -262,32 +263,14 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
         startWith(null),
         takeUntil(this.destroy))
       .subscribe(() => {
-        let matchedOptions: TOption[];
+        let options = castArray(this.field.value as any as TOption[] ?? [])
+          .map(item => this.field.options.find(option => this.optionComparer(option, item)) ?? item);
 
-        if (this.field.control.value instanceof Array) {
-          let values = this.field.control.value;
-          let ids = this.field.control.value.map(value => this.field.optionId(value));
+        this.selection.clear();
+        this.selection.select(...options);
 
-          matchedOptions = this.field.options.filter(option =>
-            ids.contains(this.field.optionId(option)) ||
-            values.contains(this.field.optionValue(option)));
-        }
-        else {
-          let value = this.field.control.value as any;
-
-          matchedOptions = this.field.options.filter(option =>
-            (value != null && this.field.optionId(value) == this.field.optionId(option)) ||
-            this.field.control.value == this.field.optionValue(option));
-        }
-
-        this.selection.clear(matchedOptions.length == 0);
-
-        if (matchedOptions.length > 0) {
-          this.selection.select(...matchedOptions);
-
-          // synchronize with select model
-          this.select._initializeSelection();
-        }
+        // synchronize with select model
+        this.select._initializeSelection();
       });
   }
 

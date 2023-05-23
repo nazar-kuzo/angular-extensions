@@ -3,11 +3,46 @@ import { CommonModule } from "@angular/common";
 import { MatSelectModule } from "@angular/material/select";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { ScrollingModule } from "@angular/cdk/scrolling";
+import { SelectionModel } from "@angular/cdk/collections";
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
 
+import { overrideFunction } from "angular-extensions/core";
 import { NgxBaseControlModule } from "angular-extensions/controls/base-control";
 import { SelectControlComponent } from "./select-control.component";
 import { CustomMatOptionDirective } from "./custom-mat-option.directive";
+
+interface AppSelectionModel<T> extends Omit<SelectionModel<T>, "_markSelected" | "_unmarkSelected"> {
+  _markSelected(value: T): void;
+
+  _unmarkSelected(value: T): void;
+}
+
+function patchSelectionModel() {
+  overrideFunction(
+    SelectionModel.prototype as any as AppSelectionModel<any>,
+    selection => selection._markSelected,
+    (markSelected, selection, value) => markSelected(tryGetConcreteValue(selection, value)));
+
+  overrideFunction(
+    SelectionModel.prototype as any as AppSelectionModel<any>,
+    selection => selection._unmarkSelected,
+    (unmarkSelected, selection, value) => unmarkSelected(tryGetConcreteValue(selection, value)));
+
+  function tryGetConcreteValue<T>(selection: AppSelectionModel<T>, value: T) {
+    if (!selection.compareWith) {
+      return value;
+    } else {
+      for (let selectedValue of selection.selected) {
+        if (selection.compareWith(selectedValue, value)) {
+          return selectedValue;
+        }
+      }
+      return value;
+    }
+  }
+}
+
+patchSelectionModel();
 
 @NgModule({
   imports: [
