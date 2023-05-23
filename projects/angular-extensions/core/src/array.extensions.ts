@@ -2,9 +2,9 @@ import { orderBy as lodashOrderBy } from "lodash-es";
 
 declare global {
   interface Array<T> {
-    first(this: T[]): T;
-    last(this: T[]): T;
-    elementAt(this: T[], index: number): T;
+    first(this: T[]): T | undefined;
+    last(this: T[]): T | undefined;
+    elementAt(this: T[], index: number): T | undefined;
     distinct(this: T[]): T[];
     contains(this: T[], item: T): boolean;
     orderBy(this: T[], ...properties: ((item: T) => any)[]): T[];
@@ -14,15 +14,15 @@ declare global {
   }
 }
 
-export function first<T>(this: T[]): T {
+export function first<T>(this: T[]): T | undefined {
   return this[0];
 }
 
-export function last<T>(this: T[]): T {
+export function last<T>(this: T[]): T | undefined {
   return this[this.length - 1];
 }
 
-export function elementAt<T>(this: T[], index: number): T {
+export function elementAt<T>(this: T[], index: number): T | undefined {
   return this[index];
 }
 
