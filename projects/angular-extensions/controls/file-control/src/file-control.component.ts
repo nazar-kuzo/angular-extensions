@@ -1,6 +1,7 @@
+import { isEmpty } from "lodash-es";
 import {
   Component, Input, ViewChild, ElementRef, OnInit, ChangeDetectorRef,
-  ChangeDetectionStrategy, ContentChild, TemplateRef,
+  ChangeDetectionStrategy, ContentChild, TemplateRef, Output, EventEmitter,
 } from "@angular/core";
 
 import { FilePickerAdapter, FilePickerComponent, FilePreviewModel, FileValidationTypes, ValidationError } from "ngx-awesome-uploader";
@@ -87,13 +88,14 @@ export class FileControlComponent extends ControlBase<File[]> implements OnInit 
   @Input()
   public customErrorMessages: Partial<ValidationErrorMessageTemplate>;
 
+  @Output()
+  public fileValidationError = new EventEmitter<ValidationError>();
+
   @ContentChild(TemplateRef)
   public contentTemplate: TemplateRef<HTMLElement>;
 
   @ViewChild(FilePickerComponent)
   public filePicker: FilePickerComponent;
-
-  public validationErrors: ValidationError[] = [];
 
   private validationErrorMessages: ValidationErrorMessageTemplate;
 
@@ -131,7 +133,13 @@ export class FileControlComponent extends ControlBase<File[]> implements OnInit 
     this.elementRef.nativeElement.addEventListener(
       "focus",
       () => {
-        this.validationErrors = [];
+        if (this.field.control.errors) {
+          Object.keys(this.field.control.errors)
+            .filter(error => error.startsWith("file_"))
+            .forEach(error => delete this.field.control.errors[error]);
+
+          this.field.control.setErrors(isEmpty(this.field.control.errors) ? null : this.field.control.errors);
+        }
 
         this.field.control.markAsTouched({ onlySelf: true });
 
@@ -143,32 +151,24 @@ export class FileControlComponent extends ControlBase<File[]> implements OnInit 
   public onValidationError(error: ValidationError) {
     error.error = this.validationErrorMessages[error.error as FileValidationTypes](this);
 
-    let errIndex = this.validationErrors.findIndex(e => e.file == error.file);
+    this.field.control.setErrors(Object.assign(
+      {},
+      this.field.control.errors || {},
+      { [`file_${error.file.name}`]: error.error }));
 
-    if (errIndex != -1) {
-      this.validationErrors[errIndex] = error;
-    }
-    else {
-      this.validationErrors.push(error);
-    }
+    this.fileValidationError.emit(error);
 
     this.changeDetectorRef.markForCheck();
   }
 
   public onFileAdded(file: FilePreviewModel) {
-    this.field.control.setValue(this.field.value
-      ? [...this.field.value, file.file as File]
-      : [file.file as File]);
+    this.field.control.setValue([...(this.field.value || []), file.file as File]);
 
     this.changeDetectorRef.markForCheck();
   }
 
   public onFileRemoved(removedFile: FilePreviewModel) {
-    this.validationErrors = [];
-
-    this.field.control.setValue(this.field.value
-      ? this.field.value.filter(file => file.name != removedFile.fileName)
-      : [removedFile.file as File]);
+    this.field.control.setValue(this.field.value.filter(file => file.name != removedFile.fileName));
 
     this.changeDetectorRef.markForCheck();
   }

@@ -23,8 +23,9 @@
         </ng-container>
 
         <ng-container *ngIf="!contentTemplate">
-          <a mat-raised-button
-             (click)="onDialogOpen()">{{ field.label }}</a>
+          <button type="button"
+                  mat-raised-button
+                  (click)="onDialogOpen()">{{ field.label }}</button>
         </ng-container>
       </div>
     </ngx-awesome-uploader>
@@ -32,10 +33,6 @@
 
   <mat-error *ngIf="baseControl.initialized && field.control.touched">
     <ng-container *ngTemplateOutlet="baseControl.errorsTemplate"></ng-container>
-
-    <mat-error *ngFor="let error of validationErrors">
-      {{ error.file.name }}: {{ error.error }}
-    </mat-error>
   </mat-error>
 </base-control>
 

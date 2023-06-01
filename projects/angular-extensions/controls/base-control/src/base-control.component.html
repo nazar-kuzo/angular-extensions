@@ -9,55 +9,66 @@
 </ng-template>
 
 <ng-template #errorsTemplate>
-  <mat-error *ngIf="control.field.control.errors?.required as error">
-    {{ control.field.validation.requiredTrue?.text || control.field.validation.required?.text || "Field is required" }}
-  </mat-error>
+  <mat-error *ngFor="let error of control.field.control.errors | keyvalue"
+             [ngSwitch]="error.key">
+    <ng-container *ngSwitchCase="'required'">
+      {{ control.field.validation.requiredTrue?.text || control.field.validation.required?.text || "Field is required" }}
+    </ng-container>
 
-  <mat-error *ngIf="control.field.control.errors?.min as error">
-    {{ control.field.validation.min?.text || "Value should be greater than " + error.min }}
-  </mat-error>
+    <ng-container *ngSwitchCase="'min'">
+      {{ control.field.validation.min?.text || "Value should be greater than " + error.value.min }}
+    </ng-container>
 
-  <mat-error *ngIf="control.field.control.errors?.max as error">
-    {{ control.field.validation.max?.text || "Value should be smaller than " + error.max }}
-  </mat-error>
+    <ng-container *ngSwitchCase="'max'">
+      {{ control.field.validation.max?.text || "Value should be smaller than " + error.value.max }}
+    </ng-container>
 
-  <mat-error *ngIf="control.field.control.errors?.minlength as error">
-    {{ control.field.validation.minLength?.text || "Value should be longer than " + error.requiredLength }}
-  </mat-error>
+    <ng-container *ngSwitchCase="'minlength'">
+      {{ control.field.validation.minLength?.text || "Value should be longer than " + error.value.requiredLength }}
+    </ng-container>
 
-  <mat-error *ngIf="control.field.control.errors?.maxlength as error">
-    {{ control.field.validation.maxLength?.text || "Value should be shorter than " + error.requiredLength }}
-  </mat-error>
+    <ng-container *ngSwitchCase="'maxlength'">
+      {{ control.field.validation.maxLength?.text || "Value should be shorter than " + error.value.requiredLength }}
+    </ng-container>
 
-  <mat-error *ngIf="control.field.control.errors?.minDate as error">
-    {{ control.field.validation.minDate?.text || "Date should be after the " + (error.expected | date) }}
-  </mat-error>
+    <ng-container *ngSwitchCase="'minDate'">
+      {{ control.field.validation.minDate?.text || "Date should be after the " + (error.value.expected | date) }}
+    </ng-container>
 
-  <mat-error *ngIf="control.field.control.errors?.minOrEqualDate as error">
-    {{ control.field.validation.minOrEqualDate?.text || "Date should be same or after the " + (error.expected | date) }}
-  </mat-error>
+    <ng-container *ngSwitchCase="'minOrEqualDate'">
+      {{ control.field.validation.minOrEqualDate?.text || "Date should be same or after the " + (error.value.expected | date) }}
+    </ng-container>
 
-  <mat-error *ngIf="control.field.control.errors?.maxDate as error">
-    {{ control.field.validation.maxDate?.text || "Date should be before the " + (error.expected | date) }}
-  </mat-error>
+    <ng-container *ngSwitchCase="'maxDate'">
+      {{ control.field.validation.maxDate?.text || "Date should be before the " + (error.value.expected | date) }}
+    </ng-container>
 
-  <mat-error *ngIf="control.field.control.errors?.maxOrEqualDate as error">
-    {{ control.field.validation.maxOrEqualDate?.text || "Date should be same or before the " + (error.expected | date) }}
-  </mat-error>
+    <ng-container *ngSwitchCase="'maxOrEqualDate'">
+      {{ control.field.validation.maxOrEqualDate?.text || "Date should be same or before the " + (error.value.expected | date) }}
+    </ng-container>
 
-  <mat-error *ngIf="control.field.control.errors?.pattern as error">
-    {{ control.field.validation.pattern?.text || error.message || "Value does not match the required pattern" }}
-  </mat-error>
+    <ng-container *ngSwitchCase="'pattern'">
+      {{ control.field.validation.pattern?.text || error.value.message || "Value does not match the required pattern" }}
+    </ng-container>
 
-  <mat-error *ngIf="control.field.control.errors?.custom as error">
-    {{ control.field.validation.custom?.text || error.message }}
-  </mat-error>
+    <ng-container *ngSwitchCase="'mask'">
+      {{ "Value does not match the required pattern" }}
+    </ng-container>
 
-  <mat-error *ngIf="control.field.control.errors?.async as error">
-    {{ control.field.validation.async?.text || error.message }}
-  </mat-error>
+    <ng-container *ngSwitchCase="'custom'">
+      {{ control.field.validation.custom?.text || error.value.message }}
+    </ng-container>
 
-  <mat-error *ngIf="control.field.control.errors?.native as error">
-    {{ control.field.validation.native?.text || error.message }}
+    <ng-container *ngSwitchCase="'async'">
+      {{ control.field.validation.async?.text || error.value.message }}
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'native'">
+      {{ control.field.validation.native?.text || error.value.message }}
+    </ng-container>
+
+    <ng-container *ngSwitchDefault>
+      {{ error.value.message || error.value }}
+    </ng-container>
   </mat-error>
 </ng-template>
