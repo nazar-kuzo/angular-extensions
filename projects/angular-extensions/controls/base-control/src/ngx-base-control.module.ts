@@ -7,6 +7,7 @@ import { MatInputModule } from "@angular/material/input";
 
 import { NgxPipesModule } from "angular-extensions/pipes";
 import { BaseControlComponent } from "./base-control.component";
+import { ValidationControlComponent } from "./validation-control.component";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatButtonModule } from "@angular/material/button";
 
@@ -25,6 +26,7 @@ import { MatButtonModule } from "@angular/material/button";
   ],
   declarations: [
     BaseControlComponent,
+    ValidationControlComponent,
   ],
   exports: [
     CommonModule,
@@ -39,6 +41,7 @@ import { MatButtonModule } from "@angular/material/button";
     NgxPipesModule,
 
     BaseControlComponent,
+    ValidationControlComponent,
   ]
 })
 export class NgxBaseControlModule { }
