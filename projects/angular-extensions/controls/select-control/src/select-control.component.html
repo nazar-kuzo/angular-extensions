@@ -51,6 +51,7 @@
             <mat-optgroup *ngFor="let group of options | groupBy : field.optionsGroupProvider"
                           [label]="group.key | map : field.optionGroupLabel">
               <mat-option *ngFor="let option of group.items; trackBy : optionTracker"
+                          [matTooltipDisabled]="optionTooltipDisabled"
                           [matTooltip]="option | map : field.optionLabel"
                           [value]="option | map : field.optionValue"
                           [disabled]="option | map : field.optionDisabled">
@@ -76,6 +77,7 @@
 
             <ng-container *ngIf="!virtualization">
               <mat-option *ngFor="let option of options; trackBy : optionTracker"
+                          [matTooltipDisabled]="optionTooltipDisabled"
                           [matTooltip]="option | map : field.optionLabel"
                           [value]="option | map : field.optionValue"
                           [disabled]="option | map : field.optionDisabled">

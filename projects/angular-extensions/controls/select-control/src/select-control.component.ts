@@ -48,6 +48,9 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   public tooltipDisabled = false;
 
   @Input()
+  public optionTooltipDisabled = false;
+
+  @Input()
   public filter = "";
 
   @Input()
