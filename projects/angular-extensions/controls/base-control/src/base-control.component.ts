@@ -38,6 +38,8 @@ export class ControlBase<TValue, TOption = any, TOptionGroup = any, TFormattedVa
 
   @Input()
   public set field(value: Field<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>) {
+    this.field?.destroy();
+
     this.fieldSubject.next(value);
   }
 
@@ -75,6 +77,8 @@ export class ControlBase<TValue, TOption = any, TOptionGroup = any, TFormattedVa
   public ngOnDestroy() {
     this.destroy.next(null);
     this.destroy.complete();
+
+    this.field.destroy();
   }
 }
 
