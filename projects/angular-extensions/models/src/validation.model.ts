@@ -1,4 +1,4 @@
-import { Observable } from "rxjs";
+import { Observable, from } from "rxjs";
 import { map, tap } from "rxjs/operators";
 import { ValidatorFn, ValidationErrors, AbstractControl as AbstractControlBase, Validators, AsyncValidatorFn } from "@angular/forms";
 
@@ -101,8 +101,12 @@ export const CustomValidators = {
     };
   },
 
-  async(valid: Observable<boolean>): AsyncValidatorFn {
+  async(valid: Observable<boolean> | Promise<boolean>): AsyncValidatorFn {
     return (control: AbstractControl<any>): Observable<ValidationErrors | null> => {
+      if(valid instanceof Promise) {
+        valid = from(valid);
+      }
+
       return valid.pipe(map(result => result ? null : { async: { value: control.value } }));
     };
   },
@@ -246,7 +250,7 @@ export class Validation<TValue> {
 
   public custom?: ValidationItem<TValue, boolean>;
 
-  public async?: ValidationItem<TValue, Observable<boolean>>;
+  public async?: ValidationItem<TValue, Observable<boolean> | Promise<boolean>>;
 
   public native?: ValidationItem<TValue, HTMLInputElement>;
 
