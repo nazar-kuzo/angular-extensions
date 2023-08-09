@@ -67,7 +67,7 @@ export class ApiService {
   }
 
   public getBlob(url: string, params?: HttpParams, httpOptions?: BlobHttpClientOptions) {
-    httpOptions = Object.assign({}, { observe: "body", responseType: "blob" }, httpOptions);
+    httpOptions = Object.assign({ responseType: "blob" }, httpOptions);
 
     return this.http.get(this.getUrl(url), this.getHttpOptions(params, httpOptions));
   }
@@ -77,7 +77,7 @@ export class ApiService {
   }
 
   public postBlob(url: string, body?: FormData | any, params?: HttpParams, httpOptions?: BlobHttpClientOptions) {
-    httpOptions = Object.assign({}, { observe: "body", responseType: "blob" }, httpOptions);
+    httpOptions = Object.assign({ responseType: "blob" }, httpOptions);
 
     return this.http.post(this.getUrl(url), this.getRequestBody(body), this.getHttpOptions(params, httpOptions, body));
   }
@@ -87,7 +87,7 @@ export class ApiService {
   }
 
   public putBlob(url: string, body?: FormData | any, params?: HttpParams, httpOptions?: BlobHttpClientOptions) {
-    httpOptions = Object.assign({}, { observe: "body", responseType: "blob" }, httpOptions);
+    httpOptions = Object.assign({ responseType: "blob" }, httpOptions);
 
     return this.http.put(this.getUrl(url), this.getRequestBody(body), this.getHttpOptions(params, httpOptions, body));
   }
