@@ -1,5 +1,4 @@
 import { merge } from "lodash-es";
-import { map } from "rxjs/operators";
 import { Inject, Injectable, InjectionToken, Optional } from "@angular/core";
 import { HttpClient, HttpHeaders as AngularHttpHeaders, HttpParams as AngularHttpParams } from "@angular/common/http";
 
@@ -10,7 +9,7 @@ type HttpParams = AngularHttpParams | { [param: string]: any };
 
 interface DefaultHttpClientOptions {
   headers?: HttpHeaders;
-  observe: "response";
+  observe: "body";
   params?: HttpParams;
   reportProgress?: boolean;
   responseType: "json" | "blob";
@@ -58,47 +57,47 @@ export class ApiService {
       headers: {
         "X-Requested-With": "XMLHttpRequest"
       },
-      observe: "response",
+      observe: "body",
       responseType: "json"
     };
   }
 
   public get<T>(url: string, params?: HttpParams, httpOptions?: HttpClientOptions) {
-    return this.http
-      .get<T>(this.getUrl(url), this.getHttpOptions(params, httpOptions))
-      .pipe(map(response => response.body as T));
+    return this.http.get<T>(this.getUrl(url), this.getHttpOptions(params, httpOptions));
   }
 
   public getBlob(url: string, params?: HttpParams, httpOptions?: BlobHttpClientOptions) {
     httpOptions = Object.assign({}, { observe: "response", responseType: "blob" }, httpOptions);
 
-    return this.http
-      .get(this.getUrl(url), this.getHttpOptions(params, httpOptions))
-      .pipe(map(response => response.body));
+    return this.http.get(this.getUrl(url), this.getHttpOptions(params, httpOptions));
   }
 
   public post<T>(url: string, body?: FormData | any, params?: HttpParams, httpOptions?: HttpClientOptions) {
-    return this.http
-      .post<T>(this.getUrl(url), this.getRequestBody(body), this.getHttpOptions(params, httpOptions, body))
-      .pipe(map(response => response.body as T));
+    return this.http.post<T>(this.getUrl(url), this.getRequestBody(body), this.getHttpOptions(params, httpOptions, body));
+  }
+
+  public postBlob(url: string, body?: FormData | any, params?: HttpParams, httpOptions?: BlobHttpClientOptions) {
+    httpOptions = Object.assign({}, { observe: "response", responseType: "blob" }, httpOptions);
+
+    return this.http.post(this.getUrl(url), this.getRequestBody(body), this.getHttpOptions(params, httpOptions, body));
   }
 
   public put<T>(url: string, body?: FormData | any, params?: HttpParams, httpOptions?: HttpClientOptions) {
-    return this.http
-      .put<T>(this.getUrl(url), this.getRequestBody(body), this.getHttpOptions(params, httpOptions, body))
-      .pipe(map(response => response.body as T));
+    return this.http.put<T>(this.getUrl(url), this.getRequestBody(body), this.getHttpOptions(params, httpOptions, body));
+  }
+
+  public putBlob(url: string, body?: FormData | any, params?: HttpParams, httpOptions?: BlobHttpClientOptions) {
+    httpOptions = Object.assign({}, { observe: "response", responseType: "blob" }, httpOptions);
+
+    return this.http.put(this.getUrl(url), this.getRequestBody(body), this.getHttpOptions(params, httpOptions, body));
   }
 
   public patch<T>(url: string, body?: FormData | any, params?: HttpParams, httpOptions?: HttpClientOptions) {
-    return this.http
-      .patch<T>(this.getUrl(url), this.getRequestBody(body), this.getHttpOptions(params, httpOptions, body))
-      .pipe(map(response => response.body as T));
+    return this.http.patch<T>(this.getUrl(url), this.getRequestBody(body), this.getHttpOptions(params, httpOptions, body));
   }
 
   public delete<T>(url: string, params?: HttpParams, httpOptions?: HttpClientOptions) {
-    return this.http
-      .delete<T>(this.getUrl(url), this.getHttpOptions(params, httpOptions))
-      .pipe(map(response => response.body as T));
+    return this.http.delete<T>(this.getUrl(url), this.getHttpOptions(params, httpOptions));
   }
 
   private getUrl(url: string) {
