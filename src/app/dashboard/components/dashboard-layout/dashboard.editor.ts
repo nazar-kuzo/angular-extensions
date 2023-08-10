@@ -205,7 +205,7 @@ export class DashboardEditor extends BaseEditor {
       },
       optionId: country => country.cca3,
       optionLabel: country => country.name.common,
-      options: this.loadAllCountries(),
+      optionsProvider: query => this.api.get<Country[]>(`https://restcountries.com/v3.1/name/${query}`),
       value: [],
       onValueChange: allies => {
         console.error(`Selected allies: ${allies.map(country => country.name.common).join(", ")}`);

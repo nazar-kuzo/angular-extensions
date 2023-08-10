@@ -10,6 +10,7 @@ import { overrideFunction } from "angular-extensions/core";
 import { NgxBaseControlModule } from "angular-extensions/controls/base-control";
 import { SelectControlComponent } from "./select-control.component";
 import { CustomMatOptionDirective } from "./custom-mat-option.directive";
+import { MatSelectSearchComponentDirective } from "./ngx-mat-select-search.directive";
 
 interface AppSelectionModel<T> extends Omit<SelectionModel<T>, "_markSelected" | "_unmarkSelected"> {
   _markSelected(value: T): void;
@@ -66,6 +67,7 @@ patchSelectionModel();
   declarations: [
     SelectControlComponent,
     CustomMatOptionDirective,
+    MatSelectSearchComponentDirective,
   ]
 })
 export class NgxSelectControlModule { }
