@@ -17,7 +17,7 @@ export class Form {
   /**
    * Provides all registered fields for this form
    */
-   public get fields() {
+  public get fields() {
     return [...this._fields];
   }
 
@@ -182,7 +182,7 @@ export class Form {
     return !errors$.length ? Promise.resolve() : forkJoin(errors$)
       .pipe(first())
       .toPromise()
-      .then(_ => {});
+      .then(_ => { });
   }
 
   /**
@@ -196,20 +196,7 @@ export class Form {
    * Iterates through descendants
    */
   public getDescendants() {
-    let controls = Object.values(this.formGroup.controls)
-      .flatMap(control => {
-        if (control instanceof FormGroup) {
-          return [...Object.values(control.controls), control];
-        }
-        else if (control instanceof FormArray) {
-          return [...control.controls, control];
-        }
-        else {
-          return [control];
-        }
-      });
-
-    return [...controls, this.formGroup];
+    return this.getDescendantsInternal(this.formGroup);
   }
 
   /**
@@ -220,6 +207,19 @@ export class Form {
 
     this.destroy$.next(null);
     this.destroy$.complete();
+  }
+
+  /**
+   * Iterates through descendants
+   */
+  private getDescendantsInternal(control: AbstractControl): AbstractControl[] {
+    let innerControls = control instanceof FormGroup
+      ? Object.values(control.controls)
+      : control instanceof FormArray
+        ? control.controls
+        : [];
+
+    return [...innerControls.flatMap(innerControl => this.getDescendantsInternal(innerControl)), control];
   }
 }
 
