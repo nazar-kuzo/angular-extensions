@@ -1,11 +1,16 @@
-:host {
+select-control {
   display: inline-block;
 
-  ::ng-deep mat-select {
+  mat-select {
     &.loading {
       .mat-select-arrow {
         color: transparent !important;
       }
     }
   }
+}
+
+mat-checkbox + .mat-select-search-input,
+mat-icon + .mat-select-search-input {
+  padding-left: 8px !important;
 }

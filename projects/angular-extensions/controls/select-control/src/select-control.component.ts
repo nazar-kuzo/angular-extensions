@@ -2,8 +2,8 @@ import { castArray } from "lodash-es";
 import { Observable, of, merge } from "rxjs";
 import { catchError, debounceTime, filter, first, startWith, switchMap, takeUntil, tap } from "rxjs/operators";
 import {
-  Component, OnInit, AfterViewInit, OnChanges, Input, Optional, ElementRef, ChangeDetectorRef,
-  ViewChild, ContentChild, TemplateRef, ChangeDetectionStrategy, Output, EventEmitter, NgZone,
+  Component, OnInit, OnChanges, Input, Optional, ElementRef, ChangeDetectorRef, NgZone,
+  ViewChild, ContentChild, TemplateRef, ChangeDetectionStrategy, Output, EventEmitter, ViewEncapsulation,
 } from "@angular/core";
 import { AppMatOption } from "@angular/material/core";
 import { AppMatSelect, MatSelect } from "@angular/material/select";
@@ -21,10 +21,11 @@ import { ActionableControl, ControlBase } from "angular-extensions/controls/base
   templateUrl: "./select-control.component.html",
   styleUrls: ["./select-control.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None
 })
 export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>
   extends ControlBase<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>
-  implements OnInit, AfterViewInit, OnChanges, ActionableControl {
+  implements OnInit, OnChanges, ActionableControl {
 
   @Input()
   public dropdownClass = "";
@@ -40,9 +41,6 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
 
   @Input()
   public virtualization = false;
-
-  @Input()
-  public showSelectAll = false;
 
   @Input()
   public tooltipDisabled = false;
@@ -77,9 +75,6 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   @ViewChild(CdkVirtualScrollViewport)
   public scrollViewport?: CdkVirtualScrollViewport;
 
-  @ViewChild("selectAllOption")
-  public selectAllOption?: AppMatOption;
-
   @ContentChild("headerTemplate", { static: true })
   public headerTemplate: TemplateRef<any>;
 
@@ -91,16 +86,23 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
 
   public dropdownHeight = this.optionHeight * this.visibleOptionsCount;
 
+  public isSelectAllChecked = false;
+
   public get viewportHeight() {
-    return this.dropdownHeight -
-      (this.searchable ? this.optionHeight : 0) -
-      (this.selectAllOption ? this.optionHeight + 15 : 0);
+    return this.dropdownHeight - (this.searchable ? this.optionHeight : 0);
   }
+
   /**
    * Selected option(s) based on option comparer,
    * see {@link Field.optionId} for details
    */
   public selectedOption: TOption | TOption[];
+
+  public get filteredOptions() {
+    return this.field.options.filter(option =>
+      !this.field.optionDisabled(option) &&
+      this.field.optionsFilterPredicate(option, this.filterControl.value));
+  }
 
   /**
    * Trigger label (text shown when option(s) selected),
@@ -145,13 +147,9 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
     this.addOptionsFilteringSupport();
     this.updateOptionsAndViewportOnMenuOpen();
 
-    if (this.multiple && this.showSelectAll) {
-      this.updateSelectAllStateOnSelectionChanges();
+    if (this.multiple && this.searchable) {
+      this.updateSelectAllStateOnOptionChanges();
     }
-  }
-
-  public ngAfterViewInit() {
-    this.updateSelectAllState();
   }
 
   public ngOnChanges(changes: SimpleChanges<SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>>) {
@@ -167,7 +165,7 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   public optionComparer = (left?: TOption, right?: TOption) => {
     return left != null && right != null &&
       (this.field.optionId(left) == this.field.optionId(right) ||
-      this.field.optionValue(left) == this.field.optionValue(right));
+        this.field.optionValue(left) == this.field.optionValue(right));
   };
 
   public showClearButton() {
@@ -187,14 +185,10 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
     this.changeDetectorRef.markForCheck();
   }
 
-  public toggleSelectAll() {
-    let shouldSelect = this.selection.selected.length != this.field.options.length;
+  public toggleSelectAll(shouldSelect: boolean) {
+    let filteredOptions = this.filteredOptions;
 
-    let options = this.field.options
-      .filter(option => !this.field.optionDisabled(option));
-
-    let matOptions = this.select.options
-      .filter(option => !option.disabled && option.id != this.selectAllOption?.id);
+    let matOptions = this.select.options.filter(option => !option.disabled);
 
     (matOptions as any as AppMatOption<any>[])
       .forEach(option => {
@@ -203,11 +197,11 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
       });
 
     if (shouldSelect) {
-      this.selection.select(...options);
+      this.selection.select(...filteredOptions);
       this.select._selectionModel.select(...matOptions);
     }
     else {
-      this.selection.deselect(...options);
+      this.selection.deselect(...filteredOptions);
       this.select._selectionModel.deselect(...matOptions);
     }
 
@@ -344,33 +338,21 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   /**
    * Updates select all state on selection changes.
    */
-  private updateSelectAllStateOnSelectionChanges() {
-    this.selection.changed
-      .pipe(startWith(this.selection.selected), takeUntil(this.destroy))
-      .subscribe(() => this.updateSelectAllState());
-  }
+  private updateSelectAllStateOnOptionChanges() {
+    merge(this.selection.changed, this.filterControl.valueChanges)
+      .pipe(
+        debounceTime(0),
+        startWith(this.isSelectAllChecked),
+        takeUntil(this.destroy))
+      .subscribe(() => {
+        let selectedOptions = this.selection.selected.filter(option =>
+          !this.field.optionDisabled(option) &&
+          this.field.optionsFilterPredicate(option, this.filterControl.value));
 
-  private updateSelectAllState() {
-    let selected = !this.selection.selected.length
-      ? false
-      : this.selection.selected.length === this.field.options?.length
-        ? true : null;
-
-    if (this.selectAllOption) {
-      let matCheckbox = this.selectAllOption._element.nativeElement
-        .querySelector("mat-pseudo-checkbox");
-
-      if (selected == null) {
-        matCheckbox.classList.remove("mat-pseudo-checkbox-checked");
-
-        matCheckbox.classList.add("mat-pseudo-checkbox-indeterminate");
-      }
-      else {
-        matCheckbox.classList.remove("mat-pseudo-checkbox-indeterminate");
-
-        matCheckbox.classList.toggle("mat-pseudo-checkbox-checked", selected);
-      }
-    }
+        this.isSelectAllChecked = !selectedOptions.length
+          ? false
+          : selectedOptions.length === this.filteredOptions.length ? true : null;
+      });
   }
 
   /**
