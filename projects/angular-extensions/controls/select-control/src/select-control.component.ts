@@ -349,9 +349,17 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
           !this.field.optionDisabled(option) &&
           this.field.optionsFilterPredicate(option, this.filterControl.value));
 
-        this.isSelectAllChecked = !selectedOptions.length
-          ? false
-          : selectedOptions.length === this.filteredOptions.length ? true : null;
+        if (!selectedOptions.length) {
+          this.isSelectAllChecked = false;
+        }
+        else {
+          let uncheckedOption = this.filteredOptions
+            .some(option => !selectedOptions.some(selected => this.optionComparer(option, selected)));
+
+          this.isSelectAllChecked = uncheckedOption ? null : true;
+
+          this.changeDetectorRef.markForCheck();
+        }
       });
   }
 
