@@ -360,9 +360,9 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
             .some(option => !selectedOptions.some(selected => this.optionComparer(option, selected)));
 
           this.isSelectAllChecked = uncheckedOption ? null : true;
-
-          this.changeDetectorRef.markForCheck();
         }
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 
