@@ -66,6 +66,9 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   @Input()
   public visibleOptionsCount = 6;
 
+  @Input()
+  public hideTriggerLabel: boolean;
+
   @Output()
   public actionButton = new EventEmitter<Field<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>>();
 
@@ -275,10 +278,11 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   /**
    * Delegates "empty" state detection to custom selection model.
    * Updates select trigger label based on custom selection model.
+   * If "hideTriggerLabel" set to true - trigger label will be ignored completely
    */
   private patchSelectTrigger() {
     Object.defineProperty(this.select, "empty", {
-      get: () => !this.selection.hasValue()
+      get: () => this.hideTriggerLabel ? true : !this.selection.hasValue()
     });
 
     this.selection.changed
