@@ -15,7 +15,7 @@ type FieldConstructor<TValue, TOption = TValue, TOptionGroup = any, TFormattedVa
   Partial<Omit<Field<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>,
     "control" | "element" | "options" | "onValueChange" | "onOptionsChange" | "validation" |
     "customOptionFilterPredicate" | "_initialStatus" | "destroy" | "setOptions" | "setFromOptions" |
-    "updateValidation" | "visible" | "formattedValue" | "formGroup" | "optionChanges"> & {
+    "updateValidation" | "visible" | "formattedValue" | "formGroup" | "optionChanges" | "destroy$"> & {
       options: TOption[] | Observable<TOption[]>;
 
       onValueChange: (value: TValue, previous: TValue) => void;
@@ -319,6 +319,14 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
    * Indicates whether field values should be updated when options changed.
    */
   public updateValueWhenOptionsChanged: boolean;
+
+  /**
+   * Configures when Field should be destroyed.
+   * If "control" - Field is destroyed when control ngOnDestroy method called.
+   * If "editor" - Field is destroyed when editor destroy method called.
+   * @default Default value: "control"
+   */
+  public destoryWith: "control" | "editor" = "control";
 
   /**
    * Options filter predicate that is used by select-control, by default filters by option label
