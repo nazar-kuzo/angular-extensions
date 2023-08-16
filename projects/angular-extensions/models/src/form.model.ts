@@ -203,7 +203,9 @@ export class Form {
    * Destroys each field in a form
    */
   public destroy() {
-    this._fields.forEach(field => field.destroy());
+    this._fields
+      .filter(field => field.destoryWith == "editor")
+      .forEach(field => field.destroy());
 
     this.destroy$.next(null);
     this.destroy$.complete();
