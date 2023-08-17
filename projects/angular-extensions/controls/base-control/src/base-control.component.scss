@@ -59,6 +59,13 @@
         display: block;
         width: 100%;
       }
+
+      .mat-form-field-suffix {
+        .mat-icon-button {
+          width: 30px !important;
+          height: 30px !important;
+        }
+      }
     }
   }
 }
