@@ -24,7 +24,7 @@
     "@angular/material": "16.2.1",
     "@angular-material-components/datetime-picker": "16.0.1",
     "angular2-ladda": "5.0.0",
-    "bootstrap": "4.6.1",
+    "bootstrap": "5.3.1",
     "date-fns": "2.30.0",
     "ladda": "2.0.3",
     "lodash-es": "4.17.21",
