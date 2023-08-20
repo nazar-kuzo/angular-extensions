@@ -6,9 +6,9 @@ import {
   ViewChild, ContentChild, TemplateRef, ChangeDetectionStrategy, Output, EventEmitter, ViewEncapsulation,
 } from "@angular/core";
 import { AppMatOption } from "@angular/material/core";
-import { AppMatSelect, MatSelect } from "@angular/material/select";
+import { AppMatSelect, MatLegacySelect as MatSelect } from "@angular/material/legacy-select";
 import { FormControl } from "@angular/forms";
-import { MatMenuTrigger } from "@angular/material/menu";
+import { MatLegacyMenuTrigger as MatMenuTrigger } from "@angular/material/legacy-menu";
 import { CdkVirtualScrollViewport } from "@angular/cdk/scrolling";
 import { SelectionModel } from "@angular/cdk/collections";
 

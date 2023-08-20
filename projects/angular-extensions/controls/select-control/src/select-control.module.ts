@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { MatSelectModule } from "@angular/material/select";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatLegacySelectModule as MatSelectModule } from "@angular/material/legacy-select";
+import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from "@angular/material/legacy-progress-spinner";
 import { ScrollingModule } from "@angular/cdk/scrolling";
 import { SelectionModel } from "@angular/cdk/collections";
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";

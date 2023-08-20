@@ -3,7 +3,7 @@ import { CommonModule } from "@angular/common";
 
 import { NgxBaseControlModule } from "angular-extensions/controls/base-control";
 import { CheckboxControlComponent } from "./checkbox-control.component";
-import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatLegacyCheckboxModule as MatCheckboxModule } from "@angular/material/legacy-checkbox";
 
 @NgModule({
   imports: [

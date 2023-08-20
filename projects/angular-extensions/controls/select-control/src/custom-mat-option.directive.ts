@@ -1,5 +1,5 @@
 import { Directive, EventEmitter, Output, OnInit } from "@angular/core";
-import { MatOption } from "@angular/material/core";
+import { MatLegacyOption as MatOption } from "@angular/material/legacy-core";
 import { overrideFunction } from "angular-extensions/core";
 
 @Directive({
