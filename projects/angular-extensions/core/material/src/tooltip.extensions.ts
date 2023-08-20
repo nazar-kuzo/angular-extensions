@@ -1,5 +1,5 @@
 import { delay, fromEvent, merge, of, sampleTime, switchMap } from "rxjs";
-import { MatLegacyTooltip as MatTooltip, MatLegacyTooltipDefaultOptions as MatTooltipDefaultOptions } from "@angular/material/legacy-tooltip";
+import { MatTooltip, MatTooltipDefaultOptions } from "@angular/material/tooltip";
 
 import { overrideFunction } from "angular-extensions/core";
 

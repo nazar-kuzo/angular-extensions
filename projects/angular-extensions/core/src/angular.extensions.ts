@@ -1,7 +1,7 @@
 import { HttpParams } from "@angular/common/http";
 import type { ChangeDetectorRef, ElementRef } from "@angular/core";
-import type { MatLegacyOption as MatOption } from "@angular/material/legacy-core";
-import type { MatLegacySelect as MatSelectBase, MatLegacySelectChange as MatSelectChangeEvent } from "@angular/material/legacy-select";
+import type { MatOption } from "@angular/material/core";
+import type { _MatSelectBase, MatSelectChange } from "@angular/material/select";
 
 /**
  * Generic representation of Angular SimpleChange
@@ -54,7 +54,7 @@ declare module "@angular/material/core" {
 }
 
 declare module "@angular/material/select" {
-  export interface AppMatSelect extends Omit<MatSelectBase, "_propagateChanges" | "_changeDetectorRef"> {
+  export interface AppMatSelect extends Omit<_MatSelectBase<any>, "_propagateChanges" | "_changeDetectorRef"> {
     _value: any;
 
     _changeDetectorRef: ChangeDetectorRef;
@@ -67,7 +67,7 @@ declare module "@angular/material/select" {
 
     _onSelect(matOption: MatOption<any>, isUserInput: boolean): void;
 
-    _getChangeEvent(value: any): MatSelectChangeEvent;
+    _getChangeEvent(value: any): MatSelectChange;
 
     _initializeSelection(): void;
   }

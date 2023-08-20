@@ -1,7 +1,7 @@
 import { merge, Subject, BehaviorSubject } from "rxjs";
 import { debounceTime, switchMap, takeUntil, tap } from "rxjs/operators";
-import { MatLegacyFormField as MatFormField, MatLegacyFormFieldAppearance as MatFormFieldAppearance } from "@angular/material/legacy-form-field";
-import { MatLegacyInput as MatInput } from "@angular/material/legacy-input";
+import { MatFormField, MatFormFieldAppearance } from "@angular/material/form-field";
+import { MatInput } from "@angular/material/input";
 
 import {
   Component, Input, ViewChild, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef,
