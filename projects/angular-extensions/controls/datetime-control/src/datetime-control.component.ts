@@ -122,7 +122,7 @@ export class DateTimeControlComponent extends ControlBase<Date> implements OnIni
   }
 
   public onFieldClick(event: MouseEvent) {
-    if (this.elementRef.nativeElement.querySelector(".mat-form-field-flex").contains(event.target as HTMLElement)) {
+    if (this.elementRef.nativeElement.querySelector(".mat-mdc-form-field-flex").contains(event.target as HTMLElement)) {
       this.datePicker.open();
     }
 
