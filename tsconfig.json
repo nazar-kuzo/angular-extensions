@@ -16,7 +16,7 @@
       ],
       "environments/*": [
         "src/environments/*"
-      ],
+      ]
     },
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
@@ -32,12 +32,13 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2017",
+    "target": "ES2022",
     "module": "es2020",
     "lib": [
       "dom",
       "es2019"
-    ]
+    ],
+    "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
