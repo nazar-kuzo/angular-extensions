@@ -1,5 +1,5 @@
 import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
-import { ApplicationRef, Injector, NgModuleRef, Type, ViewContainerRef } from "@angular/core";
+import { ApplicationRef, Injector, NgModuleRef, Type, ViewContainerRef, inject } from "@angular/core";
 import {
   ActivatedRoute, ActivationEnd, Router, IsActiveMatchOptions, GuardsCheckEnd, Route, Data,
 } from "@angular/router";
@@ -53,6 +53,8 @@ export function extendRouterConfigWithStatefulModals(router: Router) {
   if (!routeInjectors) {
     routeInjectors = new Map<Route, Injector>();
 
+    let rootInjector = inject(Injector);
+
     router.events.subscribe(event => {
       if (event instanceof GuardsCheckEnd) {
         let shouldOpenModal = router.getLastSuccessfulNavigation() == null ||
@@ -66,7 +68,7 @@ export function extendRouterConfigWithStatefulModals(router: Router) {
         }
 
         let component = event.snapshot.data.modalComponent;
-        let scopedInjector = getActivatedRouteInjector(router, event.snapshot.routeConfig);
+        let scopedInjector = getActivatedRouteInjector(router, event.snapshot.routeConfig, rootInjector);
         let activatedRoute = scopedInjector.get<ActivatedRoute>(ActivatedRoute);
         let dialog = scopedInjector.get<MatDialog>(MatDialog);
 
@@ -95,9 +97,8 @@ export function extendRouterConfigWithStatefulModals(router: Router) {
           }));
 
         let subscription = router.events.subscribe(routerEvent => {
-          let shouldCloseModal = !router.isActive(router.getCurrentNavigation().extractedUrl, routeMatchOptions);
-
-          if (routerEvent instanceof GuardsCheckEnd && routerEvent.shouldActivate && shouldCloseModal) {
+          if (routerEvent instanceof GuardsCheckEnd && routerEvent.shouldActivate &&
+            !router.isActive(router.getCurrentNavigation().extractedUrl, routeMatchOptions)) {
             dialogRef.close();
             subscription.unsubscribe();
           }
@@ -107,11 +108,11 @@ export function extendRouterConfigWithStatefulModals(router: Router) {
   }
 }
 
-function getActivatedRouteInjector(router: Router, route: Route): Injector | undefined {
+function getActivatedRouteInjector(router: Router, route: Route, rootInjector: Injector): Injector | undefined {
   let injector = routeInjectors.get(route);
 
   if (!injector) {
-    setRouteInjectors(router.config, ((router as any).ngModule as NgModuleRef<any>).injector);
+    setRouteInjectors(router.config, rootInjector);
 
     injector = routeInjectors.get(route);
   }
