@@ -4,11 +4,9 @@ import { Routes, RouterModule, Router } from "@angular/router";
 import {
   addGetLastSuccessfulNavigation,
   addOnRouteRetainedEvent, bindRouteConfigTitle,
-  SequentialRouteData,
-  extendParamMapWithTypedParameters, extendRouteConfigWithNavigationExtras, SequentialGuard,
+  extendParamMapWithTypedParameters, extendRouteConfigWithNavigationExtras,
 } from "angular-extensions";
 
-import { FirstGuard, SecondGuard } from "./core/guards";
 import { HomePageComponent } from "./shared/components/home-page/home-page.component";
 
 const routes: Routes = [
@@ -18,23 +16,11 @@ const routes: Routes = [
   },
   {
     path: "dashboard",
-    canActivate: [SequentialGuard],
-    canActivateChild: [SequentialGuard],
     loadChildren: () => import("./dashboard/dashboard.module").then(m => m.DashboardModule),
-    data: {
-      canActivateSequence: [FirstGuard, SecondGuard],
-      canActivateChildSequence: [FirstGuard, SecondGuard],
-    } as SequentialRouteData
   },
   {
     path: "other-dashboard",
-    canActivate: [SequentialGuard],
-    canActivateChild: [SequentialGuard],
     loadChildren: () => import("./other-dashboard/other-dashboard.module").then(m => m.OtherDashboardModule),
-    data: {
-      canActivateSequence: [FirstGuard, SecondGuard],
-      canActivateChildSequence: [FirstGuard, SecondGuard],
-    } as SequentialRouteData
   },
 ];
 
