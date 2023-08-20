@@ -6,7 +6,7 @@ import {
   ViewChild, ContentChild, TemplateRef, ChangeDetectionStrategy, Output, EventEmitter, ViewEncapsulation,
 } from "@angular/core";
 import { AppMatOption } from "@angular/material/core";
-import { AppMatSelect, MatLegacySelect as MatSelect } from "@angular/material/legacy-select";
+import { MatLegacySelect as MatSelect } from "@angular/material/legacy-select";
 import { FormControl } from "@angular/forms";
 import { MatLegacyMenuTrigger as MatMenuTrigger } from "@angular/material/legacy-menu";
 import { CdkVirtualScrollViewport } from "@angular/cdk/scrolling";
@@ -15,6 +15,7 @@ import { SelectionModel } from "@angular/cdk/collections";
 import { Field } from "angular-extensions/models";
 import { overrideFunction, SimpleChanges } from "angular-extensions/core";
 import { ActionableControl, ControlBase } from "angular-extensions/controls/base-control";
+import { AppMatSelect } from "@angular/material/select";
 
 @Component({
   selector: "select-control",

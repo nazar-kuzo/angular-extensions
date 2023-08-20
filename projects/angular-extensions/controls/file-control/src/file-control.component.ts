@@ -92,7 +92,7 @@ export class FileControlComponent extends ControlBase<File[]> implements OnInit 
   public fileValidationError = new EventEmitter<ValidationError>();
 
   @ContentChild(TemplateRef)
-  public contentTemplate: TemplateRef<HTMLElement>;
+  public contentTemplate: TemplateRef<{ $implicit: () => void }>;
 
   @ViewChild(FilePickerComponent)
   public filePicker: FilePickerComponent;
