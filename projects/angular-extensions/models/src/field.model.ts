@@ -261,7 +261,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
   public set value(value: TValue) {
     let convertedValue = this.controlConverter.toControlValue(value);
 
-    if (convertedValue != this.control.value) {
+    if (convertedValue !== this.control.value) {
       this.control.setValue(convertedValue, { onlySelf: true });
     }
   }
