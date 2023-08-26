@@ -30,31 +30,13 @@
       <mat-icon>{{ actionButtonIcon }}</mat-icon>
     </a>
 
-    <ng-container *ngIf="mask">
-      <input #input
-             matInput
-             cdkFocusInitial
-             [attr.inputmode]="type == 'number' ? 'decimal' : null"
-             [type]="type"
-             [attr.step]="step"
-             [prefix]="prefix"
-             [mask]="mask"
-             [showMaskTyped]="showMaskTyped"
-             [specialCharacters]="specialCharacters"
-             [dropSpecialCharacters]="dropSpecialCharacters"
-             [patterns]="$any(pattern)"
-             [formControl]="field.control">
-    </ng-container>
-
-    <ng-container *ngIf="!mask">
-      <input #input
-             matInput
-             cdkFocusInitial
-             [attr.inputmode]="type == 'number' ? 'decimal' : null"
-             [attr.step]="step"
-             [type]="type"
-             [formControl]="field.control">
-    </ng-container>
+    <input #input
+           matInput
+           cdkFocusInitial
+           [attr.inputmode]="type == 'number' ? 'decimal' : null"
+           [attr.step]="step"
+           [type]="type"
+           [formControl]="field.control">
 
     <mat-error *ngIf="baseControl.initialized">
       <ng-container *ngTemplateOutlet="baseControl.errorsTemplate"></ng-container>
