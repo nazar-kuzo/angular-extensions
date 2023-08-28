@@ -6,8 +6,9 @@ import {
 
 import { FilePickerAdapter, FilePickerComponent, FilePreviewModel, FileValidationTypes, ValidationError } from "ngx-awesome-uploader";
 
-import { NoUploadFileService } from "./no-upload-file.service";
 import { ControlBase } from "angular-extensions/controls/base-control";
+import { NoUploadFileService } from "./no-upload-file.service";
+import { FilePickerComponentDirective } from "./ngx-awesome-uploader.directive";
 
 export type ValidationErrorMessageTemplate = {
   [key in FileValidationTypes]: (control: FileControlComponent) => string;
@@ -129,23 +130,27 @@ export class FileControlComponent extends ControlBase<File[]> implements OnInit 
     }
   }
 
-  public onDialogOpen() {
-    this.elementRef.nativeElement.addEventListener(
-      "focus",
-      () => {
-        if (this.field.control.errors) {
-          Object.keys(this.field.control.errors)
-            .filter(error => error.startsWith("file_"))
-            .forEach(error => delete this.field.control.errors[error]);
+  public getOpenFileDialogHandler(fileUploader: FilePickerComponentDirective): () => void {
+    return () => {
+      fileUploader.openFileDialog();
 
-          this.field.control.setErrors(isEmpty(this.field.control.errors) ? null : this.field.control.errors);
-        }
+      this.elementRef.nativeElement.addEventListener(
+        "focus",
+        () => {
+          if (this.field.control.errors) {
+            Object.keys(this.field.control.errors)
+              .filter(error => error.startsWith("file_"))
+              .forEach(error => delete this.field.control.errors[error]);
 
-        this.field.control.markAsTouched({ onlySelf: true });
+            this.field.control.setErrors(isEmpty(this.field.control.errors) ? null : this.field.control.errors);
+          }
 
-        this.changeDetectorRef.markForCheck();
-      },
-      { capture: true, once: true });
+          this.field.control.markAsTouched({ onlySelf: true });
+
+          this.changeDetectorRef.markForCheck();
+        },
+        { capture: true, once: true });
+    };
   }
 
   public onValidationError(error: ValidationError) {

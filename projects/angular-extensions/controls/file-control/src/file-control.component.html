@@ -2,6 +2,7 @@
               [control]="this">
   <div class="field-label">
     <ngx-awesome-uploader #uploader
+                          #filePicker="filePicker"
                           [adapter]="adapter"
                           [showeDragDropZone]="true"
                           [ngClass]="fieldClass"
@@ -17,15 +18,16 @@
                           (validationError)="onValidationError($event)"
                           (fileAdded)="onFileAdded($event)">
 
-      <div class="dropzoneTemplate">
+      <div class="dropzoneTemplate"
+           *ngIf="getOpenFileDialogHandler(filePicker) as openFileDialog">
         <ng-container *ngIf="contentTemplate">
-          <ng-container *ngTemplateOutlet="contentTemplate; context: { $implicit: onDialogOpen.bind(this) }"></ng-container>
+          <ng-container *ngTemplateOutlet="contentTemplate; context: { $implicit: openFileDialog }"></ng-container>
         </ng-container>
 
         <ng-container *ngIf="!contentTemplate">
           <button type="button"
                   mat-raised-button
-                  (click)="onDialogOpen()">{{ field.label }}</button>
+                  (click)="openFileDialog()">{{ field.label }}</button>
         </ng-container>
       </div>
     </ngx-awesome-uploader>
