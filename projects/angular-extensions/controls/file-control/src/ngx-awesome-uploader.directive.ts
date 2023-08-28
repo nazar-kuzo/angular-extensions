@@ -18,7 +18,7 @@ export class FilePickerComponentDirective implements AfterViewInit {
       event => {
         let targetElement = event.target as HTMLElement;
 
-        if (!targetElement.closest(".dropzoneTemplate")) {
+        if (targetElement.classList.contains("dropzoneTemplate") || !targetElement.closest(".dropzoneTemplate")) {
           event.preventDefault();
           event.stopPropagation();
         }
