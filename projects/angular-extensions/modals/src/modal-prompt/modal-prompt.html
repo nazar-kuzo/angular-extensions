@@ -5,20 +5,22 @@
 <form [formGroup]="form.formGroup"
       (ngSubmit)="submit()">
   <mat-dialog-content>
-    <ng-container *ngIf="settings.multiline">
-      <textarea-control class="d-block"
-                        [field]="field"
-                        [focused]="true"></textarea-control>
-    </ng-container>
+    <ng-container *ngTemplateOutlet="settings.template || (settings.multiline ? textarea : text)"></ng-container>
 
-    <ng-container *ngIf="!settings.multiline">
+    <ng-template #text>
       <text-control class="d-block"
                     [field]="field"
                     [focused]="true"></text-control>
-    </ng-container>
+    </ng-template>
+
+    <ng-template #textarea>
+      <textarea-control class="d-block"
+                        [field]="field"
+                        [focused]="true"></textarea-control>
+    </ng-template>
   </mat-dialog-content>
 
-  <mat-dialog-actions align="end">
+  <mat-dialog-actions [align]="'end'">
     <button mat-raised-button
             type="button"
             [mat-dialog-close]="null">Close</button>

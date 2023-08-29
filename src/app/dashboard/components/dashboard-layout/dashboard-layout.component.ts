@@ -1,8 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
-import { ApiService, Field, ModalPromptComponent, ModalPromptSettings, overrideFunction, parseDates } from "angular-extensions";
+import {
+  ApiService, Field, ModalPromptComponent,
+  ModalPromptSettings, overrideFunction, parseDates,
+} from "angular-extensions";
 import { Country, DashboardEditor } from "./dashboard.editor";
 
 @Component({
@@ -13,6 +16,9 @@ import { Country, DashboardEditor } from "./dashboard.editor";
   providers: [DashboardEditor],
 })
 export class DashboardLayoutComponent implements OnInit {
+
+  @ViewChild("selectControlTemplate")
+  public selectControlTemplate: TemplateRef<any>;
 
   constructor(
     private router: Router,
@@ -96,5 +102,20 @@ export class DashboardLayoutComponent implements OnInit {
   }
 
   public updateDate(date: Date) {
+  }
+
+  public showPrompt() {
+    this.dialog
+      .open<ModalPromptComponent, ModalPromptSettings, any>(ModalPromptComponent, {
+        data: {
+          title: "Enter value",
+          template: this.selectControlTemplate,
+          field: this.editor.country,
+        }
+      })
+      .afterClosed()
+      .subscribe(value => {
+        console.error(value);
+      });
   }
 }

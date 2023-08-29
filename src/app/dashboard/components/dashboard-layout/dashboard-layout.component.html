@@ -129,6 +129,23 @@
               color="secondary"
               [routerLink]="['/other-dashboard/details']">Other Details</button>
 
+      <button class="mr-3 mb-2"
+              mat-raised-button
+              color="secondary"
+              (click)="showPrompt()">Prompt</button>
+
+      <ng-template #selectControlTemplate>
+        <select-control class="d-block"
+                        [field]="editor.country"
+                        [hintClass]="'text-truncate'"
+                        [searchable]="true"
+                        [clearable]="true"
+                        actionButtonIcon="content_copy"
+                        actionButtonTooltip="Copy"
+                        [actionButtonVisible]="!!editor.country.value"
+                        (actionButton)="copy($event)"></select-control>
+      </ng-template>
+
       <button mat-raised-button
               color="primary"
               (click)="submit()">Submit</button>
