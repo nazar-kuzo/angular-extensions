@@ -110,7 +110,6 @@ export class DashboardLayoutComponent implements OnInit {
         data: {
           title: "Enter value",
           template: this.selectControlTemplate,
-          field: this.editor.country,
         }
       })
       .afterClosed()

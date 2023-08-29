@@ -1,4 +1,5 @@
-import { Component, Inject, TemplateRef } from "@angular/core";
+import { NgTemplateOutlet } from "@angular/common";
+import { AfterViewInit, Component, Inject, TemplateRef, ViewChild } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 
 import { Field, Form, ValidationConstructor } from "angular-extensions/models";
@@ -13,15 +14,16 @@ export interface ModalPromptSettings {
   multiline?: boolean;
 
   template?: TemplateRef<any>;
-
-  field?: Field<any>;
 }
 
 @Component({
   selector: "modal-prompt",
   templateUrl: "./modal-prompt.html",
 })
-export class ModalPromptComponent {
+export class ModalPromptComponent implements AfterViewInit {
+
+  @ViewChild(NgTemplateOutlet, { static: true })
+  public templateOutlet: NgTemplateOutlet;
 
   public form: Form;
   public field: Field<string>;
@@ -30,13 +32,21 @@ export class ModalPromptComponent {
     public dialogRef: MatDialogRef<ModalPromptComponent, string>,
     @Inject(MAT_DIALOG_DATA) public settings: ModalPromptSettings
   ) {
-    this.field = settings.field || new Field<string>({
-      label: settings.label || settings.title,
-      name: "Answer",
-      validation: settings.validation,
-    });
+    this.form = new Form();
 
-    this.form = new Form(this.field);
+    this.field = new Field<string>({
+      label: this.settings.label || this.settings.title,
+      name: "Answer",
+      validation: this.settings.validation,
+    });
+  }
+
+  public ngAfterViewInit(): void {
+    // hacky way to get control [field] input
+    let field = (this.templateOutlet as any)._viewRef._lView
+      .find((item: any) => item instanceof Field);
+
+    this.form.addField(field);
   }
 
   public submit() {
