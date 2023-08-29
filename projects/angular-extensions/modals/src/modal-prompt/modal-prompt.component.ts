@@ -26,7 +26,7 @@ export class ModalPromptComponent implements AfterViewInit {
   public templateOutlet: NgTemplateOutlet;
 
   public form: Form;
-  public field: Field<string>;
+  public field: Field<any>;
 
   constructor(
     public dialogRef: MatDialogRef<ModalPromptComponent, string>,
@@ -43,10 +43,10 @@ export class ModalPromptComponent implements AfterViewInit {
 
   public ngAfterViewInit(): void {
     // hacky way to get control [field] input
-    let field = (this.templateOutlet as any)._viewRef._lView
-      .find((item: any) => item instanceof Field);
+    this.field = (this.templateOutlet as any)._viewRef._lView
+      .find((item: any) => item instanceof Field) as Field<any>;
 
-    this.form.addField(field);
+    this.form.addField(this.field);
   }
 
   public submit() {
