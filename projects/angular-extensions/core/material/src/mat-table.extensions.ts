@@ -34,6 +34,13 @@ export class CustomMatTableDataSource<T> extends MatTableDataSource<T> {
   }
 
   /**
+   * Forces data source to refresh {@link filteredData} field based on {@link customFilterPredicate}
+   */
+  public filterData() {
+    this.filter = this.filter;
+  }
+
+  /**
    * Sets custom data sort function
    */
   public set customSortData(sortData: (data: T[], sort: MatSort, defaultSortData: (data: T[], sort: MatSort) => T[]) => T[]) {
