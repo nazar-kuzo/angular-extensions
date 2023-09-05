@@ -1,3 +1,4 @@
+import type { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { overrideFunction } from "angular-extensions/core";
 
@@ -30,6 +31,15 @@ export class CustomMatTableDataSource<T> extends MatTableDataSource<T> {
 
         return dataSource.filteredData;
       });
+  }
+
+  /**
+   * Sets custom data sort function
+   */
+  public set customSortData(sortData: (data: T[], sort: MatSort, defaultSortData: (data: T[], sort: MatSort) => T[]) => T[]) {
+    let defaultSortData = this.sortData;
+
+    this.sortData = (data, sort) => sortData(data, sort, defaultSortData);
   }
 
   /**
