@@ -25,9 +25,12 @@ export type CustomSortData<T> = (
  */
 export class CustomMatTableDataSource<T> extends MatTableDataSource<T> {
 
+  public updatePaginatorOnDataFiltering = true;
+
   constructor(
     initialData?: T[],
     options?: {
+      updatePaginatorOnDataFiltering?: boolean,
       customSortData?: CustomSortData<T>,
       customFilterPredicate?: CustomFilterPredicate<T>,
     },
@@ -40,7 +43,7 @@ export class CustomMatTableDataSource<T> extends MatTableDataSource<T> {
       (_, dataSource, data) => {
         dataSource.filteredData = data.filter((item: T) => dataSource.filterPredicate(item, dataSource.filter));
 
-        if (dataSource.paginator) {
+        if (dataSource.paginator && options?.updatePaginatorOnDataFiltering) {
           dataSource._updatePaginator(dataSource.filteredData.length);
         }
 
