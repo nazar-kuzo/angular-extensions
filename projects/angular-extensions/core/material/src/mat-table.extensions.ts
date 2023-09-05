@@ -8,15 +8,30 @@ import { overrideFunction } from "angular-extensions/core";
 export type CustomFilterPredicate<T> = (
   data: T,
   filter: string,
-  defaultFilterPredicate: ((_data: T, _filter: string) => boolean)
+  defaultFilterPredicate: ((data: T, filter: string) => boolean),
 ) => boolean;
+
+/**
+ * Extends MatDataSource with data sort function
+ */
+export type CustomSortData<T> = (
+  data: T[],
+  sort: MatSort,
+  defaultSortData: (data: T[], sort: MatSort) => T[],
+) => T[];
 
 /**
  * Extends MatTableDataSource with custom filter function
  */
 export class CustomMatTableDataSource<T> extends MatTableDataSource<T> {
 
-  constructor(initialData?: T[]) {
+  constructor(
+    initialData?: T[],
+    options?: {
+      customSortData?: CustomSortData<T>,
+      customFilterPredicate?: CustomFilterPredicate<T>,
+    },
+  ) {
     super(initialData);
 
     overrideFunction(
@@ -31,6 +46,10 @@ export class CustomMatTableDataSource<T> extends MatTableDataSource<T> {
 
         return dataSource.filteredData;
       });
+
+    if (options) {
+      Object.assign(this, options);
+    }
   }
 
   /**
@@ -43,7 +62,7 @@ export class CustomMatTableDataSource<T> extends MatTableDataSource<T> {
   /**
    * Sets custom data sort function
    */
-  public set customSortData(sortData: (data: T[], sort: MatSort, defaultSortData: (data: T[], sort: MatSort) => T[]) => T[]) {
+  public set customSortData(sortData: CustomSortData<T>) {
     let defaultSortData = this.sortData;
 
     this.sortData = (data, sort) => sortData(data, sort, defaultSortData);
