@@ -43,7 +43,7 @@ export class CustomMatTableDataSource<T> extends MatTableDataSource<T> {
       (_, dataSource, data) => {
         dataSource.filteredData = data.filter((item: T) => dataSource.filterPredicate(item, dataSource.filter));
 
-        if (dataSource.paginator && options?.updatePaginatorOnDataFiltering) {
+        if (dataSource.paginator && dataSource.updatePaginatorOnDataFiltering) {
           dataSource._updatePaginator(dataSource.filteredData.length);
         }
 
