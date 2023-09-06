@@ -6,6 +6,7 @@ declare global {
     last(this: T[]): T | undefined;
     elementAt(this: T[], index: number): T | undefined;
     distinct(this: T[]): T[];
+    distinctBy<TKey>(this: T[], property: (item: T) => TKey): T[];
     contains(this: T[], item: T): boolean;
     orderBy(this: T[], ...properties: ((item: T) => any)[]): T[];
     orderByDesc(this: T[], property: (item: T) => any): T[];
@@ -34,6 +35,16 @@ export function elementAt<T>(this: T[], index: number): T | undefined {
  */
 export function distinct<T>(this: T[]): T[] {
   return [...new Set<T>(this)];
+}
+
+/**
+ * Removes duplicates from a collection based on a Set
+ *
+ * @param this Array
+ * @returns Array
+ */
+export function distinctBy<T, TKey>(this: T[], property: (item: T) => TKey): T[] {
+  return [...new Map<TKey, T>(this.map(item => [property(item), item])).values()];
 }
 
 export function contains<T>(this: T[], item: T): boolean {
@@ -95,12 +106,9 @@ Object.defineProperty(Array.prototype, nameOf(() => Array.prototype.first), { va
 Object.defineProperty(Array.prototype, nameOf(() => Array.prototype.last), { value: last, configurable: true, writable: true });
 Object.defineProperty(Array.prototype, nameOf(() => Array.prototype.elementAt), { value: elementAt, configurable: true, writable: true });
 Object.defineProperty(Array.prototype, nameOf(() => Array.prototype.distinct), { value: distinct, configurable: true, writable: true });
+Object.defineProperty(Array.prototype, nameOf(() => Array.prototype.distinctBy), { value: distinct, configurable: true, writable: true });
 Object.defineProperty(Array.prototype, nameOf(() => Array.prototype.contains), { value: contains, configurable: true, writable: true });
 Object.defineProperty(Array.prototype, nameOf(() => Array.prototype.orderBy), { value: orderBy, configurable: true, writable: true });
 Object.defineProperty(Array.prototype, nameOf(() => Array.prototype.move), { value: move, configurable: true, writable: true });
 Object.defineProperty(Array.prototype, nameOf(() => Array.prototype.groupBy), { value: groupBy, configurable: true, writable: true });
-
-Object.defineProperty(
-  Array.prototype,
-  nameOf(() => Array.prototype.orderByDesc),
-  { value: orderByDesc, configurable: true, writable: true });
+Object.defineProperty(Array.prototype, nameOf(() => Array.prototype.orderByDesc), { value: orderByDesc, configurable: true, writable: true });
