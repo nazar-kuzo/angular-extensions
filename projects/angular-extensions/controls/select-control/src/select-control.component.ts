@@ -257,11 +257,11 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
     this.field$
       .pipe(
         switchMap(field => merge(
+          of(field.value),
           field.optionChanges,
           new Observable(subscriber => field.control.registerOnChange(() => subscriber.next(null))),
         )),
         debounceTime(0),
-        startWith(null),
         takeUntil(this.destroy))
       .subscribe(() => {
         let options = castArray(this.field.value as any as TOption[] ?? [])
