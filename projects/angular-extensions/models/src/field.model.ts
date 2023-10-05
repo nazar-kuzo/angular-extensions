@@ -219,10 +219,14 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
   public visibilityProvider: ValueProvider<TValue, boolean>;
 
   /**
+   * Highlights field
+   */
+  public highlight?: () => void;
+
+  /**
    * Determines whether field is querying data: options, etc.
    */
   public isQuerying: boolean;
-
 
   /**
    * Gets field's parent as form group
