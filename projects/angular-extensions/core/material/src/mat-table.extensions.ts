@@ -28,8 +28,8 @@ export class CustomMatTableDataSource<T> extends MatTableDataSource<T> {
   constructor(
     initialData?: T[],
     options?: {
-      customSortData?: CustomSortData<T>,
-      customFilterPredicate?: CustomFilterPredicate<T>,
+      customSortData?: CustomSortData<T>;
+      customFilterPredicate?: CustomFilterPredicate<T>;
     },
   ) {
     super(initialData);
