@@ -261,7 +261,7 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
           new Observable(subscriber => field.control.registerOnChange(() => subscriber.next(null))),
         )),
         debounceTime(0),
-        takeUntil(this.destroy))
+        takeUntil(this.destroy$))
       .subscribe(() => {
         let options = castArray(this.field.value as any as TOption[] ?? [])
           .map(item => this.field.options.find(option => this.optionComparer(option, item)) ?? item);
@@ -285,7 +285,7 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
     });
 
     this.selection.changed
-      .pipe(startWith(this.selection.selected), takeUntil(this.destroy))
+      .pipe(startWith(this.selection.selected), takeUntil(this.destroy$))
       .subscribe(() => {
         this.selectedOption = this.multiple
           ? this.selection.selected
@@ -346,7 +346,7 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
       .pipe(
         debounceTime(0),
         startWith(this.isSelectAllChecked),
-        takeUntil(this.destroy))
+        takeUntil(this.destroy$))
       .subscribe(() => {
         let selectedOptions = this.selection.selected.filter(option =>
           !this.field.optionDisabled(option) &&
@@ -384,7 +384,7 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
           switchMap((query: string) => !!query
             ? this.field.optionsProvider(query).pipe(catchError(() => of<TOption[]>([])))
             : of([])),
-          takeUntil(this.destroy))
+          takeUntil(this.destroy$))
         .subscribe(options => {
           this.field.options = options;
           this.field.isQuerying = false;
