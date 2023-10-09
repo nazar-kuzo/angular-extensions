@@ -1,6 +1,7 @@
 import { remove } from "lodash-es";
 import { forkJoin, Observable, Subject } from "rxjs";
 import { first, tap } from "rxjs/operators";
+import { Injectable, OnDestroy } from "@angular/core";
 import { FormGroup, AbstractControl, FormArray, ValidationErrors } from "@angular/forms";
 
 import { Field } from "./field.model";
@@ -11,14 +12,15 @@ import { Field } from "./field.model";
 export class Form {
 
   private _fields: Field<any>[] = [];
+  private _editors: BaseEditor[] = [];
 
   public readonly destroy$ = new Subject();
 
   /**
    * Provides all registered fields for this form
    */
-  public get fields() {
-    return [...this._fields];
+  public get fields(): Field<any>[] {
+    return [...this._fields, ...this._editors.flatMap(editor => editor.form.fields)];
   }
 
   /**
@@ -91,7 +93,11 @@ export class Form {
       .filter(key => !fieldsToIgnore.contains(key))
       .forEach(key => {
         if ((model as any)[key] instanceof BaseEditor) {
-          form.formGroup.addControl(key, ((model as any)[key] as BaseEditor).form.formGroup);
+          let editor = (model as any)[key] as BaseEditor;
+
+          form.formGroup.addControl(key, editor.form.formGroup);
+
+          form._editors.push(editor);
         }
       });
 
@@ -207,6 +213,8 @@ export class Form {
       .filter(field => field.destoryWith == "editor")
       .forEach(field => field.destroy());
 
+    this._editors.forEach(editor => editor.ngOnDestroy());
+
     this.destroy$.next(null);
     this.destroy$.complete();
   }
@@ -228,7 +236,8 @@ export class Form {
 /**
  * Base editor model that dedicated page editors should derive from. Used by {@link Form}
  */
-export abstract class BaseEditor {
+@Injectable()
+export abstract class BaseEditor implements OnDestroy {
 
   public get destroy$() {
     return this.form.destroy$;
@@ -236,7 +245,7 @@ export abstract class BaseEditor {
 
   public form: Form;
 
-  public destroy() {
+  public ngOnDestroy(): void {
     this.form.destroy();
   }
 

@@ -328,6 +328,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
    * Configures when Field should be destroyed.
    * If "control" - Field is destroyed when control ngOnDestroy method called.
    * If "editor" - Field is destroyed when editor destroy method called.
+   *
    * @default Default value: "control"
    */
   public destoryWith: "control" | "editor" = "control";

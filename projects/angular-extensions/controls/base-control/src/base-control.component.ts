@@ -58,9 +58,9 @@ export class ControlBase<TValue, TOption = any, TOptionGroup = any, TFormattedVa
 
   private fieldSubject = new BehaviorSubject<Field<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>>(null);
 
-  protected destroy = new Subject();
+  protected destroy$ = new Subject();
 
-  public field$ = this.fieldSubject.asObservable().pipe(takeUntil(this.destroy));
+  public field$ = this.fieldSubject.asObservable().pipe(takeUntil(this.destroy$));
 
   public focus() {
     this.input?.focus();
@@ -73,8 +73,8 @@ export class ControlBase<TValue, TOption = any, TOptionGroup = any, TFormattedVa
   }
 
   public ngOnDestroy() {
-    this.destroy.next(null);
-    this.destroy.complete();
+    this.destroy$.next(null);
+    this.destroy$.complete();
 
     if (this.field.destoryWith == "control") {
       this.field.destroy();
