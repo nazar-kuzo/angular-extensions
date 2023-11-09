@@ -216,7 +216,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
   /**
    * Configures when field should be visible, by default is always visible.
    */
-  public visibilityProvider: ValueProvider<TValue, boolean>;
+  public visibilityProvider?: () => boolean;
 
   /**
    * Highlights field
@@ -239,7 +239,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
    * Gets field's visibility status. Based on {@link visibilityProvider}.
    */
   public get visible() {
-    return !!this.visibilityProvider(this.value);
+    return !this.visibilityProvider || this.visibilityProvider();
   }
 
   /**
@@ -404,7 +404,6 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
       ? () => true
       : (option, filter) => this.optionLabel(option)?.toLowerCase().includes(filter.toLowerCase());
 
-    this.visibilityProvider = () => true;
     this.optionGroupLabel = optionGroup => optionGroup?.toString();
     this.optionId = option => option instanceof Option ? option.id : option;
     this.optionLabel = option => option instanceof Option ? option.label : option?.toString();
