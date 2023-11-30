@@ -172,7 +172,7 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   };
 
   public showClearButton() {
-    return this.filterControl.enabled && this.clearable && !this.field.isQuerying && this.selection.hasValue();
+    return this.field.control.enabled && this.clearable && !this.field.isQuerying && this.selection.hasValue();
   }
 
   public isSearchAvailable() {
