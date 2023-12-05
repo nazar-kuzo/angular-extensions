@@ -18,10 +18,17 @@ function addTimepickerNullableModelSupport() {
     timePicker => timePicker.ngOnInit,
     () => { });
 
+  // ensure timepicker model is set when user performs interaction
   overrideFunction(
     NgxMatTimepickerComponent.prototype as any as AppNgxMatTimepickerComponent<any>,
     timePicker => timePicker._updateModel,
-    (updateModel, timePicker) => timePicker._model && updateModel());
+    (updateModel, timePicker) => {
+      if (!timePicker._model) {
+        timePicker._model = new Date();
+      }
+
+      return updateModel();
+    });
 
   overrideFunction(
     NgxMatTimepickerComponent.prototype as any as AppNgxMatTimepickerComponent<any>,
@@ -146,8 +153,6 @@ export class DateTimeControlComponent extends ControlBase<Date> implements OnIni
   }
 
   public datePickerOpened() {
-    this.timePicker._model = new Date();
-
     overrideFunction(
       this.datepickerContent,
       content => content._handleUserSelection,
