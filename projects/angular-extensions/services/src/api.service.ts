@@ -1,6 +1,6 @@
 import { merge } from "lodash-es";
 import { Inject, Injectable, InjectionToken, Optional } from "@angular/core";
-import { HttpClient, HttpHeaders as AngularHttpHeaders, HttpParams as AngularHttpParams } from "@angular/common/http";
+import { HttpClient, HttpHeaders as AngularHttpHeaders, HttpParams as AngularHttpParams, HttpParameterCodec } from "@angular/common/http";
 
 import { patchAngularHttpParams } from "angular-extensions/core";
 
@@ -29,6 +29,8 @@ export interface ApiConfig {
   apiUrl: string;
 
   dateConversionExcludePaths: RegExp[];
+
+  encoder?: HttpParameterCodec,
 }
 
 export const API_CONFIG = new InjectionToken<ApiConfig>("ApiConfig");
@@ -49,7 +51,7 @@ export class ApiService {
 
   constructor(
     private http: HttpClient,
-    @Optional() @Inject(API_CONFIG) config: ApiConfig,
+    @Optional() @Inject(API_CONFIG) private config: ApiConfig,
   ) {
     this.apiUrl = config?.apiUrl;
 
@@ -109,16 +111,7 @@ export class ApiService {
   }
 
   private sanitizeQueryParams(params?: HttpParams) {
-    if (params instanceof AngularHttpParams) {
-      let httpParams = params;
-
-      params = httpParams.keys().reduce((result: any, key: string) => {
-        result[key] = httpParams.getAll(key);
-
-        return result;
-      }, {});
-    }
-    else if (params != undefined) {
+    if (params != undefined && !(params instanceof AngularHttpParams)) {
       let objectParams = params;
 
       Object.keys(objectParams)
@@ -127,7 +120,7 @@ export class ApiService {
           delete objectParams[key];
         });
 
-      params = objectParams;
+      params = new AngularHttpParams({ fromObject: objectParams, encoder: this.config.encoder });
     }
 
     return params;
