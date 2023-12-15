@@ -1,4 +1,4 @@
-import { HttpParams } from "@angular/common/http";
+import { HttpParameterCodec, HttpParams } from "@angular/common/http";
 import type { ChangeDetectorRef, ElementRef } from "@angular/core";
 import type { MatOption } from "@angular/material/core";
 import type { MatSelect as MatSelectBase, MatSelectChange as MatSelectChangeEvent } from "@angular/material/select";
@@ -33,6 +33,24 @@ export function patchAngularHttpParams() {
       .replace(/&{2,}/g, "&")
       .replace(/^&|&$/g, "");
   };
+}
+
+export class DefaultHttpParamEncoder implements HttpParameterCodec {
+  public encodeKey(key: string): string {
+    return encodeURIComponent(key);
+  }
+
+  public encodeValue(value: string): string {
+    return encodeURIComponent(value);
+  }
+
+  public decodeKey(key: string): string {
+    return decodeURIComponent(key);
+  }
+
+  public decodeValue(value: string): string {
+    return decodeURIComponent(value);
+  }
 }
 
 declare module "@angular/forms" {

@@ -1,6 +1,6 @@
 import { castArray, merge } from "lodash-es";
 import { Inject, Injectable, InjectionToken, Optional } from "@angular/core";
-import { HttpClient, HttpHeaders as AngularHttpHeaders, HttpParams as AngularHttpParams } from "@angular/common/http";
+import { HttpClient, HttpHeaders as AngularHttpHeaders, HttpParams as AngularHttpParams, HttpParameterCodec } from "@angular/common/http";
 
 import { patchAngularHttpParams } from "angular-extensions/core";
 
@@ -29,6 +29,8 @@ export interface ApiConfig {
   apiUrl: string;
 
   dateConversionExcludePaths: RegExp[];
+
+  encoder?: HttpParameterCodec,
 }
 
 export const API_CONFIG = new InjectionToken<ApiConfig>("ApiConfig");
@@ -49,7 +51,7 @@ export class ApiService {
 
   constructor(
     private http: HttpClient,
-    @Optional() @Inject(API_CONFIG) config: ApiConfig,
+    @Optional() @Inject(API_CONFIG) private config: ApiConfig,
   ) {
     this.apiUrl = config?.apiUrl;
 
@@ -109,36 +111,23 @@ export class ApiService {
   }
 
   private sanitizeQueryParams(params?: HttpParams) {
-    if (params instanceof AngularHttpParams) {
-      return params;
-    }
-    else if (params != undefined) {
-      let httpParams = new AngularHttpParams();
+    if (params != undefined && !(params instanceof AngularHttpParams)) {
+      let objectParams = params;
 
-      // uses custom formatter to have flexibility in Date serialization
-      Object.entries(params)
-        .filter(([_, value]) => value !== undefined && value !== null && value !== "")
-        .forEach(([key, value]) => {
-          let items = castArray(value).map(this.serializeHttpParam);
-
-            for (let item of items) {
-              httpParams = httpParams.append(key, item);
-            }
+      Object.keys(objectParams)
+        .forEach(key => {
+          if (objectParams[key] == null || objectParams[key] === "") {
+            delete objectParams[key];
+          }
+          else if (objectParams[key] instanceof Date) {
+            objectParams[key] = objectParams[key].toJSON();
+          }
         });
 
-      params = httpParams;
+      params = new AngularHttpParams({ fromObject: objectParams, encoder: this.config.encoder });
     }
 
     return params;
-  }
-
-  private serializeHttpParam(value: any): string | number | boolean {
-    if (value instanceof Date) {
-      return value.toJSON();
-    }
-    else {
-      return `${value}`;
-    }
   }
 
   private getHttpOptions<TOptions extends DefaultHttpClientOptions>(

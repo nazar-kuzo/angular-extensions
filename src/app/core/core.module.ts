@@ -1,10 +1,10 @@
 import { NgModule } from "@angular/core";
 
-import { NgxServicesModule } from "angular-extensions";
+import { DefaultHttpParamEncoder, NgxServicesModule } from "angular-extensions";
 
 @NgModule({
   imports: [
-    NgxServicesModule,
+    NgxServicesModule.configure({ encoder: new DefaultHttpParamEncoder() }),
   ],
 })
 export class CoreModule { }
