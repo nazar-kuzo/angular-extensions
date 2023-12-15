@@ -3,12 +3,12 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve dashboard --open",
-    "build": "ng build angular-extensions --configuration production",
+    "start": "node --openssl-legacy-provider ./node_modules/@angular/cli/bin/ng serve dashboard --open",
+    "build": "node --openssl-legacy-provider ./node_modules/@angular/cli/bin/ng build angular-extensions --configuration production",
     "pack": "npm pack ./dist/angular-extensions",
     "publish": "npm publish ./dist/angular-extensions --tag angular-v12",
-    "analyze": "ng build dashboard --configuration production --stats-json && webpack-bundle-analyzer dist/dashboard/stats.json",
-    "watch": "ng build --watch --configuration development"
+    "analyze": "node --openssl-legacy-provider ./node_modules/@angular/cli/bin/ng build dashboard --configuration production --stats-json && webpack-bundle-analyzer dist/dashboard/stats.json",
+    "watch": "node --openssl-legacy-provider ./node_modules/@angular/cli/bin/ng build --watch --configuration development"
   },
   "private": true,
   "dependencies": {
