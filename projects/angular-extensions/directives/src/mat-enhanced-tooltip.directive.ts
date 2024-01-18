@@ -25,15 +25,13 @@ export class MatEnhancedTooltipDirective extends MatTooltip implements OnInit, O
 
     this.tooltipDisabled = disabled;
 
-    if (disabled) {
-      setTimeout(() => {
-        this.elementRef.nativeElement.classList.add("disabled");
+    setTimeout(() => {
+      this.elementRef.nativeElement.classList.toggle("disabled", disabled);
 
-        if (this.elementRef.nativeElement.attributes.getNamedItem("disabled")) {
-          this.elementRef.nativeElement.attributes.removeNamedItem("disabled");
-        }
-      });
-    }
+      if (this.elementRef.nativeElement.attributes.getNamedItem("disabled")) {
+        this.elementRef.nativeElement.attributes.removeNamedItem("disabled");
+      }
+    });
   }
 
   public override get message() {
