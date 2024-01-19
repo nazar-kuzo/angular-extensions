@@ -2,7 +2,7 @@ import { Directive, ElementRef, Input, OnInit, OnDestroy, HostListener } from "@
 import { MatTooltip } from "@angular/material/tooltip";
 
 @Directive({
-  selector: "[matTooltip],[matTooltipDisabled],[matTooltipEnabled]",
+  selector: "[matTooltipDisabled],[matTooltipEnabled]",
 })
 export class MatEnhancedTooltipDirective extends MatTooltip implements OnInit, OnDestroy {
 
@@ -20,13 +20,13 @@ export class MatEnhancedTooltipDirective extends MatTooltip implements OnInit, O
 
   @Input()
   public override set disabled(disabled: boolean) {
+    this.tooltipDisabled = disabled;
+
     // tooltip should be always enabled
     super.disabled = false;
 
-    this.tooltipDisabled = disabled;
-
     setTimeout(() => {
-      this.elementRef.nativeElement.classList.toggle("disabled", disabled);
+      this.elementRef.nativeElement.classList.toggle("disabled", !!disabled);
 
       if (this.elementRef.nativeElement.attributes.getNamedItem("disabled")) {
         this.elementRef.nativeElement.attributes.removeNamedItem("disabled");
