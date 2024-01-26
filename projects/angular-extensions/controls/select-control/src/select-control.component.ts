@@ -67,7 +67,10 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   public visibleOptionsCount = 6;
 
   @Input()
-  public hideTriggerLabel: boolean;
+  public hideTriggerLabel?: boolean;
+
+  @Input()
+  public alwaysShowTriggerLabel?: boolean;
 
   @Output()
   public actionButton = new EventEmitter<Field<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>>();
@@ -281,7 +284,7 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
    */
   private patchSelectTrigger() {
     Object.defineProperty(this.select, "empty", {
-      get: () => this.hideTriggerLabel ? true : !this.selection.hasValue()
+      get: () => this.alwaysShowTriggerLabel ? false : this.hideTriggerLabel ? true : !this.selection.hasValue()
     });
 
     this.selection.changed
