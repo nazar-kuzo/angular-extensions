@@ -1,8 +1,32 @@
-import { format, parseISO, parse, isValid } from "date-fns";
+import { format, parseISO } from "date-fns";
+import { reduce, upperFirst, words } from "lodash-es";
 
 declare global {
+  interface StartCaseOptions {
+    /**
+     * Should insert a space before digit present in string. E.g. "every10Month" => "Every 10 Month"
+     */
+    insertSpaceBeforeDigits?: boolean;
+
+    /**
+     * Should insert a space after digit present in string. E.g. "calculate10e" => "Calculate 10 e"
+     */
+    insertSpaceAfterDigits?: boolean;
+
+    /**
+     * Should insert a space before abbreviation present in string. E.g. "FaceID" => "Face ID"
+     */
+    insertSpaceBeforeAbbreviations?: boolean;
+
+    /**
+     * Should make single letter part present in string. E.g. "pH" => "PH"
+     */
+    capitalizeSingleLetters?: boolean;
+  }
+
   interface String {
     trimEnd(this: string, charList?: string): string;
+    toStartCase(this: string, options?: StartCaseOptions): string;
   }
 
   interface Dictionary<T> {
@@ -290,6 +314,38 @@ export function formDataFromObject(this: FormData, data: { [key: string]: File |
   return this;
 }
 
+const ApostropheRegex = RegExp("['\u2019]", "g");
+
+export function toStartCase(this: string, options?: StartCaseOptions): string {
+  if (!this) {
+    return "";
+  }
+
+  return reduce(
+    words(this.replace(ApostropheRegex, "")),
+    (result, phrase, index) => {
+      let infix = "";
+
+      if (index > 0) {
+        if (/^\d/.test(phrase)) {
+          infix = options.insertSpaceBeforeDigits ? " " : "";
+        }
+        else if (/^[A-Z]+$/.test(phrase)) {
+          infix = options.insertSpaceBeforeAbbreviations ? " " : "";
+        }
+        else if (/\d$/.test(result)) {
+          infix = options.insertSpaceAfterDigits ? " " : "";
+        }
+        else {
+          infix = " ";
+        }
+      }
+
+      return result + infix + (phrase.length > 1 || options.capitalizeSingleLetters ? upperFirst(phrase) : phrase);
+    },
+    "");
+}
+
 window.nameOf = nameOf;
 window.nameOfFull = nameOfFull;
 
@@ -301,3 +357,8 @@ Date.prototype.asLocalDate = asLocalDate;
 FormData.prototype.fromObject = formDataFromObject;
 
 Object.defineProperty(String.prototype, nameOf(() => String.prototype.trimEnd), { value: trimEnd, configurable: true, writable: true });
+
+Object.defineProperty(
+  String.prototype,
+  nameOf(() => String.prototype.toStartCase),
+  { value: toStartCase, configurable: true, writable: true });
