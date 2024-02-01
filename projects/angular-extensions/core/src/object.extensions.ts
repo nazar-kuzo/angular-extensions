@@ -328,20 +328,20 @@ export function toStartCase(this: string, options?: StartCaseOptions): string {
 
       if (index > 0) {
         if (/^\d/.test(phrase)) {
-          infix = options.insertSpaceBeforeDigits ? " " : "";
+          infix = options?.insertSpaceBeforeDigits ? " " : "";
         }
         else if (/^[A-Z]+$/.test(phrase)) {
-          infix = options.insertSpaceBeforeAbbreviations ? " " : "";
+          infix = options?.insertSpaceBeforeAbbreviations ? " " : "";
         }
         else if (/\d$/.test(result)) {
-          infix = options.insertSpaceAfterDigits ? " " : "";
+          infix = options?.insertSpaceAfterDigits ? " " : "";
         }
         else {
           infix = " ";
         }
       }
 
-      return result + infix + (phrase.length > 1 || options.capitalizeSingleLetters ? upperFirst(phrase) : phrase);
+      return result + infix + (phrase.length > 1 || options?.capitalizeSingleLetters ? upperFirst(phrase) : phrase);
     },
     "");
 }

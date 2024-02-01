@@ -385,7 +385,13 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
           }),
           debounceTime(300),
           switchMap((query: string) => !!query
-            ? this.field.optionsProvider(query).pipe(catchError(() => of<TOption[]>([])))
+            ? this.field
+              .optionsProvider(query)
+              .pipe(catchError(error => {
+                console.error(error);
+
+                return of<TOption[]>([]);
+              }))
             : of([])),
           takeUntil(this.destroy$))
         .subscribe(options => {

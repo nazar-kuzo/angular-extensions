@@ -468,7 +468,11 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
       value
         .pipe(
           first(),
-          catchError(() => of([])))
+          catchError(error => {
+            console.error(error);
+
+            return of([]);
+          }))
         .subscribe({
           next: options => {
             this.options = options;
