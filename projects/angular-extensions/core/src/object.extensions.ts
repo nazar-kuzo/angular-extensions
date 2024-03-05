@@ -158,7 +158,7 @@ export function overrideProperty<TIntance extends { [prop: string]: TProp | any 
     Object.assign(newProperty, {
       get() {
         return propertyConfig.get(
-          originalProperty.get
+          originalProperty?.get
             ? Object.setPrototypeOf(Object.assign({}, originalProperty), this).get()
             : propertyValue,
           context);
@@ -173,7 +173,7 @@ export function overrideProperty<TIntance extends { [prop: string]: TProp | any 
     Object.assign(newProperty, {
       set(value: TProp) {
         propertyConfig.set(
-          originalProperty.set
+          originalProperty?.set
             ? Object.setPrototypeOf(Object.assign({}, originalProperty), this).set
             : null,
           context,
