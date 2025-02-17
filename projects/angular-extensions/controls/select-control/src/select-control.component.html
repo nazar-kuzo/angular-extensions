@@ -1,7 +1,8 @@
 <base-control #baseControl
               [control]="this">
   <mat-form-field [appearance]="appearance"
-                  [ngClass]="fieldClass">
+                  [ngClass]="fieldClass"
+                  [attr.clearable]="clearable">
     <mat-label>
       {{ field.label }}
     </mat-label>
@@ -13,13 +14,14 @@
     <mat-select [panelClass]="'custom-scroll select-control-panel' + dropdownClass"
                 [ngClass]="{ loading: field.isQuerying }"
                 [matTooltipDisabled]="tooltipDisabled"
-                [matTooltip]="triggerLabel"
+                [matTooltip]="tooltip || triggerLabel"
+                [matTooltipClass]="'white-space-pre-line'"
                 [formControl]="field.control"
                 [disableOptionCentering]="searchable"
                 [compareWith]="optionComparer"
                 [multiple]="multiple">
       <mat-select-trigger>
-        <ng-container *ngTemplateOutlet="triggerTemplate || defaultTriggerTemplate;
+        <ng-container *ngTemplateOutlet="triggerTemplate || (multiple ? defaultTriggerMultipleTemplate : defaultTriggerTemplate);
                       context: { $implicit: triggerLabel, label: triggerLabel, option: selectedOption }"></ng-container>
       </mat-select-trigger>
 
@@ -153,4 +155,9 @@
 <ng-template #defaultTriggerTemplate
              let-triggerValue>
   {{ triggerValue }}
+</ng-template>
+
+<ng-template #defaultTriggerMultipleTemplate
+             let-options="option">
+  <span [truncate]="(options ?? []) | map : this.field.optionDisplayLabel ?? this.field.optionLabel"></span>
 </ng-template>

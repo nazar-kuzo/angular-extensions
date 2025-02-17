@@ -40,6 +40,12 @@
         }
       }
 
+      // fixes alignment issue where field value is not centered
+      &.mat-form-field-appearance-outline.mat-form-field-should-float {
+        .mat-form-field-infix {
+          top: -2px;
+        }
+      }
 
       &.mat-form-field-appearance-fill {
         .mat-form-field-subscript-wrapper {

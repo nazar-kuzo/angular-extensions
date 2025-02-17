@@ -122,6 +122,8 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
    */
   public triggerLabel: string;
 
+  public tooltip: string;
+
   public filterControl = new FormControl<string>("");
 
   private selection: SelectionModel<TOption>;
@@ -239,10 +241,11 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   public toggleOptionGroup(group: SelectionGroup<TOptionGroup, TOption>, optionGroup: MatOptgroup) {
     let shouldSelect = group.state != "checked";
 
-    let mapOptions = this.select.options.filter(option =>
-        !option.disabled &&
+    let mapOptions = this.select.options.filter(option => {
+      return !option.disabled &&
         option.group == optionGroup &&
-        this.optionFilter(option.value));
+        this.optionFilter(option.value);
+    });
 
     let groupOptions = group.items.filter(this.optionFilter);
 
@@ -339,13 +342,26 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
     this.selection.changed
       .pipe(startWith(this.selection.selected), takeUntil(this.destroy$))
       .subscribe(() => {
-        this.selectedOption = this.multiple
-          ? this.selection.selected
-          : this.selection.selected.first();
+        if (!this.selection.hasValue()) {
+          this.tooltip = null;
+          this.triggerLabel = null;
+          this.selectedOption = null;
+        }
+        else {
+          if (this.multiple) {
+            this.selectedOption = this.selection.selected;
+            this.triggerLabel = null;
 
-        this.triggerLabel = this.selection.hasValue()
-          ? this.selection.selected.map(this.field.optionDisplayLabel || this.field.optionLabel).join(", ")
-          : null;
+            this.tooltip = (this.selection.selected.length > 1 ? "• " : "") +
+              this.selection.selected.map(this.field.optionDisplayLabel ?? this.field.optionLabel).join("\n• ");
+          }
+          else {
+            this.tooltip = null;
+            this.selectedOption = this.selection.selected.first();
+
+            this.triggerLabel = (this.field.optionDisplayLabel ?? this.field.optionLabel)(this.selectedOption);
+          }
+        }
 
         this.select.stateChanges.next();
 
@@ -424,21 +440,21 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
         this.changeDetectorRef.markForCheck();
       });
 
-      function getSelectionState(selected: TOption[], options: TOption[]): MatPseudoCheckboxState {
-        if (!options.length) {
-          return "unchecked";
-        }
-
-        if (selected.length == 0) {
-          return "unchecked";
-        }
-        else if (selected.length == options.length) {
-          return "checked";
-        }
-        else {
-          return "indeterminate";
-        }
+    function getSelectionState(selected: TOption[], options: TOption[]): MatPseudoCheckboxState {
+      if (!options.length) {
+        return "unchecked";
       }
+
+      if (selected.length == 0) {
+        return "unchecked";
+      }
+      else if (selected.length == options.length) {
+        return "checked";
+      }
+      else {
+        return "indeterminate";
+      }
+    }
   }
 
   /**

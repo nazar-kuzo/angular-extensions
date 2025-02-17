@@ -1,11 +1,23 @@
 select-control {
   display: inline-block;
 
+  .mat-form-field-should-float[clearable] {
+    .mat-select-arrow-wrapper {
+      display: none;
+    }
+  }
+
   mat-select {
     &.loading {
       .mat-select-arrow {
         color: transparent !important;
       }
+    }
+
+    // fixes trigger value vertical overflow
+    mat-select-trigger {
+      display: block;
+      padding: 1px 0;
     }
   }
 }
