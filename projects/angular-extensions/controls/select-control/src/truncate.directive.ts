@@ -119,6 +119,8 @@ export class TruncateDirective implements OnChanges, AfterViewInit, OnDestroy {
       // need to revert last value due to overflow
       if (this.container.offsetWidth > this.parentElement.offsetWidth) {
         labelContainer.innerText = labelContainer.innerText.substring(0, labelContainer.innerText.length - pendingValue.length);
+
+        return true;
       }
       else {
         this.remainderContainer.innerText = "+" + --remainder;

@@ -164,10 +164,19 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
       this.updateSelectStatesOnOptionChanges();
     }
 
-    if (this.menuClosed.observed) {
+    if (this.menuClosed.observed || this.field.optionsProvider) {
       this.select._closedStream
         .pipe(takeUntil(this.destroy$))
-        .subscribe(() => this.menuClosed.emit());
+        .subscribe(() => {
+          // reset filtered options to selected options to help deselect them in the future
+          if (this.field.optionsProvider && this.selection.selected.length > 0) {
+            this.field.options = this.multiple
+              ? [...this.selection.selected]
+              : [];
+          }
+
+          this.menuClosed.emit();
+        });
     }
   }
 
