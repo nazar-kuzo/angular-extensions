@@ -350,7 +350,7 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
         else {
           if (this.multiple) {
             this.selectedOption = this.selection.selected;
-            this.triggerLabel = null;
+            this.triggerLabel = this.selection.selected.map(this.field.optionDisplayLabel ?? this.field.optionLabel).join(", ");
 
             this.tooltip = (this.selection.selected.length > 1 ? "• " : "") +
               this.selection.selected.map(this.field.optionDisplayLabel ?? this.field.optionLabel).join("\n• ");

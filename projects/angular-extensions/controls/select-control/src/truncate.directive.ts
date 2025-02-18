@@ -9,7 +9,7 @@ export class TruncateDirective implements OnChanges, AfterViewInit, OnDestroy {
   @Input("truncate")
   public values: string[];
 
-  private truncated = false;
+  private truncated = true;
 
   private truncate$ = new Subject<void>();
 
