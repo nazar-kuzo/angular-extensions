@@ -1,10 +1,6 @@
 select-control {
   display: inline-block;
 
-  .white-space-pre-line {
-    white-space: pre-line;
-  }
-
   .mat-form-field-should-float[clearable] {
     .mat-select-arrow-wrapper {
       display: none;
