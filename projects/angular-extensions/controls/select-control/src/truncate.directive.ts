@@ -1,10 +1,10 @@
-import { Directive, Input, ElementRef, OnChanges, HostListener } from "@angular/core";
+import { Directive, Input, ElementRef, OnChanges, HostListener, AfterViewInit } from "@angular/core";
 import { SimpleChanges } from "angular-extensions/core";
 
 @Directive({
   selector: "[truncate]"
 })
-export class TruncateDirective implements OnChanges {
+export class TruncateDirective implements OnChanges, AfterViewInit {
 
   @Input("truncate")
   public values: string[];
@@ -25,17 +25,20 @@ export class TruncateDirective implements OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges<TruncateDirective>) {
-    if (changes.values?.currentValue?.length) {
-      let values = changes.values.currentValue;
-
-      setTimeout(() => this.optionsFormatter(values));
-    }
-    else {
-      this.elementRef.nativeElement.innerHTML = "";
-    }
+    setTimeout(() => this.optionsFormatter(changes.values?.currentValue));
   }
 
-  private optionsFormatter(values: string[]) {
+  public ngAfterViewInit() {
+    setTimeout(() => this.optionsFormatter(this.values));
+  }
+
+  private optionsFormatter(values?: string[]) {
+    if (!values?.length) {
+      this.elementRef.nativeElement.innerHTML = "";
+
+      return;
+    }
+
     let parentElement = this.elementRef.nativeElement.parentElement;
 
     this.container.style.maxWidth = parentElement.offsetWidth + "px";
