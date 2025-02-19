@@ -17,7 +17,7 @@
            [formControl]="field.control"
            [matDatepicker]="datePicker">
 
-    <a *ngIf="actionButtonVisible && actionButtonIcon && actionButton.observers.length; else toggleTemplate"
+    <a *ngIf="actionButtonVisible && actionButtonIcon && actionButton.observed; else toggleTemplate"
        mat-icon-button
        matSuffix
        [matTooltip]="actionButtonTooltip"

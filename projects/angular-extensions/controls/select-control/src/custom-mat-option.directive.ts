@@ -16,7 +16,7 @@ export class CustomMatOptionDirective implements OnInit {
   }
 
   public ngOnInit() {
-    if (this.selectViaInteraction.observers.length) {
+    if (this.selectViaInteraction.observed) {
       overrideFunction(
         this.matOption,
         option => option._selectViaInteraction,

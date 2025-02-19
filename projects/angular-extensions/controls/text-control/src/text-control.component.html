@@ -22,7 +22,7 @@
       <mat-icon>close</mat-icon>
     </a>
 
-    <a *ngIf="actionButtonVisible && actionButtonIcon && actionButton.observers.length"
+    <a *ngIf="actionButtonVisible && actionButtonIcon && actionButton.observed"
        mat-icon-button
        matSuffix
        [matTooltip]="actionButtonTooltip"
