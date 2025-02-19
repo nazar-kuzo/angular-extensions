@@ -408,7 +408,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
       : (option, filter) => this.optionLabel(option)?.toLowerCase().includes(filter.toLowerCase());
 
     this.optionGroupLabel = optionGroup => optionGroup?.toString();
-    this.optionId = option => option instanceof Option ? option.id : option;
+    this.optionId = option => option instanceof Option ? option.value : option;
     this.optionLabel = option => option instanceof Option ? option.label : option?.toString();
     this.optionValue = option => option instanceof Option ? option.value : option;
     this.optionDisabled = _ => false;

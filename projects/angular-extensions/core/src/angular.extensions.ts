@@ -61,6 +61,14 @@ declare module "@angular/forms" {
   }
 }
 
+declare module "@angular/cdk/collections" {
+  export interface SelectionModel<T> {
+    compareBy?: ((o1: T) => any) | undefined;
+
+    values: Map<any, T>;
+  }
+}
+
 declare module "@angular/material/core" {
   export interface AppMatOption<T = any> extends Omit<MatOption<T>, "_element" | "_selected" | "_changeDetectorRef"> {
     _element: ElementRef<HTMLElement>;

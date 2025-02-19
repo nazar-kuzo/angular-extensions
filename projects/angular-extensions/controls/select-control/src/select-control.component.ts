@@ -153,7 +153,10 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
   public ngOnInit() {
     this.filterControl.setValue(this.filter);
 
-    this.selection = new SelectionModel<TOption>(this.multiple, [], true, this.optionComparer);
+    this.selection = new SelectionModel<TOption>(this.multiple, [], true);
+
+    this.selection.values = new Map();
+    this.selection.compareBy = this.field.optionId;
 
     this.patchSelectTrigger();
     this.addCustomSelectionModel();
@@ -201,8 +204,7 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
 
   public optionComparer = (left?: TOption, right?: TOption) => {
     return left != null && right != null &&
-      (this.field.optionId(left) == this.field.optionId(right) ||
-        this.field.optionValue(left) == this.field.optionValue(right));
+      this.field.optionId(left) == this.field.optionId(right);
   };
 
   public showClearButton() {
@@ -313,6 +315,7 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
         select._changeDetectorRef.markForCheck();
       });
 
+    // TODO: purpose is to sync values to select's selection model and convert value to option
     this.field$
       .pipe(
         switchMap(field => merge(
@@ -323,6 +326,12 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
         debounceTime(0),
         takeUntil(this.destroy$))
       .subscribe(() => {
+        // delay value selection until options are fully loaded
+        if (this.field.isQuerying) {
+          return;
+        }
+
+        // ensures raw value mapping to TOption
         let options = castArray(this.field.value as any as TOption[] ?? [])
           .map(item => this.field.options.find(option => this.optionComparer(option, item)) ?? item);
 
@@ -431,10 +440,12 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
             this.isSelectAllChecked = false;
           }
           else {
-            let uncheckedOption = this.field.options
-              .some(option => this.optionFilter(option) && !selectedOptions.some(selected => this.optionComparer(option, selected)));
+            let allSelected = isAllSelected(
+              this.field.options.filter(this.optionFilter),
+              selectedOptions,
+              this.field.optionId);
 
-            this.isSelectAllChecked = uncheckedOption ? null : true;
+            this.isSelectAllChecked = allSelected ? true : null;
           }
         }
 
@@ -463,6 +474,18 @@ export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedVal
       else {
         return "indeterminate";
       }
+    }
+
+    function isAllSelected<T>(allValues: T[], selectedValues: T[], keySelector: (value: T) => any) {
+      let set = new Set(selectedValues.map(keySelector));
+
+      for (let item of allValues) {
+        if (!set.has(keySelector(item))) {
+          return false;
+        }
+      }
+
+      return true;
     }
   }
 
