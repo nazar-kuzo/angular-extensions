@@ -95,6 +95,10 @@ export function extendRouterConfigWithStatefulModals(router: Router) {
           }));
 
         let subscription = router.events.subscribe(routerEvent => {
+          if (!router.getCurrentNavigation()) {
+            return;
+          }
+
           let shouldCloseModal = !router.isActive(router.getCurrentNavigation().extractedUrl, routeMatchOptions);
 
           if (routerEvent instanceof GuardsCheckEnd && routerEvent.shouldActivate && shouldCloseModal) {
@@ -102,6 +106,9 @@ export function extendRouterConfigWithStatefulModals(router: Router) {
             subscription.unsubscribe();
           }
         });
+
+        // kill route subscription in case if modal was manually closed
+        dialogRef.afterClosed().subscribe(() => subscription.unsubscribe());
       }
     });
   }
