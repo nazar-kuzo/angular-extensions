@@ -1,4 +1,5 @@
-import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
+import { of } from "rxjs";
+import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material/dialog";
 import { ApplicationRef, Injector, NgModuleRef, Type, ViewContainerRef } from "@angular/core";
 import {
   ActivatedRoute, ActivationEnd, Router, IsActiveMatchOptions, GuardsCheckEnd, Route, Data,
@@ -50,6 +51,8 @@ export interface RouteModalData extends Data {
  * @param router Angular Router
  */
 export function extendRouterConfigWithStatefulModals(router: Router) {
+  let dialogRef: MatDialogRef<any, any>;
+
   if (!routeInjectors) {
     routeInjectors = new Map<Route, Injector>();
 
@@ -76,39 +79,53 @@ export function extendRouterConfigWithStatefulModals(router: Router) {
           .injector
           .get<ViewContainerRef>(ViewContainerRef);
 
-        let dialogRef = dialog.open(
-          component,
-          Object.assign(event.snapshot.data.modalOptions || {}, {
-            viewContainerRef: {
-              createComponent: viewContainerRef.createComponent.bind(viewContainerRef),
-              injector: Injector.create({
-                parent: (dialog as any)._injector,
-                providers: [
-                  {
-                    provide: ActivatedRoute,
-                    useValue: flatten(activatedRoute.children, route => route.children)
-                      .find(route => route.snapshot.data.modalComponent == component)
-                  },
-                ]
-              })
-            } as ViewContainerRef,
-          }));
+        if (dialogRef) {
+          dialogRef.close();
+        }
 
-        let subscription = router.events.subscribe(routerEvent => {
-          if (!router.getCurrentNavigation()) {
-            return;
-          }
+        (dialogRef ? dialogRef.afterClosed() : of(undefined)).subscribe(() => {
+          dialogRef = dialog.open(
+            component,
+            Object.assign<MatDialogConfig<any>, MatDialogConfig<any>>(event.snapshot.data.modalOptions || {}, {
+              closeOnNavigation: false,
+              viewContainerRef: {
+                createComponent: viewContainerRef.createComponent.bind(viewContainerRef),
+                injector: Injector.create({
+                  parent: (dialog as any)._injector,
+                  providers: [
+                    {
+                      provide: ActivatedRoute,
+                      useValue: flatten(activatedRoute.children, route => route.children)
+                        .find(route => route.snapshot.data.modalComponent == component)
+                    },
+                  ]
+                })
+              } as ViewContainerRef,
+            }));
 
-          let shouldCloseModal = !router.isActive(router.getCurrentNavigation().extractedUrl, routeMatchOptions);
+          let subscription = router.events.subscribe(routerEvent => {
+            if (!router.getCurrentNavigation()) {
+              return;
+            }
 
-          if (routerEvent instanceof GuardsCheckEnd && routerEvent.shouldActivate && shouldCloseModal) {
-            dialogRef.close();
-            subscription.unsubscribe();
-          }
+            let shouldCloseModal = !router.isActive(router.getCurrentNavigation().extractedUrl, routeMatchOptions);
+
+            if (routerEvent instanceof GuardsCheckEnd && routerEvent.shouldActivate && shouldCloseModal) {
+              dialogRef.close();
+              subscription.unsubscribe();
+            }
+          });
+
+          // kill route subscription in case if modal was manually closed
+          dialogRef.afterClosed().subscribe(() => {
+            if (!subscription.closed) {
+              subscription.unsubscribe();
+            }
+
+            dialogRef = null;
+            subscription = null;
+          });
         });
-
-        // kill route subscription in case if modal was manually closed
-        dialogRef.afterClosed().subscribe(() => subscription.unsubscribe());
       }
     });
   }
