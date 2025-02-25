@@ -15,6 +15,7 @@ export class DashboardDetailsModalComponent implements OnInit {
     private route: ActivatedRoute,
     private api: DashboardApiService,
   ) {
+    let initialUrl = router.getCurrentNavigation().initialUrl;
   }
 
   public ngOnInit() {

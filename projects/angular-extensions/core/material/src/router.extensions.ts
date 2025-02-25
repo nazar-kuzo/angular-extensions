@@ -83,48 +83,38 @@ export function extendRouterConfigWithStatefulModals(router: Router) {
           dialogRef.close();
         }
 
-        (dialogRef ? dialogRef.afterClosed() : of(undefined)).subscribe(() => {
-          dialogRef = dialog.open(
-            component,
-            Object.assign<MatDialogConfig<any>, MatDialogConfig<any>>(event.snapshot.data.modalOptions || {}, {
-              closeOnNavigation: false,
-              viewContainerRef: {
-                createComponent: viewContainerRef.createComponent.bind(viewContainerRef),
-                injector: Injector.create({
-                  parent: (dialog as any)._injector,
-                  providers: [
-                    {
-                      provide: ActivatedRoute,
-                      useValue: flatten(activatedRoute.children, route => route.children)
-                        .find(route => route.snapshot.data.modalComponent == component)
-                    },
-                  ]
-                })
-              } as ViewContainerRef,
-            }));
+        dialogRef = dialog.open(
+          component,
+          Object.assign<MatDialogConfig<any>, MatDialogConfig<any>>(event.snapshot.data.modalOptions || {}, {
+            closeOnNavigation: false,
+            viewContainerRef: {
+              createComponent: viewContainerRef.createComponent.bind(viewContainerRef),
+              injector: Injector.create({
+                parent: (dialog as any)._injector,
+                providers: [
+                  {
+                    provide: ActivatedRoute,
+                    useValue: flatten(activatedRoute.children, route => route.children)
+                      .find(route => route.snapshot.data.modalComponent == component)
+                  },
+                ]
+              })
+            } as ViewContainerRef,
+          }));
 
-          let subscription = router.events.subscribe(routerEvent => {
-            if (!router.getCurrentNavigation()) {
-              return;
-            }
+        let subscription = router.events.subscribe(routerEvent => {
+          if (!router.getCurrentNavigation()) {
+            return;
+          }
 
-            let shouldCloseModal = !router.isActive(router.getCurrentNavigation().extractedUrl, routeMatchOptions);
+          let shouldCloseModal = !router.isActive(router.getCurrentNavigation().extractedUrl, routeMatchOptions);
 
-            if (routerEvent instanceof GuardsCheckEnd && routerEvent.shouldActivate && shouldCloseModal) {
-              dialogRef.close();
-              subscription.unsubscribe();
-            }
-          });
-
-          // kill route subscription in case if modal was manually closed
-          dialogRef.afterClosed().subscribe(() => {
-            if (!subscription.closed) {
-              subscription.unsubscribe();
-            }
+          if (routerEvent instanceof GuardsCheckEnd && routerEvent.shouldActivate && shouldCloseModal) {
+            dialogRef?.close();
+            subscription?.unsubscribe();
 
             dialogRef = null;
-            subscription = null;
-          });
+          }
         });
       }
     });
