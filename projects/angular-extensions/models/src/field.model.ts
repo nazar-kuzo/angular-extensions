@@ -405,7 +405,21 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
     // do not filter option if search provider is used
     this.optionsFilterPredicate = props.optionsProvider
       ? () => true
-      : (option, filter) => this.optionLabel(option)?.toLowerCase().includes(filter.toLowerCase());
+      : (option, filter) => {
+        filter = filter.toLowerCase();
+
+        let optionGroup = this.optionsGroupProvider?.(option);
+
+        if (optionGroup && this.optionGroupLabel(optionGroup)?.toLowerCase().includes(filter)) {
+          return true;
+        }
+
+        if (this.optionLabel(option)?.toLowerCase().includes(filter)) {
+          return true;
+        }
+
+        return false;
+      };
 
     this.optionGroupLabel = optionGroup => optionGroup?.toString();
     this.optionId = option => option instanceof Option ? option.value : option;
