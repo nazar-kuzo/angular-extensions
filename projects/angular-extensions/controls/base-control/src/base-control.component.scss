@@ -41,9 +41,15 @@
       }
 
       // fixes alignment issue where field value is not centered
-      &.mat-form-field-appearance-outline.mat-form-field-should-float {
-        .mat-form-field-infix {
-          top: -2px;
+      &.mat-form-field-appearance-outline {
+        .mat-form-field-flex {
+          margin-top: 0;
+        }
+
+        &.mat-form-field-should-float {
+          .mat-form-field-infix {
+            top: -2px;
+          }
         }
       }
 
