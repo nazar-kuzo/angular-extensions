@@ -30,7 +30,7 @@ export interface ApiConfig {
 
   dateConversionExcludePaths: RegExp[];
 
-  encoder?: HttpParameterCodec,
+  encoder?: HttpParameterCodec;
 }
 
 export const API_CONFIG = new InjectionToken<ApiConfig>("ApiConfig");
