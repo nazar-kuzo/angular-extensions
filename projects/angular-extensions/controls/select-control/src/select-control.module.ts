@@ -11,7 +11,6 @@ import { overrideFunction } from "angular-extensions/core";
 import { NgxDirectivesModule } from "angular-extensions/directives";
 import { NgxBaseControlModule } from "angular-extensions/controls/base-control";
 import { SelectControlComponent } from "./select-control.component";
-import { CustomMatOptionDirective } from "./custom-mat-option.directive";
 import { MatSelectSearchComponentDirective } from "./ngx-mat-select-search.directive";
 import { TruncateDirective } from "./truncate.directive";
 
@@ -127,7 +126,6 @@ patchSelectionModel();
   ],
   declarations: [
     SelectControlComponent,
-    CustomMatOptionDirective,
     MatSelectSearchComponentDirective,
     TruncateDirective,
   ]
