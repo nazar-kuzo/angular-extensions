@@ -69,32 +69,28 @@ declare module "@angular/cdk/collections" {
   }
 }
 
-declare module "@angular/material/core" {
-  export interface AppMatOption<T = any> extends Omit<MatOption<T>, "_element" | "_selected" | "_changeDetectorRef"> {
-    _element: ElementRef<HTMLElement>;
+export interface AppMatOption<T = any> extends Omit<MatOption<T>, "_element" | "_selected" | "_changeDetectorRef"> {
+  _element: ElementRef<HTMLElement>;
 
-    _selected: boolean;
+  _selected: boolean;
 
-    _changeDetectorRef: ChangeDetectorRef;
-  }
+  _changeDetectorRef: ChangeDetectorRef;
 }
 
-declare module "@angular/material/select" {
-  export interface AppMatSelect extends Omit<MatSelectBase, "_propagateChanges" | "_changeDetectorRef"> {
-    _value: any;
+export interface AppMatSelect extends Omit<MatSelectBase, "_propagateChanges" | "_changeDetectorRef"> {
+  _value: any;
 
-    _changeDetectorRef: ChangeDetectorRef;
+  _changeDetectorRef: ChangeDetectorRef;
 
-    panel: ElementRef<HTMLElement>;
+  panel: ElementRef<HTMLElement>;
 
-    _canOpen(): boolean;
+  _canOpen(): boolean;
 
-    _propagateChanges(fallbackValue?: any): void;
+  _propagateChanges(fallbackValue?: any): void;
 
-    _onSelect(matOption: MatOption<any>, isUserInput: boolean): void;
+  _onSelect(matOption: MatOption<any>, isUserInput: boolean): void;
 
-    _getChangeEvent(value: any): MatSelectChangeEvent;
+  _getChangeEvent(value: any): MatSelectChangeEvent;
 
-    _initializeSelection(): void;
-  }
+  _initializeSelection(): void;
 }

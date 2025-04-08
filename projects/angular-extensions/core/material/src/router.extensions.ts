@@ -1,4 +1,3 @@
-import { of } from "rxjs";
 import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material/dialog";
 import { ApplicationRef, Injector, NgModuleRef, Type, ViewContainerRef } from "@angular/core";
 import {

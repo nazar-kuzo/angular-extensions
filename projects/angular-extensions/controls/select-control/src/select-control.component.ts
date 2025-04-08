@@ -5,15 +5,15 @@ import {
   Component, OnInit, OnChanges, Input, Optional, ElementRef, ChangeDetectorRef, NgZone,
   ViewChild, ContentChild, TemplateRef, ChangeDetectionStrategy, Output, EventEmitter, ViewEncapsulation,
 } from "@angular/core";
-import { AppMatOption, MatOptgroup, MatPseudoCheckboxState } from "@angular/material/core";
-import { AppMatSelect, MatSelect } from "@angular/material/select";
+import { MatOptgroup, MatPseudoCheckboxState } from "@angular/material/core";
+import { MatSelect } from "@angular/material/select";
 import { FormControl } from "@angular/forms";
 import { MatMenuTrigger } from "@angular/material/menu";
 import { CdkVirtualScrollViewport } from "@angular/cdk/scrolling";
 import { SelectionModel } from "@angular/cdk/collections";
 
 import { Field } from "angular-extensions/models";
-import { overrideFunction, SimpleChanges } from "angular-extensions/core";
+import { overrideFunction, SimpleChanges, AppMatSelect, AppMatOption } from "angular-extensions/core";
 import { ActionableControl, ControlBase } from "angular-extensions/controls/base-control";
 
 interface SelectionGroup<TKey, T> extends Group<TKey, T> {
