@@ -148,14 +148,12 @@
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "project": "projects/angular-extensions/ng-package.json"
+            "project": "projects/angular-extensions/ng-package.json",
+            "tsConfig": "projects/angular-extensions/tsconfig.lib.json"
           },
           "configurations": {
             "production": {
               "tsConfig": "projects/angular-extensions/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "projects/angular-extensions/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
