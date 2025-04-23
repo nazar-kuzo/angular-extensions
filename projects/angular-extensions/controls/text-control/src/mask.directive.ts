@@ -1,5 +1,5 @@
 import { Directive, ElementRef } from "@angular/core";
-import { MaskDirective } from "ngx-mask";
+import { NgxMaskDirective } from "ngx-mask";
 
 import { overrideFunction } from "angular-extensions/core";
 
@@ -9,10 +9,10 @@ import { overrideFunction } from "angular-extensions/core";
 @Directive({
   selector: "[mask]"
 })
-export class NgxMaskDirective {
+export class AppMaskDirective {
 
   constructor(
-    maskDirective: MaskDirective,
+    maskDirective: NgxMaskDirective,
     elementRef: ElementRef<HTMLInputElement>
   ) {
     overrideFunction(

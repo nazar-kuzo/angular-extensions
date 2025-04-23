@@ -1,25 +1,28 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { NgxMaskModule } from "ngx-mask";
+import { NgxMaskPipe, NgxMaskDirective, provideNgxMask } from "ngx-mask";
 
 import { NgxBaseControlModule } from "angular-extensions/controls/base-control";
 import { TextControlComponent } from "./text-control.component";
-import { NgxMaskDirective } from "./mask.directive";
+import { AppMaskDirective } from "./mask.directive";
 
 @NgModule({
   imports: [
     CommonModule,
     NgxBaseControlModule,
-    NgxMaskModule.forRoot(),
+    NgxMaskDirective,
+    NgxMaskPipe,
   ],
   declarations: [
     TextControlComponent,
-    NgxMaskDirective,
+    AppMaskDirective,
+  ],
+  providers: [
+    provideNgxMask(),
   ],
   exports: [
     CommonModule,
     NgxBaseControlModule,
-    NgxMaskModule,
 
     TextControlComponent,
   ]
