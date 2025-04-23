@@ -1,9 +1,8 @@
 import { parseISO } from "date-fns";
 import { Observable } from "rxjs";
 import { filter, map } from "rxjs/operators";
-import { Title } from "@angular/platform-browser";
 import { NgModuleRef } from "@angular/core";
-import { ActivatedRoute, ActivatedRouteSnapshot, ActivationEnd, ActivationStart, Navigation, ParamMap, Router } from "@angular/router";
+import { ActivatedRoute, ActivationEnd, ActivationStart, Navigation, ParamMap, Router } from "@angular/router";
 
 import { isValidDateString, parseDates } from "./object.extensions";
 
@@ -40,8 +39,6 @@ declare module "@angular/router" {
   }
 }
 
-export type RouteTitleProvider = (route: ActivatedRouteSnapshot, navigation?: Navigation) => string;
-
 /**
  * Extends route config with navigation extras.
  *
@@ -57,38 +54,6 @@ export function extendRouteConfigWithNavigationExtras(router: Router) {
     // extend existing routes with NavigationExtras property
     if (event instanceof ActivationStart && event.snapshot.data?.extras) {
       Object.assign(router.getCurrentNavigation()?.extras, event.snapshot.data?.extras);
-    }
-  });
-}
-
-/**
- * Binds route config title to website title.
- * Set "suppressTitleUpdate" to true if you want to avoid title change during navigation.
- *
- * @example Route config:
- * {
-      path: "..",
-      data: { title: string | (route: ActivatedRouteSnapshot, navigation: Navigation) => string }
-   }
- * @param router Angular Router
- * @param title Angular Title
- * @param prefix Application title prefix
- */
-export function bindRouteConfigTitle(router: Router, title: Title, prefix: string) {
-  router.events.subscribe(event => {
-    // set website title
-    if (event instanceof ActivationEnd) {
-      let navigation = router.getCurrentNavigation();
-
-      if (event.snapshot.children.length == 0 && !navigation?.extras?.state?.suppressTitleUpdate) {
-        let routeTitle = event.snapshot.data?.title;
-
-        if (typeof routeTitle == "function") {
-          routeTitle = (routeTitle as RouteTitleProvider)(event.snapshot, navigation);
-        }
-
-        title.setTitle(routeTitle ? `${prefix} - ${routeTitle}` : prefix);
-      }
     }
   });
 }

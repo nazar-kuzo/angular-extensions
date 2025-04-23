@@ -1,9 +1,8 @@
 import { NgModule } from "@angular/core";
-import { Title } from "@angular/platform-browser";
 import { Routes, RouterModule, Router } from "@angular/router";
 import {
   addGetLastSuccessfulNavigation,
-  addOnRouteRetainedEvent, bindRouteConfigTitle,
+  addOnRouteRetainedEvent,
   SequentialRouteData,
   extendParamMapWithTypedParameters, extendRouteConfigWithNavigationExtras, SequentialGuard,
 } from "angular-extensions";
@@ -46,11 +45,8 @@ export class AppRoutingModule {
 
   constructor(
     router: Router,
-    title: Title,
   ) {
     extendRouteConfigWithNavigationExtras(router);
-
-    bindRouteConfigTitle(router, title, "Angular Extensions");
 
     extendParamMapWithTypedParameters(router);
 
