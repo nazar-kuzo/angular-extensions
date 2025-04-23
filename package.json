@@ -30,7 +30,7 @@
     "lodash-es": "4.17.21",
     "ngx-awesome-uploader": "15.0.0",
     "ngx-mask": "15.2.1",
-    "ngx-mat-select-search": "7.0.10",
+    "ngx-mat-select-search": "6.0.0",
     "rxjs": "7.5.7",
     "zone.js": "0.11.4",
     "tslib": "2.3.1"

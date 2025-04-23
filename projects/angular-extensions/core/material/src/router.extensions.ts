@@ -1,5 +1,8 @@
-import { MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig, MatLegacyDialogRef as MatDialogRef } from "@angular/material/legacy-dialog";
-import { ApplicationRef, Injector, NgModuleRef, Type, ViewContainerRef } from "@angular/core";
+import {
+  MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig,
+  MatLegacyDialogRef as MatDialogRef,
+} from "@angular/material/legacy-dialog";
+import { ApplicationRef, inject, Injector, Type, ViewContainerRef } from "@angular/core";
 import {
   ActivatedRoute, ActivationEnd, Router, IsActiveMatchOptions, GuardsCheckEnd, Route, Data,
 } from "@angular/router";
@@ -52,6 +55,8 @@ export interface RouteModalData extends Data {
 export function extendRouterConfigWithStatefulModals(router: Router) {
   let dialogRef: MatDialogRef<any, any>;
 
+  let rootInjector = inject(Injector);
+
   if (!routeInjectors) {
     routeInjectors = new Map<Route, Injector>();
 
@@ -68,7 +73,7 @@ export function extendRouterConfigWithStatefulModals(router: Router) {
         }
 
         let component = event.snapshot.data.modalComponent;
-        let scopedInjector = getActivatedRouteInjector(router, event.snapshot.routeConfig);
+        let scopedInjector = getActivatedRouteInjector(router, event.snapshot.routeConfig, rootInjector);
         let activatedRoute = scopedInjector.get<ActivatedRoute>(ActivatedRoute);
         let dialog = scopedInjector.get<MatDialog>(MatDialog);
 
@@ -120,11 +125,11 @@ export function extendRouterConfigWithStatefulModals(router: Router) {
   }
 }
 
-function getActivatedRouteInjector(router: Router, route: Route): Injector | undefined {
+function getActivatedRouteInjector(router: Router, route: Route, rootInjector: Injector): Injector | undefined {
   let injector = routeInjectors.get(route);
 
   if (!injector) {
-    setRouteInjectors(router.config, ((router as any).ngModule as NgModuleRef<any>).injector);
+    setRouteInjectors(router.config, rootInjector);
 
     injector = routeInjectors.get(route);
   }

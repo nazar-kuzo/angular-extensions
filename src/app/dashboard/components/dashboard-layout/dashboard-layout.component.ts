@@ -67,7 +67,9 @@ export class DashboardLayoutComponent implements OnInit {
       component => component.updateDate,
       (_, __, date) => { });
 
-    console.log(`Last Successful Navigation: ${navigation.finalUrl}`);
+    if (navigation) {
+      console.log(`Last Successful Navigation: ${navigation.finalUrl}`);
+    }
   }
 
   public scan(field: Field<string>) {

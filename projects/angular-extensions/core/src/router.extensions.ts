@@ -129,6 +129,6 @@ export function addOnRouteRetainedEvent(router: Router) {
 
 export function addGetLastSuccessfulNavigation(router: Router) {
   (router.constructor.prototype as Router).getLastSuccessfulNavigation = function (this: Router) {
-    return (this as any).lastSuccessfulNavigation as Navigation;
+    return (this as any).navigationTransitions.lastSuccessfulNavigation as Navigation;
   };
 }
