@@ -16,7 +16,7 @@
       ],
       "environments/*": [
         "src/environments/*"
-      ],
+      ]
     },
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
@@ -26,13 +26,14 @@
     "strictNullChecks": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "useDefineForClassFields": false,
     "sourceMap": true,
     "declaration": false,
     "downlevelIteration": true,
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2017",
+    "target": "ES2022",
     "module": "es2020",
     "lib": [
       "dom",
