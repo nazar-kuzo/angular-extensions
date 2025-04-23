@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy, Component, ElementRef,
   EventEmitter, Input, OnChanges, Output, ViewChild,
 } from "@angular/core";
-import { MatInput } from "@angular/material/input";
+import { MatLegacyInput as MatInput } from "@angular/material/legacy-input";
 import { initialConfig } from "ngx-mask";
 
 import { SimpleChanges } from "angular-extensions/core";

@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { MatButtonModule } from "@angular/material/button";
-import { MatDialogModule, MatDialogConfig, MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material/dialog";
+import { MatLegacyButtonModule as MatButtonModule } from "@angular/material/legacy-button";
+import { MatLegacyDialogModule as MatDialogModule, MatLegacyDialogConfig as MatDialogConfig, MAT_LEGACY_DIALOG_DEFAULT_OPTIONS as MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material/legacy-dialog";
 
 import { NgxTextControlModule } from "angular-extensions/controls/text-control";
 import { NgxTextAreaControlModule } from "angular-extensions/controls/textarea-control";

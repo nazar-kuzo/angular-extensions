@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { MatButtonModule } from "@angular/material/button";
+import { MatLegacyButtonModule as MatButtonModule } from "@angular/material/legacy-button";
 import { FilePickerModule } from  "ngx-awesome-uploader";
 
 import { NgxBaseControlModule } from "angular-extensions/controls/base-control";

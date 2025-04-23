@@ -1,7 +1,7 @@
 import { Observable } from "rxjs";
 import { CdkCellDef, CdkRowDef } from "@angular/cdk/table";
 import { Directive, Input } from "@angular/core";
-import { MatCellDef, MatRowDef, MatTableDataSource } from "@angular/material/table";
+import { MatLegacyCellDef as MatCellDef, MatLegacyRowDef as MatRowDef, MatLegacyTableDataSource as MatTableDataSource } from "@angular/material/legacy-table";
 
 @Directive({
   selector: "[matCellDef]",

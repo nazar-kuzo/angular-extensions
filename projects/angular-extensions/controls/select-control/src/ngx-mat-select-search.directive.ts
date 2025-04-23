@@ -1,5 +1,5 @@
 import { Directive, Input, AfterViewInit, OnChanges, ElementRef } from "@angular/core";
-import { MatSelect } from "@angular/material/select";
+import { MatLegacySelect as MatSelect } from "@angular/material/legacy-select";
 import { MatSelectSearchComponent } from "ngx-mat-select-search";
 
 import { overrideFunction, SimpleChanges } from "angular-extensions/core";

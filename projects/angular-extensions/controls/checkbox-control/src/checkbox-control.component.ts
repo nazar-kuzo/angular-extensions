@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ContentChild, TemplateRef } from "@angular/core";
-import { matFormFieldAnimations } from "@angular/material/form-field";
+import { matLegacyFormFieldAnimations as matFormFieldAnimations } from "@angular/material/legacy-form-field";
 import { ControlBase } from "angular-extensions/controls/base-control";
 
 
