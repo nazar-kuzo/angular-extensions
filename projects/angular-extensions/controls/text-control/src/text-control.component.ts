@@ -89,7 +89,7 @@ export class TextControlComponent<TValue> extends ControlBase<TValue> implements
   }
 
   public onFieldClick(event: MouseEvent) {
-    if (this.elementRef.nativeElement.querySelector(".mat-form-field-flex").contains(event.target as HTMLElement)) {
+    if (this.elementRef.nativeElement.querySelector(".mat-mdc-form-field-flex").contains(event.target as HTMLElement)) {
       this.input.focus();
     }
 

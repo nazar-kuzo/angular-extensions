@@ -44,7 +44,7 @@
       // fixes alignment issue where field value is not centered
       &.mat-form-field-appearance-outline {
         /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-        .mat-form-field-flex {
+        .mat-mdc-form-field-flex {
           margin-top: 0;
         }
         /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
