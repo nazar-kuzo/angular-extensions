@@ -22,7 +22,6 @@
     "@angular/router": "16.2.12",
     "@angular/cdk": "16.2.14",
     "@angular/material": "16.2.14",
-    "@angular-material-components/datetime-picker": "16.0.1",
     "angular2-ladda": "5.0.0",
     "bootstrap": "4.6.1",
     "date-fns": "2.29.3",

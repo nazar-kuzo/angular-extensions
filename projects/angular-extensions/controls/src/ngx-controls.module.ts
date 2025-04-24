@@ -14,10 +14,8 @@ import { NgxTextAreaControlModule } from "angular-extensions/controls/textarea-c
 import { NgxCheckboxControlModule } from "angular-extensions/controls/checkbox-control";
 import { NgxSelectControlModule } from "angular-extensions/controls/select-control";
 import { NgxDateControlModule } from "angular-extensions/controls/date-control";
-import { NgxTimeControlModule } from "angular-extensions/controls/time-control";
-import {
-  NgxDateTimeControlModule, NgxDateTimeConfig, dateTimeConfigDefaults,
-} from "angular-extensions/controls/datetime-control";
+import { dateTimeConfigDefaults, NgxDateTimeConfig, NgxTimeControlModule } from "angular-extensions/controls/time-control";
+import {NgxDateTimeControlModule } from "angular-extensions/controls/datetime-control";
 
 
 /**

@@ -5,68 +5,11 @@ import {
 } from "@angular/core";
 import { MatDateFormats, MAT_DATE_FORMATS } from "@angular/material/core";
 import { MatDatepicker, MatDatepickerContent } from "@angular/material/datepicker";
-import { NgxMatTimepickerComponent } from "@angular-material-components/datetime-picker";
 
 import { overrideFunction } from "angular-extensions/core";
-import { AppMatDatepicker, AppNgxMatTimepickerComponent, Field } from "angular-extensions/models";
+import { AppMatDatepicker, Field } from "angular-extensions/models";
 import { ControlBase, ActionableControl } from "angular-extensions/controls/base-control";
-
-function addTimepickerNullableModelSupport() {
-  // disable dead-loop of model => view and view <= model change events
-  overrideFunction(
-    NgxMatTimepickerComponent.prototype,
-    timePicker => timePicker.ngOnInit,
-    () => { });
-
-  // ensure timepicker model is set when user performs interaction
-  overrideFunction(
-    NgxMatTimepickerComponent.prototype as any as AppNgxMatTimepickerComponent<any>,
-    timePicker => timePicker._updateModel,
-    (updateModel, timePicker) => {
-      if (!timePicker._model) {
-        timePicker._model = new Date();
-      }
-
-      return updateModel();
-    });
-
-  overrideFunction(
-    NgxMatTimepickerComponent.prototype as any as AppNgxMatTimepickerComponent<any>,
-    timePicker => timePicker.writeValue,
-    (writeValue, timePicker, value) => {
-      if (!value) {
-        timePicker._model = value;
-
-        Object.values(timePicker.form.controls).forEach((control, index) => {
-          control.setValue(String(timePicker.defaultTime?.[index] || 0).padStart(2, "0"));
-        });
-      }
-      else {
-        writeValue(value);
-      }
-    });
-}
-
-function improveTimepickerStepper() {
-  overrideFunction(
-    NgxMatTimepickerComponent.prototype as any as AppNgxMatTimepickerComponent<any>,
-    timePicker => timePicker._getNextValueByProp,
-    (getNextValueByProp, timePicker, property, up) => {
-      let keyProp = property[0].toUpperCase() + property.slice(1);
-
-      let result = getNextValueByProp(property, up);
-
-      if (up != null) {
-        result -= result % (timePicker as any)[`step${keyProp}`] as number;
-      }
-
-      return result;
-    });
-}
-
-improveTimepickerStepper();
-
-addTimepickerNullableModelSupport();
+import { AppNgxMatTimepickerComponent, NgxMatTimepickerComponent } from "angular-extensions/controls/time-control";
 
 @Component({
   selector: "datetime-control",
