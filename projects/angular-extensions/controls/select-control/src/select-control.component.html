@@ -167,5 +167,5 @@
 
 <ng-template #defaultTriggerMultipleTemplate
              let-options="option">
-  <span [truncate]="(options ?? []) | map : this.field.optionDisplayLabel ?? this.field.optionLabel"></span>
+  <span [truncate]="(options ?? []) | map : field.optionDisplayLabel ?? field.optionLabel"></span>
 </ng-template>
