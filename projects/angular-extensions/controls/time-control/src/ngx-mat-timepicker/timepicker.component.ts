@@ -1,61 +1,84 @@
-import { ChangeDetectorRef, Component, forwardRef, Input, OnChanges, OnInit, Optional, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
-import { ThemePalette } from '@angular/material/core';
-import { Subject } from 'rxjs';
-import { debounceTime, takeUntil } from 'rxjs/operators';
-import { NgxMatDateAdapter } from './date-adapter';
+import { ChangeDetectorRef, Component, forwardRef, Input, OnChanges, OnInit, Optional, SimpleChanges, ViewEncapsulation, OnDestroy } from "@angular/core";
+import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators } from "@angular/forms";
+import { ThemePalette } from "@angular/material/core";
+import { Subject } from "rxjs";
+import { debounceTime, takeUntil } from "rxjs/operators";
+import { NgxMatDateAdapter } from "./date-adapter";
 import {
   createMissingDateImplError, DEFAULT_STEP, formatTwoDigitTimeValue,
-  LIMIT_TIMES, MERIDIANS, NUMERIC_REGEX, PATTERN_INPUT_HOUR, PATTERN_INPUT_MINUTE, PATTERN_INPUT_SECOND
-} from './date-utils';
+  LIMIT_TIMES, MERIDIANS, NUMERIC_REGEX, PATTERN_INPUT_HOUR, PATTERN_INPUT_MINUTE, PATTERN_INPUT_SECOND,
+} from "./date-utils";
 
 @Component({
-  selector: 'ngx-mat-timepicker',
-  templateUrl: './timepicker.component.html',
-  styleUrls: ['./timepicker.component.scss'],
+  selector: "ngx-mat-timepicker",
+  templateUrl: "./timepicker.component.html",
+  styleUrls: ["./timepicker.component.scss"],
   host: {
-    'class': 'ngx-mat-timepicker'
+    "class": "ngx-mat-timepicker"
   },
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => NgxMatTimepickerComponent),
       multi: true
-    }
+    },
   ],
-  exportAs: 'ngxMatTimepicker',
+  exportAs: "ngxMatTimepicker",
   encapsulation: ViewEncapsulation.None,
 })
-export class NgxMatTimepickerComponent<D> implements ControlValueAccessor, OnInit, OnChanges {
+export class NgxMatTimepickerComponent<D> implements ControlValueAccessor, OnInit, OnChanges, OnDestroy {
+
+  @Input()
+  public disabled = false;
+
+  @Input()
+  public showSpinners = true;
+
+  @Input()
+  public stepHour: number = DEFAULT_STEP;
+
+  @Input()
+  public stepMinute: number = DEFAULT_STEP;
+
+  @Input()
+  public stepSecond: number = DEFAULT_STEP;
+
+  @Input()
+  public showSeconds = false;
+
+  @Input()
+  public disableMinute = false;
+
+  @Input()
+  public enableMeridian = false;
+
+  @Input()
+  public defaultTime: number[];
+
+  @Input()
+  public color: ThemePalette = "primary";
+
+  private _disabled: boolean;
+  private _model: D;
+  private _destroyed: Subject<void> = new Subject<void>();
 
   public form: FormGroup;
-
-  @Input() disabled = false;
-  @Input() showSpinners = true;
-  @Input() stepHour: number = DEFAULT_STEP;
-  @Input() stepMinute: number = DEFAULT_STEP;
-  @Input() stepSecond: number = DEFAULT_STEP;
-  @Input() showSeconds = false;
-  @Input() disableMinute = false;
-  @Input() enableMeridian = false;
-  @Input() defaultTime: number[];
-  @Input() color: ThemePalette = 'primary';
-
   public meridian: string = MERIDIANS.AM;
+  public pattern = PATTERN_INPUT_HOUR;
 
   /** Hour */
   private get hour() {
-    let val = Number(this.form.controls['hour'].value);
+    let val = Number(this.form.controls["hour"].value);
     return isNaN(val) ? 0 : val;
   };
 
   private get minute() {
-    let val = Number(this.form.controls['minute'].value);
+    let val = Number(this.form.controls["minute"].value);
     return isNaN(val) ? 0 : val;
   };
 
   private get second() {
-    let val = Number(this.form.controls['second'].value);
+    let val = Number(this.form.controls["second"].value);
     return isNaN(val) ? 0 : val;
   };
 
@@ -64,19 +87,10 @@ export class NgxMatTimepickerComponent<D> implements ControlValueAccessor, OnIni
     return this.form.valid;
   }
 
-  private _onChange: any = () => { };
-  private _onTouched: any = () => { };
-  private _disabled: boolean;
-  private _model: D;
-
-  private _destroyed: Subject<void> = new Subject<void>();
-
-  public pattern = PATTERN_INPUT_HOUR;
-
   constructor(@Optional() public _dateAdapter: NgxMatDateAdapter<D>,
     private cd: ChangeDetectorRef, private formBuilder: FormBuilder) {
     if (!this._dateAdapter) {
-      throw createMissingDateImplError('NgxMatDateAdapter');
+      throw createMissingDateImplError("NgxMatDateAdapter");
     }
     this.form = this.formBuilder.group(
       {
@@ -86,19 +100,19 @@ export class NgxMatTimepickerComponent<D> implements ControlValueAccessor, OnIni
       });
   }
 
-  ngOnInit() {
-    this.form.valueChanges.pipe(takeUntil(this._destroyed), debounceTime(400)).subscribe(val => {
+  public ngOnInit() {
+    this.form.valueChanges.pipe(takeUntil(this._destroyed), debounceTime(400)).subscribe(() => {
       this._updateModel();
     })
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  public ngOnChanges(changes: SimpleChanges) {
     if (changes.disabled || changes.disableMinute) {
       this._setDisableStates();
     }
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy() {
     this._destroyed.next();
     this._destroyed.complete();
   }
@@ -107,28 +121,27 @@ export class NgxMatTimepickerComponent<D> implements ControlValueAccessor, OnIni
    * Writes a new value to the element.
    * @param obj
    */
-  writeValue(val: D): void {
+  public writeValue(val: D): void {
     if (val != null) {
       this._model = val;
       this._updateHourMinuteSecond();
     }
-
   }
 
   /** Registers a callback function that is called when the control's value changes in the UI. */
-  registerOnChange(fn: (_: any) => {}): void {
+  public registerOnChange(fn: (_: any) => {}): void {
     this._onChange = fn;
   }
 
   /**
    * Set the function to be called when the control receives a touch event.
    */
-  registerOnTouched(fn: () => {}): void {
+  public registerOnTouched(fn: () => {}): void {
     this._onTouched = fn;
   }
 
   /** Enables or disables the appropriate DOM element */
-  setDisabledState(isDisabled: boolean): void {
+  public setDisabledState(isDisabled: boolean): void {
     this._disabled = isDisabled;
     this.cd.markForCheck();
   }
@@ -138,13 +151,13 @@ export class NgxMatTimepickerComponent<D> implements ControlValueAccessor, OnIni
    * @param input
    */
   public formatInput(input: HTMLInputElement) {
-    input.value = input.value.replace(NUMERIC_REGEX, '');
+    input.value = input.value.replace(NUMERIC_REGEX, "");
   }
 
   /** Toggle meridian */
   public toggleMeridian() {
     this.meridian = (this.meridian === MERIDIANS.AM) ? MERIDIANS.PM : MERIDIANS.AM;
-    this.change('hour');
+    this.change("hour");
   }
 
   /** Change property of time */
@@ -214,19 +227,19 @@ export class NgxMatTimepickerComponent<D> implements ControlValueAccessor, OnIni
     const min = LIMIT_TIMES[`min${keyProp}`];
     let max = LIMIT_TIMES[`max${keyProp}`];
 
-    if (prop === 'hour' && this.enableMeridian) {
+    if (prop === "hour" && this.enableMeridian) {
       max = LIMIT_TIMES.meridian;
     }
 
     let next;
     if (up == null) {
       next = (this as any)[prop] % (max);
-      if (prop === 'hour' && this.enableMeridian) {
+      if (prop === "hour" && this.enableMeridian) {
         if (next === 0) next = max;
       }
     } else {
       next = up ? (this as any)[prop] + (this as any)[`step${keyProp}`] : (this as any)[prop] - (this as any)[`step${keyProp}`];
-      if (prop === 'hour' && this.enableMeridian) {
+      if (prop === "hour" && this.enableMeridian) {
         next = next % (max + 1);
         if (next === 0) next = up ? 1 : max;
       } else {
@@ -253,12 +266,15 @@ export class NgxMatTimepickerComponent<D> implements ControlValueAccessor, OnIni
     else {
       this.form.enable();
       if (this.disableMinute) {
-        this.form.get('minute').disable();
+        this.form.get("minute").disable();
         if (this.showSeconds) {
-          this.form.get('second').disable();
+          this.form.get("second").disable();
         }
       }
     }
   }
 
+  private _onChange: any = () => { };
+
+  private _onTouched: any = () => { };
 }

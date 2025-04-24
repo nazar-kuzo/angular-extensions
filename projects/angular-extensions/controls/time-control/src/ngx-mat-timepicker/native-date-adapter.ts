@@ -1,9 +1,9 @@
 
 
-import { Platform } from '@angular/cdk/platform';
-import { Inject, Injectable, Optional } from '@angular/core';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
-import { NgxMatDateAdapter } from './date-adapter';
+import { Platform } from "@angular/cdk/platform";
+import { Inject, Injectable, Optional } from "@angular/core";
+import { MAT_DATE_LOCALE } from "@angular/material/core";
+import { NgxMatDateAdapter } from "./date-adapter";
 
 // TODO(mmalerba): Remove when we no longer support safari 9.
 /** Whether the browser supports the Intl API. */
@@ -15,19 +15,19 @@ let SUPPORTS_INTL_API: boolean;
 // https://github.com/Microsoft/ChakraCore/issues/3189
 // https://github.com/angular/components/issues/15687
 try {
-  SUPPORTS_INTL_API = typeof Intl != 'undefined';
+  SUPPORTS_INTL_API = typeof Intl != "undefined";
 } catch {
   SUPPORTS_INTL_API = false;
 }
 
 /** The default month names to use if Intl API is not available. */
 const DEFAULT_MONTH_NAMES = {
-  'long': [
-    'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
-    'October', 'November', 'December'
+  "long": [
+    "January", "February", "March", "April", "May", "June", "July", "August", "September",
+    "October", "November", "December",
   ],
-  'short': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-  'narrow': ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D']
+  "short": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+  "narrow": ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"]
 };
 
 
@@ -37,9 +37,9 @@ const DEFAULT_DATE_NAMES = range(31, i => String(i + 1));
 
 /** The default day of the week names to use if Intl API is not available. */
 const DEFAULT_DAY_OF_WEEK_NAMES = {
-  'long': ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-  'short': ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-  'narrow': ['S', 'M', 'T', 'W', 'T', 'F', 'S']
+  "long": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+  "short": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+  "narrow": ["S", "M", "T", "W", "T", "F", "S"]
 };
 
 
@@ -79,7 +79,7 @@ export class NgxMatNativeDateAdapter extends NgxMatDateAdapter<Date> {
    * it here for sometime, just for precaution, in case we decide to revert some of these changes
    * though.
    */
-  useUtcForDisplay: boolean = true;
+  public useUtcForDisplay: boolean = true;
 
   constructor(@Optional() @Inject(MAT_DATE_LOCALE) matDateLocale: string, platform: Platform) {
     super();
@@ -90,72 +90,72 @@ export class NgxMatNativeDateAdapter extends NgxMatDateAdapter<Date> {
     this._clampDate = platform.TRIDENT || platform.EDGE;
   }
 
-  getYear(date: Date): number {
+  public getYear(date: Date): number {
     return date.getFullYear();
   }
 
-  getMonth(date: Date): number {
+  public getMonth(date: Date): number {
     return date.getMonth();
   }
 
-  getDate(date: Date): number {
+  public getDate(date: Date): number {
     return date.getDate();
   }
 
-  getDayOfWeek(date: Date): number {
+  public getDayOfWeek(date: Date): number {
     return date.getDay();
   }
 
-  getMonthNames(style: 'long' | 'short' | 'narrow'): string[] {
+  public getMonthNames(style: "long" | "short" | "narrow"): string[] {
     if (SUPPORTS_INTL_API) {
-      const dtf = new Intl.DateTimeFormat(this.locale, { month: style, timeZone: 'utc' });
+      const dtf = new Intl.DateTimeFormat(this.locale, { month: style, timeZone: "utc" });
       return range(12, i =>
         this._stripDirectionalityCharacters(this._format(dtf, new Date(2017, i, 1))));
     }
     return DEFAULT_MONTH_NAMES[style];
   }
 
-  getDateNames(): string[] {
+  public getDateNames(): string[] {
     if (SUPPORTS_INTL_API) {
-      const dtf = new Intl.DateTimeFormat(this.locale, { day: 'numeric', timeZone: 'utc' });
+      const dtf = new Intl.DateTimeFormat(this.locale, { day: "numeric", timeZone: "utc" });
       return range(31, i => this._stripDirectionalityCharacters(
         this._format(dtf, new Date(2017, 0, i + 1))));
     }
     return DEFAULT_DATE_NAMES;
   }
 
-  getDayOfWeekNames(style: 'long' | 'short' | 'narrow'): string[] {
+  public getDayOfWeekNames(style: "long" | "short" | "narrow"): string[] {
     if (SUPPORTS_INTL_API) {
-      const dtf = new Intl.DateTimeFormat(this.locale, { weekday: style, timeZone: 'utc' });
+      const dtf = new Intl.DateTimeFormat(this.locale, { weekday: style, timeZone: "utc" });
       return range(7, i => this._stripDirectionalityCharacters(
         this._format(dtf, new Date(2017, 0, i + 1))));
     }
     return DEFAULT_DAY_OF_WEEK_NAMES[style];
   }
 
-  getYearName(date: Date): string {
+  public getYearName(date: Date): string {
     if (SUPPORTS_INTL_API) {
-      const dtf = new Intl.DateTimeFormat(this.locale, { year: 'numeric', timeZone: 'utc' });
+      const dtf = new Intl.DateTimeFormat(this.locale, { year: "numeric", timeZone: "utc" });
       return this._stripDirectionalityCharacters(this._format(dtf, date));
     }
     return String(this.getYear(date));
   }
 
-  getFirstDayOfWeek(): number {
+  public getFirstDayOfWeek(): number {
     // We can't tell using native JS Date what the first day of the week is, we default to Sunday.
     return 0;
   }
 
-  getNumDaysInMonth(date: Date): number {
+  public getNumDaysInMonth(date: Date): number {
     return this.getDate(this._createDateWithOverflow(
       this.getYear(date), this.getMonth(date) + 1, 0));
   }
 
-  clone(date: Date): Date {
+  public clone(date: Date): Date {
     return new Date(date.getTime());
   }
 
-  createDate(year: number, month: number, date: number): Date {
+  public createDate(year: number, month: number, date: number): Date {
     // Check for invalid month and date (except upper bound on date which we have to check after
     // creating the Date).
     if (month < 0 || month > 11) {
@@ -175,22 +175,22 @@ export class NgxMatNativeDateAdapter extends NgxMatDateAdapter<Date> {
     return result;
   }
 
-  today(): Date {
+  public today(): Date {
     return new Date();
   }
 
-  parse(value: any): Date | null {
+  public parse(value: any): Date | null {
     // We have no way using the native JS Date to set the parse format or locale, so we ignore these
     // parameters.
-    if (typeof value == 'number') {
+    if (typeof value == "number") {
       return new Date(value);
     }
     return value ? new Date(Date.parse(value)) : null;
   }
 
-  format(date: Date, displayFormat: Object): string {
+  public format(date: Date, displayFormat: Object): string {
     if (!this.isValid(date)) {
-      throw Error('NativeDateAdapter: Cannot format invalid date.');
+      throw Error("NativeDateAdapter: Cannot format invalid date.");
     }
 
     if (SUPPORTS_INTL_API) {
@@ -201,7 +201,7 @@ export class NgxMatNativeDateAdapter extends NgxMatDateAdapter<Date> {
         date.setFullYear(Math.max(1, Math.min(9999, date.getFullYear())));
       }
 
-      displayFormat = { ...displayFormat, timeZone: 'utc' };
+      displayFormat = { ...displayFormat, timeZone: "utc" };
 
       const dtf = new Intl.DateTimeFormat(this.locale, displayFormat);
       return this._stripDirectionalityCharacters(this._format(dtf, date));
@@ -209,11 +209,11 @@ export class NgxMatNativeDateAdapter extends NgxMatDateAdapter<Date> {
     return this._stripDirectionalityCharacters(date.toDateString());
   }
 
-  addCalendarYears(date: Date, years: number): Date {
+  public addCalendarYears(date: Date, years: number): Date {
     return this.addCalendarMonths(date, years * 12);
   }
 
-  addCalendarMonths(date: Date, months: number): Date {
+  public addCalendarMonths(date: Date, months: number): Date {
     let newDate = this._createDateWithOverflow(
       this.getYear(date), this.getMonth(date) + months, this.getDate(date));
 
@@ -228,17 +228,17 @@ export class NgxMatNativeDateAdapter extends NgxMatDateAdapter<Date> {
     return newDate;
   }
 
-  addCalendarDays(date: Date, days: number): Date {
+  public addCalendarDays(date: Date, days: number): Date {
     return this._createDateWithOverflow(
       this.getYear(date), this.getMonth(date), this.getDate(date) + days);
   }
 
-  toIso8601(date: Date): string {
+  public toIso8601(date: Date): string {
     return [
       date.getUTCFullYear(),
       this._2digit(date.getUTCMonth() + 1),
-      this._2digit(date.getUTCDate())
-    ].join('-');
+      this._2digit(date.getUTCDate()),
+    ].join("-");
   }
 
   /**
@@ -246,8 +246,8 @@ export class NgxMatNativeDateAdapter extends NgxMatDateAdapter<Date> {
    * (https://www.ietf.org/rfc/rfc3339.txt) into valid Dates and empty string into null. Returns an
    * invalid date for all other values.
    */
-  deserialize(value: any): Date | null {
-    if (typeof value === 'string') {
+  public deserialize(value: any): Date | null {
+    if (typeof value === "string") {
       if (!value) {
         return null;
       }
@@ -263,35 +263,35 @@ export class NgxMatNativeDateAdapter extends NgxMatDateAdapter<Date> {
     return super.deserialize(value);
   }
 
-  isDateInstance(obj: any) {
+  public isDateInstance(obj: any) {
     return obj instanceof Date;
   }
 
-  isValid(date: Date) {
+  public isValid(date: Date) {
     return !isNaN(date.getTime());
   }
 
-  invalid(): Date {
+  public invalid(): Date {
     return new Date(NaN);
   }
 
-  getHour(date: Date): number {
+  public getHour(date: Date): number {
     return date.getHours();
   }
-  getMinute(date: Date): number {
+  public getMinute(date: Date): number {
     return date.getMinutes();
   }
-  getSecond(date: Date): number {
+  public getSecond(date: Date): number {
     return date.getSeconds()
   }
 
-  setHour(date: Date, value: number): void {
+  public setHour(date: Date, value: number): void {
     date.setHours(value);
   }
-  setMinute(date: Date, value: number): void {
+  public setMinute(date: Date, value: number): void {
     date.setMinutes(value);
   }
-  setSecond(date: Date, value: number): void {
+  public setSecond(date: Date, value: number): void {
     date.setSeconds(value);
   }
 
@@ -313,7 +313,7 @@ export class NgxMatNativeDateAdapter extends NgxMatDateAdapter<Date> {
    * @returns The padded number.
    */
   private _2digit(n: number) {
-    return ('00' + n).slice(-2);
+    return ("00" + n).slice(-2);
   }
 
   /**
@@ -324,7 +324,7 @@ export class NgxMatNativeDateAdapter extends NgxMatDateAdapter<Date> {
    * @returns The stripped string.
    */
   private _stripDirectionalityCharacters(str: string) {
-    return str.replace(/[\u200e\u200f]/g, '');
+    return str.replace(/[\u200e\u200f]/g, "");
   }
 
   /**

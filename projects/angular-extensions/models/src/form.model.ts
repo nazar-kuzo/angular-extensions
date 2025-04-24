@@ -188,7 +188,7 @@ export class Form {
     return !errors$.length ? Promise.resolve() : forkJoin(errors$)
       .pipe(first())
       .toPromise()
-      .then(_ => { });
+      .then(() => { });
   }
 
   /**

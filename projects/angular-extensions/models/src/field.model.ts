@@ -95,11 +95,6 @@ interface FieldControlValueConverter<TFieldValue, TControlValue> {
   toControlValue: (value: TFieldValue) => TControlValue;
 }
 
-interface FormatterOptions {
-  insertSpaceBeforeDigits?: boolean;
-  insertSpaceBeforeAbbreviations?: boolean;
-}
-
 /**
  * Field option that can be used in select-control, etc.
  */
@@ -425,7 +420,7 @@ export class Field<TValue, TOption = TValue, TOptionGroup = any, TFormattedValue
     this.optionId = option => option instanceof Option ? option.value : option;
     this.optionLabel = option => option instanceof Option ? option.label : option?.toString();
     this.optionValue = option => option instanceof Option ? option.value : option;
-    this.optionDisabled = _ => false;
+    this.optionDisabled = () => false;
 
     // indicated form that control should remain disabled
     if (props.disabled) {

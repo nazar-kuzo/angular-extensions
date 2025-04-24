@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { OtherDashboardApiService } from "../../services";
 
@@ -8,16 +8,13 @@ import { OtherDashboardApiService } from "../../services";
   styleUrls: ["./other-dashboard-details-modal.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OtherDashboardDetailsModalComponent implements OnInit {
+export class OtherDashboardDetailsModalComponent {
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private api: OtherDashboardApiService,
   ) {
-  }
-
-  public ngOnInit() {
   }
 
   public close() {

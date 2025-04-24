@@ -59,14 +59,14 @@ export class OtherDashboardLayoutComponent implements OnInit {
     overrideFunction(
       this,
       component => component.updateDate,
-      (_, __, date) => { });
+      () => { });
 
     if (navigation) {
       console.log(`Last Successful Navigation: ${navigation.finalUrl}`);
     }
   }
 
-  public scan(field: Field<string>) {
+  public scan(_: Field<string>) {
     this.dialog.open<ModalPromptComponent, ModalPromptSettings>(ModalPromptComponent, {
       data: {
         title: "Scan text",
@@ -97,6 +97,6 @@ export class OtherDashboardLayoutComponent implements OnInit {
   public updateCurrentDate() {
   }
 
-  public updateDate(date: Date) {
+  public updateDate(_: Date) {
   }
 }

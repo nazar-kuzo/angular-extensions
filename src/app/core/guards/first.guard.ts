@@ -11,13 +11,13 @@ export class FirstGuard {
   ) {
   }
 
-  public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+  public canActivate(_: ActivatedRouteSnapshot, __: RouterStateSnapshot) {
     console.log("FirstGuard: canActivate");
 
     return of(true);
   }
 
-  public canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+  public canActivateChild(_: ActivatedRouteSnapshot, __: RouterStateSnapshot) {
     console.log("FirstGuard: canActivateChild");
 
     return true;

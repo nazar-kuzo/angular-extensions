@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { DashboardApiService } from "app/dashboard/services";
 
@@ -8,17 +8,14 @@ import { DashboardApiService } from "app/dashboard/services";
   styleUrls: ["./dashboard-details-modal.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardDetailsModalComponent implements OnInit {
+export class DashboardDetailsModalComponent {
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private api: DashboardApiService,
   ) {
-    let initialUrl = router.getCurrentNavigation().initialUrl;
-  }
-
-  public ngOnInit() {
+    let _ = router.getCurrentNavigation().initialUrl;
   }
 
   public close() {

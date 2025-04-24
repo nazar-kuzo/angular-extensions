@@ -10,13 +10,13 @@ export class SecondGuard {
   ) {
   }
 
-  public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+  public canActivate(_: ActivatedRouteSnapshot, __: RouterStateSnapshot) {
     console.log("SecondGuard: canActivate");
 
     return Promise.resolve(true);
   }
 
-  public canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+  public canActivateChild(_: ActivatedRouteSnapshot, __: RouterStateSnapshot) {
     console.log("SecondGuard: canActivateChild");
 
     return true;

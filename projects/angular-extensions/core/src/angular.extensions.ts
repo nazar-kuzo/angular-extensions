@@ -54,7 +54,7 @@ export class DefaultHttpParamEncoder implements HttpParameterCodec {
 }
 
 declare module "@angular/forms" {
-  export interface FormControl<TValue = any> {
+  export interface FormControl {
     _onChange: ((newValue: any, emitModelEvent: boolean) => void)[];
 
     _onDisabledChange: ((disabled: boolean) => any)[];

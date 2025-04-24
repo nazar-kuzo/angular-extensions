@@ -1,4 +1,4 @@
-import { castArray, merge } from "lodash-es";
+import { merge } from "lodash-es";
 import { Inject, Injectable, InjectionToken, Optional } from "@angular/core";
 import { HttpClient, HttpHeaders as AngularHttpHeaders, HttpParams as AngularHttpParams, HttpParameterCodec } from "@angular/common/http";
 

@@ -258,7 +258,7 @@ export function parseDateProperty<T>(object: T, prop: keyof T) {
 export function withoutTimezone(this: Date): Date {
   let dateWithoutTimezone = new Date(this.valueOf());
 
-  dateWithoutTimezone.toJSON = function (this: Date, key?: any) {
+  dateWithoutTimezone.toJSON = function (this: Date, _?: any) {
     return format(this, "yyyy-MM-dd'T'HH:mm:ss");
   };
 

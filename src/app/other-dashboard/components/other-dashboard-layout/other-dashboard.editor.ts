@@ -247,7 +247,7 @@ export class OtherDashboardEditor extends BaseEditor {
 
   public reloadControls() {
     if (this.image.value?.length > 0) {
-      let formData = new FormData().fromObject({
+      let _ = new FormData().fromObject({
         file: this.image.value[0],
         files: this.image.value,
         ticket: {
