@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { FilePickerAdapter, FilePreviewModel, UploadResponse } from "ngx-awesome-uploader";
+import { FilePickerAdapter, FilePreviewModel, UploadResponse } from "@sleiss/ngx-awesome-uploader";
 import { Observable, of } from "rxjs";
 
 /**

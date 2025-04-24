@@ -5,7 +5,7 @@ import {
   ChangeDetectionStrategy, ContentChild, TemplateRef, Output, EventEmitter,
 } from "@angular/core";
 
-import { FilePickerAdapter, FilePickerComponent, FilePreviewModel, FileValidationTypes, ValidationError } from "ngx-awesome-uploader";
+import { FilePickerAdapter, FilePickerComponent, FilePreviewModel, FileValidationTypes, ValidationError } from "@sleiss/ngx-awesome-uploader";
 
 import { overrideFunction } from "angular-extensions/core";
 import { ControlBase } from "angular-extensions/controls/base-control";
@@ -116,7 +116,7 @@ export class FileControlComponent extends ControlBase<File[]> implements OnInit 
   public fileValidationError = new EventEmitter<ValidationError>();
 
   @ContentChild(TemplateRef)
-  public contentTemplate: TemplateRef<HTMLElement>;
+  public contentTemplate: TemplateRef<{ $implicit: () => void }>;
 
   @ViewChild(FilePickerComponent)
   public filePicker: FilePickerComponent;
