@@ -1,16 +1,21 @@
 import { Observable } from "rxjs";
 import { Injectable, Injector, Type } from "@angular/core";
-import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Data, RouterStateSnapshot, UrlTree } from "@angular/router";
+import { ActivatedRouteSnapshot, Data, RouterStateSnapshot, UrlTree, CanActivateFn, CanActivateChildFn } from "@angular/router";
 
 export interface SequentialRouteData extends Data {
-  canActivateSequence?: Type<CanActivate>[];
-  canActivateChildSequence?: Type<CanActivateChild>[];
+  canActivateSequence?: Type<{
+    canActivate: CanActivateFn;
+  }>[];
+
+  canActivateChildSequence?: Type<{
+    canActivateChild: CanActivateChildFn;
+  }>[];
 }
 
 @Injectable({
   providedIn: "root",
 })
-export class SequentialGuard implements CanActivate, CanActivateChild {
+export class SequentialGuard {
 
   constructor(
     private injector: Injector,
@@ -74,7 +79,9 @@ export class SequentialGuard implements CanActivate, CanActivateChild {
   private getGuardTypes(route: ActivatedRouteSnapshot) {
     let parentRoute = route.parent;
 
-    let guardTypes: Type<CanActivateChild>[];
+    let guardTypes: Type<{
+      canActivateChild: CanActivateChildFn;
+    }>[];
 
     do {
 
