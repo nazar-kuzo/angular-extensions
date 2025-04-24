@@ -2,17 +2,20 @@
     mat-dialog-title
     [innerHtml]="settings.title | trustedHtml"></h2>
 
-<mat-dialog-content *ngIf="settings.template">
+@if (settings.template) {
+<mat-dialog-content>
   <ng-container *ngTemplateOutlet="settings.template; context: settings.templateContext"></ng-container>
 </mat-dialog-content>
+}
 
 <mat-dialog-actions [align]="'end'">
-  <button *ngFor="let button of settings.buttons"
-          mat-raised-button
+  @for (button of settings.buttons; track button) {
+  <button mat-raised-button
           type="button"
           cdkFocusInitial
           [color]="button.color"
           [mat-dialog-close]="button.value !== undefined ? button.value : button.text">
     {{ button.text }}
   </button>
+  }
 </mat-dialog-actions>

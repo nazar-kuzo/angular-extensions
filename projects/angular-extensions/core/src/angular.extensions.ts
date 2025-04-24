@@ -61,6 +61,12 @@ declare module "@angular/forms" {
   }
 }
 
+declare module "@angular/material/datepicker" {
+  export interface AppMatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>> extends Omit<MatDatepickerContent<S, D>, "_elementRef"> {
+    _elementRef: ElementRef<any>;
+  }
+}
+
 declare module "@angular/cdk/collections" {
   export interface SelectionModel<T> {
     compareBy?: ((o1: T) => any) | undefined;

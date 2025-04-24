@@ -18,24 +18,24 @@
            [formControl]="field.control"
            [matDatepicker]="datePicker">
 
-    <a *ngIf="actionButtonVisible && actionButtonIcon && actionButton.observed; else toggleTemplate"
-       mat-icon-button
+    @if (actionButtonVisible && actionButtonIcon && actionButton.observed) {
+    <a mat-icon-button
        matSuffix
        [matTooltip]="actionButtonTooltip"
        (click)="actionButton.emit(field); $event.preventDefault(); $event.stopImmediatePropagation();">
       <mat-icon>{{ actionButtonIcon }}</mat-icon>
     </a>
+    } @else {
+    <mat-datepicker-toggle matSuffix
+                           [for]="datePicker">
+      <mat-icon matDatepickerToggleIcon
+                [matTooltip]="clearable && field.control.enabled && field.value != null ? 'Clear' : ''"
+                (click)="onToggle($event)">
+        {{ clearable && field.control.enabled && field.value != null ? 'close' : 'today' }}
+      </mat-icon>
+    </mat-datepicker-toggle>
+    }
 
-    <ng-template #toggleTemplate>
-      <mat-datepicker-toggle matSuffix
-                             [for]="datePicker">
-        <mat-icon matDatepickerToggleIcon
-                  [matTooltip]="clearable && field.control.enabled && field.value != null ? 'Clear' : ''"
-                  (click)="onToggle($event)">
-          {{ clearable && field.control.enabled && field.value != null ? 'close' : 'today' }}
-        </mat-icon>
-      </mat-datepicker-toggle>
-    </ng-template>
 
     <mat-datepicker #datePicker
                     [restoreFocus]="false"
@@ -46,8 +46,10 @@
                     (opened)="datePickerOpened()"
                     (closed)="blur(); field.control.markAllAsTouched()"></mat-datepicker>
 
-    <mat-error *ngIf="baseControl.initialized">
+    @if (baseControl.initialized) {
+    <mat-error>
       <ng-container *ngTemplateOutlet="baseControl.errorsTemplate"></ng-container>
     </mat-error>
+    }
   </mat-form-field>
 </base-control>

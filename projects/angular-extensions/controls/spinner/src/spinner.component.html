@@ -1,14 +1,17 @@
 <ng-content></ng-content>
 
-<div *ngIf="loading">
-  <mat-progress-bar *ngIf="type == 'small'"
-                    mode="indeterminate"></mat-progress-bar>
-
-  <mat-spinner *ngIf="type == 'big'"
-               [diameter]="size"
+@if (loading) {
+<div>
+  @if (type == 'small') {
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+  @if (type == 'big') {
+  <mat-spinner [diameter]="size"
                mode="indeterminate"></mat-spinner>
+  }
 </div>
+}
 
-<ng-container *ngIf="!loading && contentTemplate">
-  <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
-</ng-container>
+@if (!loading && contentTemplate) {
+<ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+}

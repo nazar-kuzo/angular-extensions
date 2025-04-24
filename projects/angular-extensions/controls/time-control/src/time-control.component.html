@@ -45,8 +45,10 @@
       </mat-datepicker-actions>
     </mat-datepicker>
 
-    <mat-error *ngIf="baseControl.initialized">
+    @if (baseControl.initialized) {
+    <mat-error>
       <ng-container *ngTemplateOutlet="baseControl.errorsTemplate"></ng-container>
     </mat-error>
+    }
   </mat-form-field>
 </base-control>

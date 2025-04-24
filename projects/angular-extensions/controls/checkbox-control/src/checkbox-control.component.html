@@ -7,17 +7,19 @@
         <ng-container *ngTemplateOutlet="labelTemplate || defaultLabelTemplate; context: { $implicit: field }"></ng-container>
       </mat-label>
 
-      <mat-icon *ngIf="field.info"
-                class="align-bottom"
+      @if (field.info) {
+      <mat-icon class="align-bottom"
                 style="font-size: 1.25em;"
                 [inline]="true"
                 [matTooltip]="field.info">info_outline</mat-icon>
+      }
     </mat-checkbox>
 
-    <div *ngIf="field.control.touched && field.control.invalid"
-         [@transitionMessages]="'enter'">
+    @if (field.control.touched && field.control.invalid) {
+    <div [@transitionMessages]="'enter'">
       <ng-container *ngTemplateOutlet="baseControl.errorsTemplate"></ng-container>
     </div>
+    }
   </div>
 </base-control>
 

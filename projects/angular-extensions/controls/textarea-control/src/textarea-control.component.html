@@ -15,8 +15,10 @@
               [formControl]="field.control">
     </textarea>
 
-    <mat-error *ngIf="baseControl.initialized">
+    @if (baseControl.initialized) {
+    <mat-error>
       <ng-container *ngTemplateOutlet="baseControl.errorsTemplate"></ng-container>
     </mat-error>
+    }
   </mat-form-field>
 </base-control>

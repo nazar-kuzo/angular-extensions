@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component,
   ComponentRef, ElementRef, EventEmitter, Inject, Input, OnChanges, Output, ViewChild,
 } from "@angular/core";
-import { MatCalendarHeader, MatCalendarView, MatDatepicker, MatDatepickerContent } from "@angular/material/datepicker";
+import { AppMatDatepickerContent, MatCalendarHeader, MatCalendarView, MatDatepicker } from "@angular/material/datepicker";
 import { MatDateFormats, MAT_DATE_FORMATS } from "@angular/material/core";
 import type { CdkPortalOutlet } from "@angular/cdk/portal";
 
@@ -47,8 +47,8 @@ export class DateControlComponent<TOption, TOptionGroup, TFormattedValue, TContr
   @ViewChild(MatDatepicker, { static: true })
   public datePicker: AppMatDatepicker<Date>;
 
-  private get datepickerContent(): MatDatepickerContent<Date> | null {
-    return (this.datePicker._componentRef || this.datePicker._popupComponentRef)?.instance;
+  private get datepickerContent(): AppMatDatepickerContent<Date> | null {
+    return (this.datePicker._componentRef || this.datePicker._popupComponentRef)?.instance as any;
   }
 
   constructor(
@@ -137,7 +137,7 @@ export class DateControlComponent<TOption, TOptionGroup, TFormattedValue, TContr
     setTimeout(() => this.tryPatchPeriodButton(this.datepickerContent));
   }
 
-  private tryPatchPeriodButton(datePickerContent: MatDatepickerContent<Date, Date>) {
+  private tryPatchPeriodButton(datePickerContent: AppMatDatepickerContent<Date, Date>) {
     let calendarHeader = (((datePickerContent
       ._calendar
       ._calendarHeaderPortal as any)

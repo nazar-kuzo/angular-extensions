@@ -18,24 +18,26 @@
                           (validationError)="onValidationError($event)"
                           (fileAdded)="onFileAdded($event)">
 
-      <div class="dropzoneTemplate"
-           *ngIf="getOpenFileDialogHandler(filePicker) as openFileDialog">
-        <ng-container *ngIf="contentTemplate">
-          <ng-container *ngTemplateOutlet="contentTemplate; context: { $implicit: openFileDialog }"></ng-container>
-        </ng-container>
-
-        <ng-container *ngIf="!contentTemplate">
-          <button type="button"
-                  mat-raised-button
-                  (click)="openFileDialog()">{{ field.label }}</button>
-        </ng-container>
+      @if (getOpenFileDialogHandler(filePicker); as openFileDialog) {
+      <div class="dropzoneTemplate">
+        @if (contentTemplate) {
+        <ng-container *ngTemplateOutlet="contentTemplate; context: { $implicit: openFileDialog }"></ng-container>
+        }
+        @if (!contentTemplate) {
+        <button type="button"
+                mat-raised-button
+                (click)="openFileDialog()">{{ field.label }}</button>
+        }
       </div>
+      }
     </ngx-awesome-uploader>
   </div>
 
-  <mat-error *ngIf="baseControl.initialized && field.control.touched">
+  @if (baseControl.initialized && field.control.touched) {
+  <mat-error>
     <ng-container *ngTemplateOutlet="baseControl.errorsTemplate"></ng-container>
   </mat-error>
+  }
 </base-control>
 
 <ng-content></ng-content>
@@ -48,11 +50,13 @@
       {{ fileItem.fileName }}
     </span>
 
-    <div *ngIf="fileItem">
+    @if (fileItem) {
+    <div>
       <a mat-icon-button
          (click)="uploader.removeFile(fileItem); onFileRemoved(fileItem)">
         <mat-icon>clear</mat-icon>
       </a>
     </div>
+    }
   </div>
 </ng-template>

@@ -9,66 +9,55 @@
 </ng-template>
 
 <ng-template #errorsTemplate>
-  <mat-error *ngFor="let error of control.field.control.errors | keyvalue"
-             [ngSwitch]="error.key">
-    <ng-container *ngSwitchCase="'required'">
-      {{ control.field.validation.requiredTrue?.text || control.field.validation.required?.text || "Field is required" }}
-    </ng-container>
-
-    <ng-container *ngSwitchCase="'min'">
-      {{ control.field.validation.min?.text || "Value should be greater than " + error.value.min }}
-    </ng-container>
-
-    <ng-container *ngSwitchCase="'max'">
-      {{ control.field.validation.max?.text || "Value should be smaller than " + error.value.max }}
-    </ng-container>
-
-    <ng-container *ngSwitchCase="'minlength'">
-      {{ control.field.validation.minLength?.text || "Value should be longer than " + error.value.requiredLength }}
-    </ng-container>
-
-    <ng-container *ngSwitchCase="'maxlength'">
-      {{ control.field.validation.maxLength?.text || "Value should be shorter than " + error.value.requiredLength }}
-    </ng-container>
-
-    <ng-container *ngSwitchCase="'minDate'">
-      {{ control.field.validation.minDate?.text || "Date should be after the " + (error.value.expected | date) }}
-    </ng-container>
-
-    <ng-container *ngSwitchCase="'minOrEqualDate'">
-      {{ control.field.validation.minOrEqualDate?.text || "Date should be same or after the " + (error.value.expected | date) }}
-    </ng-container>
-
-    <ng-container *ngSwitchCase="'maxDate'">
-      {{ control.field.validation.maxDate?.text || "Date should be before the " + (error.value.expected | date) }}
-    </ng-container>
-
-    <ng-container *ngSwitchCase="'maxOrEqualDate'">
-      {{ control.field.validation.maxOrEqualDate?.text || "Date should be same or before the " + (error.value.expected | date) }}
-    </ng-container>
-
-    <ng-container *ngSwitchCase="'pattern'">
-      {{ control.field.validation.pattern?.text || error.value.message || "Value does not match the required pattern" }}
-    </ng-container>
-
-    <ng-container *ngSwitchCase="'mask'">
-      {{ "Value does not match the required pattern" }}
-    </ng-container>
-
-    <ng-container *ngSwitchCase="'custom'">
-      {{ control.field.validation.custom?.text || error.value.message }}
-    </ng-container>
-
-    <ng-container *ngSwitchCase="'async'">
-      {{ control.field.validation.async?.text || error.value.message }}
-    </ng-container>
-
-    <ng-container *ngSwitchCase="'native'">
-      {{ control.field.validation.native?.text || error.value.message }}
-    </ng-container>
-
-    <ng-container *ngSwitchDefault>
-      {{ error.value.message || error.value }}
-    </ng-container>
+  @for (error of control.field.control.errors | keyvalue; track error) {
+  <mat-error>
+    @switch (error.key) {
+    @case ('required') {
+    {{ control.field.validation.requiredTrue?.text || control.field.validation.required?.text || "Field is required" }}
+    }
+    @case ('min') {
+    {{ control.field.validation.min?.text || "Value should be greater than " + error.value.min }}
+    }
+    @case ('max') {
+    {{ control.field.validation.max?.text || "Value should be smaller than " + error.value.max }}
+    }
+    @case ('minlength') {
+    {{ control.field.validation.minLength?.text || "Value should be longer than " + error.value.requiredLength }}
+    }
+    @case ('maxlength') {
+    {{ control.field.validation.maxLength?.text || "Value should be shorter than " + error.value.requiredLength }}
+    }
+    @case ('minDate') {
+    {{ control.field.validation.minDate?.text || "Date should be after the " + (error.value.expected | date) }}
+    }
+    @case ('minOrEqualDate') {
+    {{ control.field.validation.minOrEqualDate?.text || "Date should be same or after the " + (error.value.expected | date) }}
+    }
+    @case ('maxDate') {
+    {{ control.field.validation.maxDate?.text || "Date should be before the " + (error.value.expected | date) }}
+    }
+    @case ('maxOrEqualDate') {
+    {{ control.field.validation.maxOrEqualDate?.text || "Date should be same or before the " + (error.value.expected | date) }}
+    }
+    @case ('pattern') {
+    {{ control.field.validation.pattern?.text || error.value.message || "Value does not match the required pattern" }}
+    }
+    @case ('mask') {
+    {{ "Value does not match the required pattern" }}
+    }
+    @case ('custom') {
+    {{ control.field.validation.custom?.text || error.value.message }}
+    }
+    @case ('async') {
+    {{ control.field.validation.async?.text || error.value.message }}
+    }
+    @case ('native') {
+    {{ control.field.validation.native?.text || error.value.message }}
+    }
+    @default {
+    {{ error.value.message || error.value }}
+    }
+    }
   </mat-error>
+  }
 </ng-template>

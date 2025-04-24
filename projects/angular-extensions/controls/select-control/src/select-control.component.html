@@ -25,7 +25,8 @@
                       context: { $implicit: triggerLabel, label: triggerLabel, option: selectedOption }"></ng-container>
       </mat-select-trigger>
 
-      <mat-option *ngIf="searchable">
+      @if (searchable) {
+      <mat-option>
         <ngx-mat-select-search class="d-block"
                                [showToggleAllCheckbox]="multiple"
                                [toggleAllCheckboxIndeterminate]="isSelectAllChecked == null"
@@ -39,112 +40,119 @@
                                [formControl]="filterControl"
                                [searching]="field.isQuerying"
                                (toggleAll)="toggleSelectAll($event)">
-          <div *ngIf="searchActionTemplate"
-               [hidden]="filterControl.value"
+          @if (searchActionTemplate) {
+          <div [hidden]="filterControl.value"
                class="mat-select-search-custom-header-content">
             <ng-container *ngTemplateOutlet="searchActionTemplate"></ng-container>
           </div>
+          }
         </ngx-mat-select-search>
       </mat-option>
+      }
 
-      <ng-container *ngIf="headerTemplate">
-        <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
-      </ng-container>
+      @if (headerTemplate) {
+      <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+      }
 
-      <ng-container *ngIf="field.options | filter : field.optionsFilterPredicate : filterControl.value as options">
-        <ng-container *ngIf="options.length; else noItemsTemplate">
-          <ng-container *ngIf="field.optionsGroupProvider">
-            <mat-optgroup #optionGroup
-                          *ngFor="let group of options | groupBy : field.optionsGroupProvider; trackBy : optionGroupTracker"
-                          [style.top]="searchable ? optionHeight + 'px' : '0px'"
-                          [label]="multiple ? '' : group.key | map : field.optionGroupLabel">
-              <span *ngIf="multiple && groupStates.get(group.key) as group">
-                <mat-pseudo-checkbox class="mat-option-pseudo-checkbox"
-                                     [state]="group.state"
-                                     (click)="toggleOptionGroup(group, optionGroup)"></mat-pseudo-checkbox>
-                {{ group.key | map : field.optionGroupLabel }}
-              </span>
-
-              <mat-option *ngFor="let option of group.items; trackBy : optionTracker"
-                          [matTooltipDisabled]="optionTooltipDisabled"
-                          [matTooltip]="option | map : field.optionTooltip ?? field.optionLabel"
-                          [value]="option | map : field.optionValue"
-                          [disabled]="option | map : field.optionDisabled">
-                <ng-container *ngTemplateOutlet="optionTemplate || defaultOptionTempalte;
+      @if (field.options | filter : field.optionsFilterPredicate : filterControl.value; as options) {
+      @if (options.length) {
+      @if (field.optionsGroupProvider) {
+      @for (group of options | groupBy : field.optionsGroupProvider; track group) {
+      <mat-optgroup #optionGroup
+                    [style.top]="searchable ? optionHeight + 'px' : '0px'"
+                    [label]="multiple ? '' : group.key | map : field.optionGroupLabel">
+        @if (multiple && groupStates.get(group.key); as group) {
+        <span>
+          <mat-pseudo-checkbox class="mat-option-pseudo-checkbox"
+                               [state]="group.state"
+                               (click)="toggleOptionGroup(group, optionGroup)"></mat-pseudo-checkbox>
+          {{ group.key | map : field.optionGroupLabel }}
+        </span>
+        }
+        @for (option of group.items; track option) {
+        <mat-option [matTooltipDisabled]="optionTooltipDisabled"
+                    [matTooltip]="option | map : field.optionTooltip ?? field.optionLabel"
+                    [value]="option | map : field.optionValue"
+                    [disabled]="option | map : field.optionDisabled">
+          <ng-container *ngTemplateOutlet="optionTemplate || defaultOptionTempalte;
                               context: { $implicit: option | map : field.optionLabel, option: option }"></ng-container>
-              </mat-option>
-            </mat-optgroup>
-          </ng-container>
-
-          <ng-container *ngIf="!field.optionsGroupProvider">
-            <ng-container *ngIf="virtualization">
-              <cdk-virtual-scroll-viewport [itemSize]="optionHeight"
-                                           [style.height.px]="viewportHeight"
-                                           [class.virtualization-disabled]="options.length * optionHeight < viewportHeight">
-                <mat-option *cdkVirtualFor="let option of options; trackBy : optionTracker"
-                            [style.height.px]="optionHeight"
-                            [value]="option | map : field.optionValue"
-                            [disabled]="option | map : field.optionDisabled">
-                  <ng-container *ngTemplateOutlet="optionTemplate || defaultOptionTempalte;
+        </mat-option>
+        }
+      </mat-optgroup>
+      }
+      }
+      @if (!field.optionsGroupProvider) {
+      @if (virtualization) {
+      <cdk-virtual-scroll-viewport [itemSize]="optionHeight"
+                                   [style.height.px]="viewportHeight"
+                                   [class.virtualization-disabled]="options.length * optionHeight < viewportHeight">
+        <mat-option *cdkVirtualFor="let option of options; trackBy : optionTracker"
+                    [style.height.px]="optionHeight"
+                    [value]="option | map : field.optionValue"
+                    [disabled]="option | map : field.optionDisabled">
+          <ng-container *ngTemplateOutlet="optionTemplate || defaultOptionTempalte;
                               context: { $implicit: option | map : field.optionLabel, option: option }"></ng-container>
-                </mat-option>
-              </cdk-virtual-scroll-viewport>
-            </ng-container>
-
-            <ng-container *ngIf="!virtualization">
-              <mat-option *ngFor="let option of options; trackBy : optionTracker"
-                          [matTooltipDisabled]="optionTooltipDisabled"
-                          [matTooltip]="option | map : field.optionTooltip ?? field.optionLabel"
-                          [value]="option | map : field.optionValue"
-                          [disabled]="option | map : field.optionDisabled">
-                <ng-container *ngTemplateOutlet="optionTemplate || defaultOptionTempalte;
+        </mat-option>
+      </cdk-virtual-scroll-viewport>
+      }
+      @if (!virtualization) {
+      @for (option of options; track option) {
+      <mat-option [matTooltipDisabled]="optionTooltipDisabled"
+                  [matTooltip]="option | map : field.optionTooltip ?? field.optionLabel"
+                  [value]="option | map : field.optionValue"
+                  [disabled]="option | map : field.optionDisabled">
+        <ng-container *ngTemplateOutlet="optionTemplate || defaultOptionTempalte;
                             context: { $implicit: option | map : field.optionLabel, option: option }"></ng-container>
-              </mat-option>
-            </ng-container>
-          </ng-container>
-        </ng-container>
-      </ng-container>
+      </mat-option>
+      }
+      }
+      }
+      } @else {
+      @if (field.isQuerying) {
+      <mat-option [disabled]="true">Loading...</mat-option>
+      }
+      @if (!field.isQuerying) {
+      @if (filterControl.value) {
+      <mat-option [disabled]="true">No items found</mat-option>
+      }
+      }
+      }
+      }
     </mat-select>
 
-    <span matSuffix
-          *ngIf="field.isQuerying">
+    @if (field.isQuerying) {
+    <span matSuffix>
       <mat-spinner mode="indeterminate"
                    [diameter]="20"></mat-spinner>
     </span>
+    }
 
-    <a *ngIf="showClearButton()"
-       mat-icon-button
+    @if (showClearButton()) {
+    <a mat-icon-button
        matSuffix
        matTooltip="Clear"
        (click)="clear(); $event.stopPropagation()">
       <mat-icon>close</mat-icon>
     </a>
+    }
 
-    <a *ngIf="!field.isQuerying && actionButtonVisible && actionButtonIcon && actionButton.observed"
-       mat-icon-button
+    @if (!field.isQuerying && actionButtonVisible && actionButtonIcon && actionButton.observed) {
+    <a mat-icon-button
        matSuffix
        [matTooltip]="actionButtonTooltip"
        (click)="actionButton.emit(field); $event.stopPropagation()">
       <mat-icon>{{ actionButtonIcon }}</mat-icon>
     </a>
+    }
 
-    <mat-error *ngIf="baseControl.initialized">
+    @if (baseControl.initialized) {
+    <mat-error>
       <ng-container *ngTemplateOutlet="baseControl.errorsTemplate"></ng-container>
     </mat-error>
+    }
   </mat-form-field>
 </base-control>
 
-<ng-template #noItemsTemplate>
-  <ng-container *ngIf="field.isQuerying">
-    <mat-option [disabled]="true">Loading...</mat-option>
-  </ng-container>
-
-  <ng-container *ngIf="!field.isQuerying">
-    <ng-container *ngIf="filterControl.value">
-      <mat-option [disabled]="true">No items found</mat-option>
-    </ng-container>
-  </ng-container>
-</ng-template>
 
 <ng-template #defaultOptionTempalte
              let-label

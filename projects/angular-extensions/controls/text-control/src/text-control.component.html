@@ -11,53 +11,58 @@
       <ng-container *ngTemplateOutlet="baseControl.hintTemplate"></ng-container>
     </mat-hint>
 
-    <mat-icon *ngIf="icon"
-              matPrefix>{{icon}}</mat-icon>
+    @if (icon) {
+    <mat-icon matPrefix>{{icon}}</mat-icon>
+    }
 
-    <a *ngIf="field.value && clearable"
-       mat-icon-button
+    @if (field.value && clearable) {
+    <a mat-icon-button
        matSuffix
        matTooltip="Clear"
        (click)="field.control.setValue(null)">
       <mat-icon>close</mat-icon>
     </a>
+    }
 
-    <a *ngIf="actionButtonVisible && actionButtonIcon && actionButton.observed"
-       mat-icon-button
+    @if (actionButtonVisible && actionButtonIcon && actionButton.observed) {
+    <a mat-icon-button
        matSuffix
        [matTooltip]="actionButtonTooltip"
        (click)="actionButton.emit(field)">
       <mat-icon>{{ actionButtonIcon }}</mat-icon>
     </a>
+    }
 
-    <ng-container *ngIf="mask">
-      <input #input
-             matInput
-             cdkFocusInitial
-             [attr.inputmode]="type == 'number' ? 'decimal' : null"
-             [type]="type"
-             [attr.step]="step"
-             [prefix]="prefix"
-             [mask]="mask"
-             [showMaskTyped]="showMaskTyped"
-             [specialCharacters]="specialCharacters"
-             [dropSpecialCharacters]="dropSpecialCharacters"
-             [patterns]="$any(pattern)"
-             [formControl]="field.control">
-    </ng-container>
+    @if (mask) {
+    <input #input
+           matInput
+           cdkFocusInitial
+           [attr.inputmode]="type == 'number' ? 'decimal' : null"
+           [type]="type"
+           [attr.step]="step"
+           [prefix]="prefix"
+           [mask]="mask"
+           [showMaskTyped]="showMaskTyped"
+           [specialCharacters]="specialCharacters"
+           [dropSpecialCharacters]="dropSpecialCharacters"
+           [patterns]="$any(pattern)"
+           [formControl]="field.control">
+    }
 
-    <ng-container *ngIf="!mask">
-      <input #input
-             matInput
-             cdkFocusInitial
-             [attr.inputmode]="type == 'number' ? 'decimal' : null"
-             [attr.step]="step"
-             [type]="type"
-             [formControl]="field.control">
-    </ng-container>
+    @if (!mask) {
+    <input #input
+           matInput
+           cdkFocusInitial
+           [attr.inputmode]="type == 'number' ? 'decimal' : null"
+           [attr.step]="step"
+           [type]="type"
+           [formControl]="field.control">
+    }
 
-    <mat-error *ngIf="baseControl.initialized">
+    @if (baseControl.initialized) {
+    <mat-error>
       <ng-container *ngTemplateOutlet="baseControl.errorsTemplate"></ng-container>
     </mat-error>
+    }
   </mat-form-field>
 </base-control>
