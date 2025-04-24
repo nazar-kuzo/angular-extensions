@@ -1,7 +1,4 @@
-import {
-  MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig,
-  MatLegacyDialogRef as MatDialogRef,
-} from "@angular/material/legacy-dialog";
+import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material/dialog";
 import { ApplicationRef, inject, Injector, Type, ViewContainerRef } from "@angular/core";
 import {
   ActivatedRoute, ActivationEnd, Router, IsActiveMatchOptions, GuardsCheckEnd, Route, Data,

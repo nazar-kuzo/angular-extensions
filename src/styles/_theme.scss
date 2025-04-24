@@ -1,7 +1,6 @@
 @use '@angular/material' as mat;
 
 @include mat.core();
-@include mat.legacy-core();
 
 @import "angular-extensions/styles/reset";
 
@@ -54,4 +53,3 @@ $theme: mat.define-light-theme((
 ));
 
 @include mat.all-component-themes($theme);
-@include mat.all-legacy-component-themes($theme);

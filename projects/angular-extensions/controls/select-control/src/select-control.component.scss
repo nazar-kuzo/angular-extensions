@@ -1,20 +1,25 @@
 select-control {
   display: inline-block;
-
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
   .mat-form-field-should-float[clearable] {
+    /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
     .mat-select-arrow-wrapper {
       display: none;
     }
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
+  /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
   mat-select {
     &.loading {
+      /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
       .mat-select-arrow {
         color: transparent !important;
       }
     }
 
     // fixes trigger value vertical overflow
+    /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
     mat-select-trigger {
       display: block;
       padding: 4px 0;
@@ -22,7 +27,7 @@ select-control {
   }
 }
 
-.mat-optgroup-label {
+.mat-mdc-optgroup-label {
   position: sticky;
   top: inherit;
   z-index: 1020;
@@ -30,6 +35,7 @@ select-control {
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
 mat-checkbox + .mat-select-search-input,
 mat-icon + .mat-select-search-input {
   padding-left: 8px !important;

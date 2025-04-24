@@ -31,10 +31,11 @@
       min-width: 150px;
 
       &.p-0 {
+        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
         .mat-form-field-wrapper {
           padding: 0 !important;
         }
-
+        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
         .mat-form-field-underline {
           bottom: 0 !important;
         }
@@ -42,11 +43,14 @@
 
       // fixes alignment issue where field value is not centered
       &.mat-form-field-appearance-outline {
+        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
         .mat-form-field-flex {
           margin-top: 0;
         }
-
+        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
+        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
         &.mat-form-field-should-float {
+          /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
           .mat-form-field-infix {
             top: -2px;
           }
@@ -54,26 +58,28 @@
       }
 
       &.mat-form-field-appearance-fill {
+        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
         .mat-form-field-subscript-wrapper {
           margin: 0 !important;
         }
       }
-
+      /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
       .mat-form-field-wrapper {
         padding-bottom: 0.25rem;
       }
-
+      /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
       .mat-form-field-subscript-wrapper {
         position: relative;
       }
 
-      .mat-hint {
+      .mat-mdc-form-field-hint {
         display: block;
         width: 100%;
       }
-
+      /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
+      /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
       .mat-form-field-suffix {
-        .mat-icon-button {
+        .mat-mdc-icon-button {
           width: 30px !important;
           height: 30px !important;
         }

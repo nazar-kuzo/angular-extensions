@@ -6,10 +6,10 @@ import {
   ViewChild, ContentChild, TemplateRef, ChangeDetectionStrategy, Output, EventEmitter, ViewEncapsulation,
 } from "@angular/core";
 import { MatPseudoCheckboxState } from "@angular/material/core";
-import { MatLegacyOptgroup as MatOptgroup } from "@angular/material/legacy-core";
-import { MatLegacySelect as MatSelect } from "@angular/material/legacy-select";
+import { MatOptgroup } from "@angular/material/core";
+import { MatSelect } from "@angular/material/select";
 import { FormControl } from "@angular/forms";
-import { MatLegacyMenuTrigger as MatMenuTrigger } from "@angular/material/legacy-menu";
+import { MatMenuTrigger } from "@angular/material/menu";
 import { CdkVirtualScrollViewport } from "@angular/cdk/scrolling";
 import { SelectionModel } from "@angular/cdk/collections";
 

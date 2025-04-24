@@ -1,7 +1,7 @@
 import { HttpParameterCodec, HttpParams } from "@angular/common/http";
 import type { ChangeDetectorRef, ElementRef } from "@angular/core";
-import type { MatLegacyOption as MatOption } from "@angular/material/legacy-core";
-import type { MatLegacySelect as MatSelectBase, MatLegacySelectChange as MatSelectChangeEvent } from "@angular/material/legacy-select";
+import type { MatOption } from "@angular/material/core";
+import type { MatSelect as MatSelectBase, MatSelectChange as MatSelectChangeEvent } from "@angular/material/select";
 
 /**
  * Generic representation of Angular SimpleChange

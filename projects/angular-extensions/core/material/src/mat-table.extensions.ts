@@ -1,5 +1,5 @@
 import type { MatSort } from "@angular/material/sort";
-import { MatLegacyTableDataSource as MatTableDataSource } from "@angular/material/legacy-table";
+import { MatTableDataSource } from "@angular/material/table";
 import { overrideFunction } from "angular-extensions/core";
 
 /**

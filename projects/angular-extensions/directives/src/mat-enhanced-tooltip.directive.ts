@@ -1,5 +1,5 @@
 import { Directive, ElementRef, Input, OnInit, OnDestroy, HostListener } from "@angular/core";
-import { MatLegacyTooltip as MatTooltip } from "@angular/material/legacy-tooltip";
+import { MatTooltip } from "@angular/material/tooltip";
 
 @Directive({
   selector: "[matTooltipWhenDisabled],[matTooltipWhenEnabled]",
