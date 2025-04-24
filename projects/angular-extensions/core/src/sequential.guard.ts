@@ -1,6 +1,6 @@
 import { Observable } from "rxjs";
 import { Injectable, Injector, Type } from "@angular/core";
-import { ActivatedRouteSnapshot, Data, RouterStateSnapshot, UrlTree, CanActivateFn, CanActivateChildFn } from "@angular/router";
+import { ActivatedRouteSnapshot, Data, RouterStateSnapshot, UrlTree, CanActivateFn, CanActivateChildFn, RedirectCommand } from "@angular/router";
 
 export interface SequentialRouteData extends Data {
   canActivateSequence?: Type<{
@@ -29,7 +29,7 @@ export class SequentialGuard {
       throw new Error("SequentialGuard: missing \"CanActivate\" guards for RouteConfig \"data.canActivateSequence\" property");
     }
 
-    let result: boolean | UrlTree;
+    let result: boolean | UrlTree | RedirectCommand;
 
     for (let guardType of guardTypes) {
       result = await this.toPromise(this.injector.get(guardType).canActivate(route, state));
@@ -50,7 +50,7 @@ export class SequentialGuard {
       throw new Error("SequentialGuard: missing \"CanActivateChild\" guards for RouteConfig \"data.canActivateChildSequence\" property");
     }
 
-    let result: boolean | UrlTree;
+    let result: boolean | UrlTree | RedirectCommand;
 
     for (let guardType of guardTypes) {
       result = await this.toPromise(this.injector.get(guardType).canActivateChild(route, state));
