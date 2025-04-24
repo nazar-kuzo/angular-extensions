@@ -109,15 +109,15 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "dashboard:build",
-            "port": 4320
+            "port": 4320,
+            "buildTarget": "dashboard:build"
           },
           "configurations": {
             "development": {
-              "browserTarget": "dashboard:build:development"
+              "buildTarget": "dashboard:build:development"
             },
             "production": {
-              "browserTarget": "dashboard:build:production"
+              "buildTarget": "dashboard:build:production"
             }
           },
           "defaultConfiguration": "development"
@@ -125,7 +125,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "dashboard:build"
+            "buildTarget": "dashboard:build"
           }
         },
         "lint": {
