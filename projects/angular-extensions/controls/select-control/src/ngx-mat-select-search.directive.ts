@@ -6,7 +6,8 @@ import { overrideFunction, SimpleChanges } from "angular-extensions/core";
 import { filter, first } from "rxjs";
 
 @Directive({
-  selector: "ngx-mat-select-search"
+  selector: "ngx-mat-select-search",
+  standalone: false,
 })
 export class MatSelectSearchComponentDirective implements AfterViewInit, OnChanges {
 

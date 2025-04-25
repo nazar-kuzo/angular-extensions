@@ -25,6 +25,7 @@ import {
   ],
   exportAs: "ngxMatTimepicker",
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class NgxMatTimepickerComponent<D> implements ControlValueAccessor, OnInit, OnChanges, OnDestroy {
 

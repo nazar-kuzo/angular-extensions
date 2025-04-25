@@ -5,6 +5,7 @@ import { Component, ChangeDetectionStrategy } from "@angular/core";
   templateUrl: "./app-layout.component.html",
   styleUrls: ["./app-layout.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class AppLayoutComponent {
 }

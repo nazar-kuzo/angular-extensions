@@ -21,6 +21,7 @@ export interface ModalPromptSettings<TContext = any> {
 @Component({
   selector: "modal-prompt",
   templateUrl: "./modal-prompt.html",
+  standalone: false,
 })
 export class ModalPromptComponent implements AfterViewInit {
 

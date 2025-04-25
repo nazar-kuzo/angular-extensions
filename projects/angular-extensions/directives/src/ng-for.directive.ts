@@ -2,7 +2,8 @@ import { NgFor } from "@angular/common";
 import { Directive, EmbeddedViewRef, Input, OnChanges, Self, TemplateRef, ViewContainerRef } from "@angular/core";
 
 @Directive({
-  selector: "[ngFor]"
+  selector: "[ngFor]",
+  standalone: false,
 })
 export class NgForDirective<T> implements OnChanges {
 

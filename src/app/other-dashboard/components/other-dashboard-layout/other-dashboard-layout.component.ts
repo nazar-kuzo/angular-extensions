@@ -11,6 +11,7 @@ import { Country, OtherDashboardEditor } from "./other-dashboard.editor";
   styleUrls: ["./other-dashboard-layout.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [OtherDashboardEditor],
+  standalone: false,
 })
 export class OtherDashboardLayoutComponent implements OnInit {
 

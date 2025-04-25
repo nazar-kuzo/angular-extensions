@@ -4,7 +4,8 @@ import { Component, Input, ContentChild, TemplateRef, ChangeDetectionStrategy } 
   selector: "spinner",
   templateUrl: "./spinner.component.html",
   styleUrls: ["./spinner.component.scss"],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class SpinnerComponent {
 

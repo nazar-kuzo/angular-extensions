@@ -3,6 +3,7 @@ import { MatTooltip } from "@angular/material/tooltip";
 
 @Directive({
   selector: "[matTooltipWhenDisabled],[matTooltipWhenEnabled]",
+  standalone: false,
 })
 export class MatEnhancedTooltipDirective extends MatTooltip implements OnInit, OnDestroy {
 

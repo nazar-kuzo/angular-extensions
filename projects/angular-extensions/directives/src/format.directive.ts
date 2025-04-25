@@ -8,7 +8,8 @@ import type { AppMatDatepickerInput } from "angular-extensions/models";
  * Forces date/time format in text input view
  */
 @Directive({
-  selector: "input[format]"
+  selector: "input[format]",
+  standalone: false,
 })
 export class FormatDirective implements OnInit {
 

@@ -5,7 +5,8 @@ import { ControlBase } from "angular-extensions/controls/base-control";
   selector: "textarea-control",
   templateUrl: "./textarea-control.component.html",
   styleUrls: ["./textarea-control.component.scss"],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TextAreaControlComponent<TValue> extends ControlBase<TValue> {
 }

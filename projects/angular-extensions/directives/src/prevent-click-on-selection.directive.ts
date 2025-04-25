@@ -2,6 +2,7 @@ import { Directive, ElementRef, OnDestroy } from "@angular/core";
 
 @Directive({
   selector: "[preventClickOnSelection]",
+  standalone: false,
 })
 export class PreventClickOnSelectionDirective implements OnDestroy {
 

@@ -4,7 +4,8 @@ import { DataSource } from "@angular/cdk/collections";
 import { CdkVirtualForOf } from "@angular/cdk/scrolling";
 
 @Directive({
-  selector: "[cdkVirtualFor]"
+  selector: "[cdkVirtualFor]",
+  standalone: false,
 })
 export class CdkVirtualForOfDirective<T> {
 

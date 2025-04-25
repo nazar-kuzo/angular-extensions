@@ -2,7 +2,8 @@ import { Directive, AfterViewInit, ElementRef } from "@angular/core";
 
 @Directive({
   selector: "ngx-awesome-uploader",
-  exportAs: "filePicker"
+  exportAs: "filePicker",
+  standalone: false,
 })
 export class FilePickerComponentDirective implements AfterViewInit {
 

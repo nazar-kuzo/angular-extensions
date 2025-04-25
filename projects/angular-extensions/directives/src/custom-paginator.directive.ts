@@ -2,7 +2,8 @@ import { Directive, Input } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 
 @Directive({
-  selector: "[customPaginator]"
+  selector: "[customPaginator]",
+  standalone: false,
 })
 export class CustomPaginatorDirective {
 

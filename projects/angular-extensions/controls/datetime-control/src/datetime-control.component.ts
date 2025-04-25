@@ -16,7 +16,8 @@ import { AppNgxMatTimepickerComponent, NgxMatTimepickerComponent } from "angular
   templateUrl: "./datetime-control.component.html",
   styleUrls: ["./datetime-control.component.scss"],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DateTimeControlComponent extends ControlBase<Date> implements ActionableControl, OnInit {
 

@@ -8,7 +8,8 @@ import { ControlBase } from "angular-extensions/controls/base-control";
   templateUrl: "./checkbox-control.component.html",
   styleUrls: ["./checkbox-control.component.scss"],
   animations: [matFormFieldAnimations.transitionMessages],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CheckboxControlComponent extends ControlBase<boolean> {
 

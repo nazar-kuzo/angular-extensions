@@ -7,6 +7,7 @@ import { OtherDashboardApiService } from "../../services";
   templateUrl: "./other-dashboard-details-modal.component.html",
   styleUrls: ["./other-dashboard-details-modal.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class OtherDashboardDetailsModalComponent {
 

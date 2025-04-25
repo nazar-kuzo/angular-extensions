@@ -8,6 +8,7 @@ import { MatCellDef, MatRowDef, MatTableDataSource } from "@angular/material/tab
   providers: [
     { provide: CdkCellDef, useExisting: MatCellDefDirective },
   ],
+  standalone: false,
 })
 export class MatCellDefDirective<T, TValue> extends MatCellDef {
 
@@ -29,6 +30,7 @@ export class MatCellDefDirective<T, TValue> extends MatCellDef {
   providers: [
     { provide: CdkRowDef, useExisting: MatRowDefDirective },
   ],
+  standalone: false,
 })
 export class MatRowDefDirective<T> extends MatRowDef<T> {
 

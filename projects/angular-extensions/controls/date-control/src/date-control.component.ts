@@ -14,7 +14,8 @@ import { AppMatDatepicker, Field } from "angular-extensions/models";
   selector: "date-control",
   templateUrl: "./date-control.component.html",
   styleUrls: ["./date-control.component.scss"],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DateControlComponent<TOption, TOptionGroup, TFormattedValue, TControlValue>
   extends ControlBase<Date, TOption, TOptionGroup, TFormattedValue, TControlValue>

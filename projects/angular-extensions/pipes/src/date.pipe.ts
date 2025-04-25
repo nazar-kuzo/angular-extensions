@@ -4,6 +4,7 @@ import { MatDateFormats, MAT_DATE_FORMATS } from "@angular/material/core";
 
 @Pipe({
   name: "date",
+  standalone: false,
 })
 export class DatePipe implements PipeTransform {
 

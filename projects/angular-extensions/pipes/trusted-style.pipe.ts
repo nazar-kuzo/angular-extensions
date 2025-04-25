@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from "@angular/core";
 import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
 
 @Pipe({
-  name: "trustedStyle"
+  name: "trustedStyle",
+  standalone: false,
 })
 export class TrustedStylePipe implements PipeTransform {
 

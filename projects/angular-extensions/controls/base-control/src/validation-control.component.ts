@@ -12,7 +12,8 @@ import { ControlBase } from "./base-control.component";
     }
     </base-control>
     `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class ValidationControlComponent<TValue> extends ControlBase<TValue> {
 }

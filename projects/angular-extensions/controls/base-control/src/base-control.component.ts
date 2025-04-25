@@ -87,7 +87,8 @@ export class ControlBase<TValue, TOption = any, TOptionGroup = any, TFormattedVa
   templateUrl: "./base-control.component.html",
   styleUrls: ["./base-control.component.scss"],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class BaseControlComponent<TValue, TOption = any, TOptionGroup = any, TFormattedValue = any, TControlValue = any>
   implements OnInit, AfterViewInit {

@@ -26,7 +26,8 @@ interface SelectionGroup<TKey, T> extends Group<TKey, T> {
   templateUrl: "./select-control.component.html",
   styleUrls: ["./select-control.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class SelectControlComponent<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>
   extends ControlBase<TValue, TOption, TOptionGroup, TFormattedValue, TControlValue>

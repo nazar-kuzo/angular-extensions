@@ -7,7 +7,8 @@ import { overrideFunction } from "angular-extensions/core";
  * Overrides mask behavior for TextControl
  */
 @Directive({
-  selector: "[mask]"
+  selector: "[mask]",
+  standalone: false,
 })
 export class AppMaskDirective {
 

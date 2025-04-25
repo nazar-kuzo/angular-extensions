@@ -8,7 +8,8 @@ interface NgLetContext<T> {
 
 
 @Directive({
-  selector: "[ngLet]"
+  selector: "[ngLet]",
+  standalone: false,
 })
 export class NgLetDirective<T> {
 

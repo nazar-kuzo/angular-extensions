@@ -6,6 +6,7 @@ import { Component, ChangeDetectionStrategy } from "@angular/core";
   templateUrl: "./home-page.component.html",
   styleUrls: ["./home-page.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class HomePageComponent {
 

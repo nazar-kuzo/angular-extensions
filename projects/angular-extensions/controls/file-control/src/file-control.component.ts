@@ -42,7 +42,8 @@ overrideFunction(
   templateUrl: "./file-control.component.html",
   styleUrls: ["./file-control.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [NoUploadFileService]
+  providers: [NoUploadFileService],
+  standalone: false,
 })
 export class FileControlComponent extends ControlBase<File[]> implements OnInit {
 

@@ -4,6 +4,7 @@ import { toStartCase } from "angular-extensions/core";
 
 @Pipe({
   name: "startCase",
+  standalone: false,
 })
 export class StartCasePipe implements PipeTransform {
 

@@ -23,7 +23,8 @@ interface MaskPattern {
   selector: "text-control",
   templateUrl: "./text-control.component.html",
   styleUrls: ["./text-control.component.scss"],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TextControlComponent<TValue> extends ControlBase<TValue> implements OnChanges, ActionableControl {
 

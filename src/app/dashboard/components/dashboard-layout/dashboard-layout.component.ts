@@ -14,6 +14,7 @@ import { Country, DashboardEditor } from "./dashboard.editor";
   styleUrls: ["./dashboard-layout.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DashboardEditor],
+  standalone: false,
 })
 export class DashboardLayoutComponent implements OnInit {
 

@@ -2,7 +2,8 @@ import { debounceTime, Subject } from "rxjs";
 import { Directive, Input, ElementRef, OnChanges, AfterViewInit, OnDestroy } from "@angular/core";
 
 @Directive({
-  selector: "[truncate]"
+  selector: "[truncate]",
+  standalone: false,
 })
 export class TruncateDirective implements OnChanges, AfterViewInit, OnDestroy {
 

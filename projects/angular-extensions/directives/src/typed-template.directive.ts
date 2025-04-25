@@ -6,6 +6,7 @@ interface TemplateContext<T> {
 
 @Directive({
   selector: "ng-template[type]",
+  standalone: false,
 })
 export class TypedTemplateDirective<T> {
 

@@ -7,6 +7,7 @@ import { DashboardApiService } from "app/dashboard/services";
   templateUrl: "./dashboard-details-modal.component.html",
   styleUrls: ["./dashboard-details-modal.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class DashboardDetailsModalComponent {
 

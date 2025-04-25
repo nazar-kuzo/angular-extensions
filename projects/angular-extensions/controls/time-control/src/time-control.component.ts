@@ -84,7 +84,8 @@ addTimepickerNullableModelSupport();
   templateUrl: "./time-control.component.html",
   styleUrls: ["./time-control.component.scss"],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class TimeControlComponent<TValue> extends ControlBase<TValue, any, any, any, Date> {
 

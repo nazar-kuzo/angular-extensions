@@ -14,7 +14,8 @@ export interface ModalConfirmSettings<TContext = any> {
 @Component({
   selector: "modal-confirm",
   templateUrl: "./modal-confirm.component.html",
-  styleUrls: ["./modal-confirm.component.scss"]
+  styleUrls: ["./modal-confirm.component.scss"],
+  standalone: false,
 })
 export class ModalConfirmComponent {
 
