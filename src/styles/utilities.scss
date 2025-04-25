@@ -1,4 +1,4 @@
-@import "angular-extensions/styles/utilities";
+@use "angular-extensions/styles/utilities" as *;
 
 .button-rounded {
   border-radius: 2em !important;

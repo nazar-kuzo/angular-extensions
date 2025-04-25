@@ -1,9 +1,8 @@
 @use '@angular/material' as mat;
+@use "angular-extensions/styles/reset" as *;
 
 @include mat.elevation-classes();
 @include mat.app-background();
-
-@import "angular-extensions/styles/reset";
 
 $mat-brand: (
   50: #e0f4ff,

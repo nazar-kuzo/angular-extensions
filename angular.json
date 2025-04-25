@@ -68,6 +68,7 @@
             "stylePreprocessorOptions": {
               "includePaths": [
                 "dist/",
+                "src/styles",
                 "."
               ]
             },

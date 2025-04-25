@@ -1,7 +1,7 @@
-@import "./styles/variables";
+@use "./styles/variables" as *;
 
-@import "angular-extensions/styles/bootstrap";
+@use "angular-extensions/styles/bootstrap" as *;
 
-@import "./styles/theme";
+@use "./styles/theme" as *;
 
-@import "./styles/utilities";
+@use "./styles/utilities" as *;
