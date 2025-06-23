@@ -1,19 +1,66 @@
-# angular-extensions
+# Angular Extensions
 
-* Provides simplified API to work with Angular ReactiveForms validation via Field/Form classes.
-* Contains a list of commonly-used editor controls based on Angular Material and CDK
-* Provides extensions to Angular Router like: stateful modals, route retained event, etc.
+A curated collection of extensions and utilities that simplify and enhance Angular application development.
 
-## Install
+## ✨ Features
 
-`npm install`
+### 🧱 Reactive Forms Enhancements
+- **Field / Form Classes**: Simplified API for managing Angular Reactive Forms.
+- Cleaner validation logic and form control abstractions.
+- Strongly-typed helpers to reduce boilerplate.
 
-## Publishing Library to Local npm
+### 🧩 Common Editor Controls
+- Prebuilt, reusable components based on **Angular Material** and **CDK**.
+- Includes commonly-used form inputs and UI controls.
+- Consistent UX patterns out of the box.
 
-### Build
+### 🚦 Router Extensions
+- **Stateful Modals**: Manage modals as part of router state.
+- **Route Retained Events**: Listen to route changes even when components are reused.
+- Useful hooks and utilities for advanced routing behavior.
 
-Run `ng build angular-extensions --configuration development` from root directory.
+## 📦 Installation
 
-### Usage
+```bash
+npm install angular-extensions
+````
 
-Install the package in your project using the command `npm install angular-extensions@1`
+> Make sure to also install `@angular/material` and `@angular/cdk` if you intend to use the UI controls.
+
+## 🛠️ Usage
+
+### Reactive Forms
+
+```ts
+import { Field, FormGroupBuilder } from 'angular-extensions/forms';
+
+const loginForm = new FormGroupBuilder({
+  email: new Field('', [Validators.required, Validators.email]),
+  password: new Field('', Validators.required),
+});
+```
+
+### Router Extensions
+
+```ts
+import { ModalRouteService } from 'angular-extensions/router';
+
+modalRouteService.open('settings');
+```
+
+## 📚 Documentation
+
+Detailed usage examples and API reference can be found in the [Wiki](https://github.com/your-org/angular-extensions/wiki) *(or replace with a `/docs` folder link if applicable)*.
+
+## 🧪 Development
+
+Clone the repo and run:
+
+```bash
+npm install
+npm run start
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request.
